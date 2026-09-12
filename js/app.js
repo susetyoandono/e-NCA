@@ -1,34 +1,42 @@
 // =========================================================
-// e-NCA - Application
+// e-NCA - Database Connection Test
 // =========================================================
 
 import { supabase } from "./supabase.js";
 
-async function testSupabaseConnection() {
+const statusElement = document.getElementById("connection-status");
 
-    const statusElement = document.getElementById("connection-status");
+async function testDatabase() {
 
     try {
 
-        const { data, error } = await supabase.auth.getSession();
+        // TEST 1 — Read database
+        const { data, error } = await supabase
+            .from("nca")
+            .select("id, nca_number, nca_status, approval_status, created_at")
+            .limit(10);
 
         if (error) {
             throw error;
         }
 
-        console.log("Supabase connected.");
-        console.log("Session:", data.session);
+        console.log("Database connection successful.");
+        console.log("NCA records:", data);
 
-        statusElement.textContent =
-            "Supabase connection: CONNECTED";
+        statusElement.innerHTML = `
+            <strong>Supabase: CONNECTED</strong><br>
+            NCA records found: ${data.length}
+        `;
 
     } catch (error) {
 
-        console.error("Supabase connection error:", error);
+        console.error("Database error:", error);
 
-        statusElement.textContent =
-            "Supabase connection: ERROR";
+        statusElement.innerHTML = `
+            <strong>Supabase: ERROR</strong><br>
+            ${error.message}
+        `;
     }
 }
 
-testSupabaseConnection();
+testDatabase();
