@@ -39,4 +39,34 @@ async function testDatabase() {
     }
 }
 
+async function testInsertDepartment() {
+    try {
+        const { data, error } = await supabase
+            .from("departments")
+            .insert([
+                { 
+                    department_code: "QA-01", 
+                    department_name: "Quality Assurance" 
+                }
+            ])
+            .select(); 
+
+        if (error) {
+            throw error;
+        }
+
+        console.log("Insert berhasil. Data baru:", data);
+        
+        // Opsional: Update UI untuk memastikan jalan
+        const statusElement = document.getElementById("connection-status");
+        statusElement.innerHTML += `<br><br><strong>Insert Test:</strong> Berhasil menambahkan departemen ${data[0].department_code}`;
+
+    } catch (error) {
+        console.error("Gagal insert data:", error);
+    }
+}
+
+// Panggil fungsinya
+testInsertDepartment();
+
 testDatabase();
