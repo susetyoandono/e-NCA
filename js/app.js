@@ -70,3 +70,37 @@ async function testInsertDepartment() {
 testInsertDepartment();
 
 testDatabase();
+
+// =========================================================
+// Create NCA Record dari Form
+// =========================================================
+
+document.getElementById("form-nca")?.addEventListener("submit", async function(e) {
+    e.preventDefault(); // Mencegah page reload
+    
+    const ncaNumberInput = document.getElementById("nca-number").value;
+    const dummyUserId = "PASTE_USER_UID_DISINI"; // Wajib ganti dengan UID dari Step 1
+    
+    try {
+        const { data, error } = await supabase
+            .from("nca")
+            .insert([{ 
+                nca_number: ncaNumberInput,
+                created_by: dummyUserId
+                // nca_status dan approval_status otomatis 'DRAFT' dan 'WAITING QC SUPERVISOR' dari default database
+            }])
+            .select();
+
+        if (error) throw error;
+        
+        alert(`Berhasil! NCA ID: ${data[0].nca_number} dibuat.`);
+        document.getElementById("form-nca").reset();
+        
+        // Opsional: Panggil ulang testDatabase() untuk refresh counter di layar
+        testDatabase(); 
+        
+    } catch (error) {
+        console.error("Gagal membuat NCA:", error);
+        alert("Error: " + error.message);
+    }
+});
