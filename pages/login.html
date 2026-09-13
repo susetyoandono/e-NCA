@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - e-NCA System</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Mengambil library Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Login e-NCA</h2>
+            <p>Silakan masuk menggunakan Email dan Password Anda.</p>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required placeholder="Masukkan email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Masukkan password">
+                </div>
+                
+                <button type="submit" id="login-btn">Masuk</button>
+                <p id="error-message" style="color: red; text-align: center; margin-top: 10px;"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script konfigurasi dan logika login -->
+    <script src="config.js"></script>
+    <script src="login.js"></script>
+</body>
+</html>
