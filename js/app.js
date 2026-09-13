@@ -79,7 +79,7 @@ document.getElementById("form-nca")?.addEventListener("submit", async function(e
     e.preventDefault(); // Mencegah page reload
     
     const ncaNumberInput = document.getElementById("nca-number").value;
-    const dummyUserId = "PAe6fcd3e4-e1a5-4a92-bbf0-ff1fb99de13e"; // Wajib ganti dengan UID dari Step 1
+    const dummyUserId = "e6fcd3e4-e1a5-4a92-bbf0-ff1fb99de13e"; // Wajib ganti dengan UID dari Step 1
     
     try {
         const { data, error } = await supabase
