@@ -1,89 +1,85 @@
 // =========================================================
-// e-NCA - Database CRUD Test
+// e-NCA - Authentication Test
 // =========================================================
 
 import { supabase } from "./supabase.js";
 
 const statusElement = document.getElementById("connection-status");
 
-async function testCRUD() {
+async function testLogin() {
 
     try {
 
         // ==========================================
-        // 1. READ
+        // 1. LOGIN
         // ==========================================
 
-        const { data: records, error: readError } = await supabase
-            .from("nca")
-            .select("*")
-            .eq("nca_number", "TEST-001")
-            .limit(1);
+        const { data: authData, error: authError } =
+            await supabase.auth.signInWithPassword({
+                email: "admin@test.com",
+                password: "Test12345!"
+            });
 
-        if (readError) throw readError;
-
-        if (!records || records.length === 0) {
-            throw new Error("TEST-001 record not found.");
+        if (authError) {
+            throw authError;
         }
 
-        const ncaId = records[0].id;
+        const user = authData.user;
 
-        console.log("READ successful:", records[0]);
-
-
-        // ==========================================
-        // 2. UPDATE
-        // ==========================================
-
-        const { data: updatedRecord, error: updateError } = await supabase
-            .from("nca")
-            .update({
-                nca_status: "ON HOLD"
-            })
-            .eq("id", ncaId)
-            .select()
-            .single();
-
-        if (updateError) throw updateError;
-
-        console.log("UPDATE successful:", updatedRecord);
+        console.log("Auth Login successful:", user);
 
 
         // ==========================================
-        // 3. DELETE
+        // 2. GET PROFILE
         // ==========================================
 
-        const { error: deleteError } = await supabase
-            .from("nca")
-            .delete()
-            .eq("id", ncaId);
+        const { data: profile, error: profileError } =
+            await supabase
+                .from("profiles")
+                .select(`
+                    id,
+                    badge_id,
+                    full_name,
+                    email,
+                    active,
+                    roles (
+                        role_code,
+                        role_name
+                    )
+                `)
+                .eq("id", user.id)
+                .single();
 
-        if (deleteError) throw deleteError;
+        if (profileError) {
+            throw profileError;
+        }
 
-        console.log("DELETE successful.");
+        console.log("Profile:", profile);
 
 
         // ==========================================
-        // RESULT
+        // 3. DISPLAY RESULT
         // ==========================================
 
         statusElement.innerHTML = `
-            <strong>Supabase CRUD: SUCCESS</strong><br>
-            READ ✓<br>
-            UPDATE ✓<br>
-            DELETE ✓<br>
-            Test record TEST-001 has been removed.
+            <strong>LOGIN SUCCESS</strong><br><br>
+
+            User: ${profile.full_name}<br>
+            Badge ID: ${profile.badge_id}<br>
+            Email: ${profile.email}<br>
+            Role: ${profile.roles.role_code}<br>
+            Role Name: ${profile.roles.role_name}
         `;
 
     } catch (error) {
 
-        console.error("CRUD error:", error);
+        console.error("Authentication error:", error);
 
         statusElement.innerHTML = `
-            <strong>Supabase CRUD: ERROR</strong><br>
+            <strong>LOGIN ERROR</strong><br>
             ${error.message}
         `;
     }
 }
 
-testCRUD();
+testLogin();
