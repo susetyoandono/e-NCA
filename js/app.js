@@ -16,7 +16,7 @@ async function testLogin() {
 
         const { data: authData, error: authError } =
             await supabase.auth.signInWithPassword({
-                email: "susetyo.andono@i-pex.com",
+                email: "admin@test.com",
                 password: "1234"
             });
 
