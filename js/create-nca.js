@@ -14,165 +14,108 @@ let currentProfile = null;
 
 
 // =========================================================
-// GENERATE NCA NUMBER
+// DOM ELEMENTS
 // =========================================================
 
-function generateNcaNumber() {
+const userName = document.getElementById("user-name");
+const userRole = document.getElementById("user-role");
 
-    const now = new Date();
+const ncaNumberInput =
+    document.getElementById("nca-number");
 
-    const year =
-        now.getFullYear();
+const reportedDateInput =
+    document.getElementById("reported-date");
 
-    const month =
-        String(now.getMonth() + 1)
-            .padStart(2, "0");
+const createdByInput =
+    document.getElementById("created-by");
 
-    const day =
-        String(now.getDate())
-            .padStart(2, "0");
+const departmentInput =
+    document.getElementById("department");
 
-    const hour =
-        String(now.getHours())
-            .padStart(2, "0");
+const defectNameInput =
+    document.getElementById("defect-name");
 
-    const minute =
-        String(now.getMinutes())
-            .padStart(2, "0");
+const defectCategoryInput =
+    document.getElementById("defect-category");
 
-    const second =
-        String(now.getSeconds())
-            .padStart(2, "0");
+const processStationInput =
+    document.getElementById("process-station");
 
+const partNumberInput =
+    document.getElementById("part-number");
 
-    return `NCA-${year}${month}${day}-${hour}${minute}${second}`;
-}
+const partNameInput =
+    document.getElementById("part-name");
+
+const lotNumberInput =
+    document.getElementById("lot-number");
+
+const reelNumberInput =
+    document.getElementById("reel-number");
+
+const machineMoldInput =
+    document.getElementById("machine-mold-no");
+
+const detectionSourceInput =
+    document.getElementById("detection-source");
+
+const defectDescriptionInput =
+    document.getElementById("defect-description");
+
+const affectedQtyInput =
+    document.getElementById("affected-qty");
+
+const sampleSizeInput =
+    document.getElementById("sample-size");
+
+const defectiveQtyInput =
+    document.getElementById("defective-qty");
+
+const defectivePercentInput =
+    document.getElementById("defective-percent");
+
+const cancelButton =
+    document.getElementById("cancel-button");
+
+const saveDraftButton =
+    document.getElementById("save-draft-button");
+
+const submitButton =
+    document.getElementById("submit-button");
+
+const logoutButton =
+    document.getElementById("logout-button");
+
+const scanQRButton =
+    document.getElementById("scan-flowsheet-qr");
+
+const formMessage =
+    document.getElementById("form-message");
 
 
 // =========================================================
-// INITIALIZE
+// INITIALIZATION
 // =========================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initializePage
+);
+
 
 async function initializePage() {
 
     try {
 
-        // -----------------------------------------
-        // Check Session
-        // -----------------------------------------
+        await loadCurrentUser();
 
-        const {
-            data: { session }
-        } = await supabase.auth.getSession();
+        generateNcaNumber();
 
+        setReportedDate();
 
-        if (!session) {
+        setupDefectiveCalculation();
 
-            window.location.href =
-                "../index.html";
-
-            return;
-        }
-
-
-        currentUser =
-            session.user;
-
-
-        // -----------------------------------------
-        // Get Profile
-        // -----------------------------------------
-
-        const {
-            data: profile,
-            error
-        } = await supabase
-            .from("profiles")
-            .select(`
-                id,
-                badge_id,
-                full_name,
-                email,
-                active,
-                roles (
-                    role_code,
-                    role_name
-                )
-            `)
-            .eq(
-                "id",
-                currentUser.id
-            )
-            .single();
-
-
-        if (error || !profile) {
-
-            await supabase.auth.signOut();
-
-            window.location.href =
-                "../index.html";
-
-            return;
-        }
-
-
-        // -----------------------------------------
-        // Check Active
-        // -----------------------------------------
-
-        if (!profile.active) {
-
-            await supabase.auth.signOut();
-
-            alert(
-                "This account is inactive."
-            );
-
-            window.location.href =
-                "../index.html";
-
-            return;
-        }
-
-
-        currentProfile =
-            profile;
-
-
-        // -----------------------------------------
-        // Display User
-        // -----------------------------------------
-
-        document.getElementById(
-            "user-name"
-        ).textContent =
-            profile.full_name ||
-            profile.badge_id;
-
-
-        document.getElementById(
-            "user-role"
-        ).textContent =
-            profile.roles?.role_name ||
-            "User";
-
-
-        document.getElementById(
-            "created-by"
-        ).value =
-            `${profile.full_name} (${profile.badge_id})`;
-
-
-        // -----------------------------------------
-        // Generate NCA Number
-        // -----------------------------------------
-
-        document.getElementById(
-            "nca-number"
-        ).value =
-            generateNcaNumber();
-
+        setupButtons();
 
     } catch (error) {
 
@@ -181,7 +124,671 @@ async function initializePage() {
             error
         );
 
+        showMessage(
+            error.message,
+            "error"
+        );
+
     }
+
+}
+
+
+// =========================================================
+// LOAD CURRENT USER
+// =========================================================
+
+async function loadCurrentUser() {
+
+    const {
+        data: sessionData,
+        error: sessionError
+    } = await supabase.auth.getSession();
+
+
+    if (
+        sessionError ||
+        !sessionData.session
+    ) {
+
+        window.location.href =
+            "../index.html";
+
+        return;
+
+    }
+
+
+    currentUser =
+        sessionData.session.user;
+
+
+    const {
+        data: profile,
+        error: profileError
+    } = await supabase
+        .from("profiles")
+        .select(`
+            id,
+            badge_id,
+            full_name,
+            email,
+            active,
+            department_id,
+            departments (
+                department_code,
+                department_name
+            ),
+            roles (
+                role_code,
+                role_name
+            )
+        `)
+        .eq("id", currentUser.id)
+        .single();
+
+
+    if (
+        profileError ||
+        !profile
+    ) {
+
+        throw new Error(
+            "User profile could not be loaded."
+        );
+
+    }
+
+
+    if (!profile.active) {
+
+        await supabase.auth.signOut();
+
+        window.location.href =
+            "../index.html";
+
+        return;
+
+    }
+
+
+    currentProfile =
+        profile;
+
+
+    // Header
+
+    userName.textContent =
+        profile.full_name ||
+        profile.badge_id ||
+        "-";
+
+
+    userRole.textContent =
+        profile.roles?.role_name ||
+        "-";
+
+
+    // Form
+
+    createdByInput.value =
+        profile.full_name ||
+        profile.badge_id ||
+        "";
+
+
+    departmentInput.value =
+        profile.departments?.department_name ||
+        profile.departments?.department_code ||
+        "";
+
+}
+
+
+// =========================================================
+// GENERATE NCA NUMBER
+// =========================================================
+
+function generateNcaNumber() {
+
+    const now =
+        new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(2, "0");
+
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(2, "0");
+
+
+    const hours =
+        String(
+            now.getHours()
+        ).padStart(2, "0");
+
+
+    const minutes =
+        String(
+            now.getMinutes()
+        ).padStart(2, "0");
+
+
+    const seconds =
+        String(
+            now.getSeconds()
+        ).padStart(2, "0");
+
+
+    const ncaNumber =
+        `NCA-${year}${month}${day}-${hours}${minutes}${seconds}`;
+
+
+    ncaNumberInput.value =
+        ncaNumber;
+
+}
+
+
+// =========================================================
+// REPORTED DATE
+// =========================================================
+
+function setReportedDate() {
+
+    const now =
+        new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(2, "0");
+
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(2, "0");
+
+
+    reportedDateInput.value =
+        `${year}-${month}-${day}`;
+
+}
+
+
+// =========================================================
+// DEFECTIVE % CALCULATION
+// =========================================================
+
+function setupDefectiveCalculation() {
+
+    affectedQtyInput.addEventListener(
+        "input",
+        calculateDefectivePercent
+    );
+
+
+    sampleSizeInput.addEventListener(
+        "input",
+        calculateDefectivePercent
+    );
+
+
+    defectiveQtyInput.addEventListener(
+        "input",
+        calculateDefectivePercent
+    );
+
+}
+
+
+function calculateDefectivePercent() {
+
+    const sampleSize =
+        Number(
+            sampleSizeInput.value
+        );
+
+
+    const defectiveQty =
+        Number(
+            defectiveQtyInput.value
+        );
+
+
+    if (
+        !sampleSize ||
+        sampleSize <= 0
+    ) {
+
+        defectivePercentInput.value =
+            "0.00 %";
+
+        return;
+
+    }
+
+
+    const percentage =
+        (
+            defectiveQty /
+            sampleSize
+        ) * 100;
+
+
+    defectivePercentInput.value =
+        `${percentage.toFixed(2)} %`;
+
+}
+
+
+// =========================================================
+// FLOWSHEET QR PARSER
+// =========================================================
+
+function parseFlowsheetQR(qrText) {
+
+    if (
+        !qrText ||
+        !qrText.trim()
+    ) {
+
+        throw new Error(
+            "QR data is empty."
+        );
+
+    }
+
+
+    const fields =
+        qrText
+            .trim()
+            .split(",");
+
+
+    /*
+        QR Mapping
+
+        Index 0  = QR Identifier
+        Index 1  = Part Number
+        Index 2  = Lot Number
+        Index 10 = Machine / Mold No.
+        Index 18 = Reel Number
+        Index 19 = Part Name
+    */
+
+
+    if (fields.length <= 19) {
+
+        throw new Error(
+            "Invalid Flowsheet QR format. " +
+            "Expected at least 20 fields."
+        );
+
+    }
+
+
+    return {
+
+        qrIdentifier:
+            fields[0]?.trim() || "",
+
+        partNumber:
+            fields[1]?.trim() || "",
+
+        lotNumber:
+            fields[2]?.trim() || "",
+
+        machineMoldNo:
+            fields[10]?.trim() || "",
+
+        reelNumber:
+            fields[18]?.trim() || "",
+
+        partName:
+            fields[19]?.trim() || ""
+
+    };
+
+}
+
+
+// =========================================================
+// APPLY QR DATA TO FORM
+// =========================================================
+
+function applyQRData(qrData) {
+
+    partNumberInput.value =
+        qrData.partNumber;
+
+
+    partNameInput.value =
+        qrData.partName;
+
+
+    lotNumberInput.value =
+        qrData.lotNumber;
+
+
+    reelNumberInput.value =
+        qrData.reelNumber;
+
+
+    machineMoldInput.value =
+        qrData.machineMoldNo;
+
+
+    showMessage(
+        "Flowsheet QR data loaded successfully.",
+        "success"
+    );
+
+}
+
+
+// =========================================================
+// QR SCANNER - TEMPORARY TEST
+// =========================================================
+
+function testQRParser() {
+
+    const sampleQR =
+        prompt(
+            "Paste Flowsheet QR data for testing:"
+        );
+
+
+    if (
+        sampleQR === null
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const qrData =
+            parseFlowsheetQR(
+                sampleQR
+            );
+
+
+        console.log(
+            "Parsed QR:",
+            qrData
+        );
+
+
+        applyQRData(
+            qrData
+        );
+
+    } catch (error) {
+
+        console.error(
+            "QR parsing error:",
+            error
+        );
+
+
+        showMessage(
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+// =========================================================
+// VALIDATION
+// =========================================================
+
+function validateForm() {
+
+    const requiredFields = [
+
+        {
+            element: defectNameInput,
+            name: "Defect Name"
+        },
+
+        {
+            element: defectCategoryInput,
+            name: "Defect Category"
+        },
+
+        {
+            element: processStationInput,
+            name: "Process / Station"
+        },
+
+        {
+            element: detectionSourceInput,
+            name: "Detection Source"
+        },
+
+        {
+            element: defectDescriptionInput,
+            name: "Defect Description"
+        },
+
+        {
+            element: affectedQtyInput,
+            name: "Affected Qty"
+        },
+
+        {
+            element: sampleSizeInput,
+            name: "Sample Size"
+        },
+
+        {
+            element: defectiveQtyInput,
+            name: "Defective Qty"
+        }
+
+    ];
+
+
+    for (
+        const field
+        of requiredFields
+    ) {
+
+        if (
+            !field.element.value.trim()
+        ) {
+
+            field.element.focus();
+
+            throw new Error(
+                `${field.name} is required.`
+            );
+
+        }
+
+    }
+
+
+    const affectedQty =
+        Number(
+            affectedQtyInput.value
+        );
+
+
+    const sampleSize =
+        Number(
+            sampleSizeInput.value
+        );
+
+
+    const defectiveQty =
+        Number(
+            defectiveQtyInput.value
+        );
+
+
+    if (
+        affectedQty < 0 ||
+        sampleSize < 0 ||
+        defectiveQty < 0
+    ) {
+
+        throw new Error(
+            "Quantity cannot be negative."
+        );
+
+    }
+
+
+    if (
+        sampleSize === 0
+    ) {
+
+        throw new Error(
+            "Sample Size must be greater than 0."
+        );
+
+    }
+
+
+    if (
+        defectiveQty > sampleSize
+    ) {
+
+        throw new Error(
+            "Defective Qty cannot be greater than Sample Size."
+        );
+
+    }
+
+
+    if (
+        sampleSize > affectedQty
+    ) {
+
+        throw new Error(
+            "Sample Size cannot be greater than Affected Qty."
+        );
+
+    }
+
+
+    return true;
+
+}
+
+
+// =========================================================
+// GET FORM DATA
+// =========================================================
+
+function getFormData() {
+
+    const sampleSize =
+        Number(
+            sampleSizeInput.value
+        );
+
+
+    const defectiveQty =
+        Number(
+            defectiveQtyInput.value
+        );
+
+
+    const defectivePercent =
+        sampleSize > 0
+            ? (
+                defectiveQty /
+                sampleSize
+            ) * 100
+            : 0;
+
+
+    return {
+
+        nca_number:
+            ncaNumberInput.value.trim(),
+
+        reported_date:
+            reportedDateInput.value,
+
+        created_by:
+            currentProfile.id,
+
+        defect_name:
+            defectNameInput.value.trim(),
+
+        defect_category:
+            defectCategoryInput.value,
+
+        process_station:
+            processStationInput.value.trim(),
+
+        part_number:
+            partNumberInput.value.trim() ||
+            null,
+
+        part_name:
+            partNameInput.value.trim() ||
+            null,
+
+        lot_number:
+            lotNumberInput.value.trim() ||
+            null,
+
+        reel_number:
+            reelNumberInput.value.trim() ||
+            null,
+
+        machine_mold_no:
+            machineMoldInput.value.trim() ||
+            null,
+
+        detection_source:
+            detectionSourceInput.value,
+
+        defect_description:
+            defectDescriptionInput.value.trim(),
+
+        affected_qty:
+            Number(
+                affectedQtyInput.value
+            ),
+
+        sample_size:
+            sampleSize,
+
+        defective_qty:
+            defectiveQty,
+
+        defective_percent:
+            Number(
+                defectivePercent.toFixed(2)
+            )
+
+    };
 
 }
 
@@ -190,179 +797,188 @@ async function initializePage() {
 // SAVE NCA
 // =========================================================
 
-document
-    .getElementById("save-button")
-    .addEventListener(
-        "click",
-        saveNca
-    );
-
-
-async function saveNca() {
-
-    const defectName =
-        document.getElementById(
-            "defect-name"
-        ).value.trim();
-
-
-    const description =
-        document.getElementById(
-            "description"
-        ).value.trim();
-
-
-    const ncaNumber =
-        document.getElementById(
-            "nca-number"
-        ).value;
-
-
-    // -----------------------------------------
-    // Validation
-    // -----------------------------------------
-
-    if (!defectName) {
-
-        showMessage(
-            "Please enter Defect Name.",
-            "error"
-        );
-
-        return;
-    }
-
-
-    const saveButton =
-        document.getElementById(
-            "save-button"
-        );
-
-
-    saveButton.disabled = true;
-
-    saveButton.textContent =
-        "Saving...";
-
+async function saveNCA(
+    submitToQC = false
+) {
 
     try {
 
-        // -----------------------------------------
-        // INSERT NCA
-        // -----------------------------------------
-
-        const {
-            data,
-            error
-        } = await supabase
-            .from("nca")
-            .insert([
-                {
-                    nca_number:
-                        ncaNumber,
-
-                    created_by:
-                        currentProfile.id,
-
-                    nca_status:
-                        "DRAFT",
-
-                    approval_status:
-                        "WAITING QC SUPERVISOR"
-                }
-            ])
-            .select()
-            .single();
+        validateForm();
 
 
-        if (error) {
-
-            throw error;
-        }
-        
-// -----------------------------------------
-// Create Initial Workflow History
-// -----------------------------------------
-
-const {
-    error: workflowError
-} = await supabase
-    .from("nca_workflow")
-    .insert([
-        {
-            nca_id: data.id,
-
-            from_status: null,
-
-            to_status: "DRAFT",
-
-            from_approval_status: null,
-
-            to_approval_status:
-                "WAITING QC SUPERVISOR",
-
-            action_by:
-                currentProfile.id,
-
-            action_type:
-                "CREATE",
-
-            comments:
-                "NCA created by user."
-        }
-    ]);
-
-
-if (workflowError) {
-
-    console.error(
-        "Workflow history error:",
-        workflowError
-    );
-
-    // NCA already exists, so don't delete it.
-    // Just inform the user.
-
-    showMessage(
-        "NCA created, but workflow history could not be recorded.",
-        "error"
-    );
-
-} else {
-
-    console.log(
-        "Initial workflow history created."
-    );
-}
-
-        console.log(
-            "NCA created:",
-            data
+        setButtonsDisabled(
+            true
         );
 
 
-        // -----------------------------------------
-        // SUCCESS
-        // -----------------------------------------
+        showMessage(
+            "Saving NCA...",
+            "info"
+        );
+
+
+        const formData =
+            getFormData();
+
+
+        const ncaStatus =
+            "DRAFT";
+
+
+        const approvalStatus =
+            submitToQC
+                ? "WAITING QC SUPERVISOR"
+                : "WAITING QC SUPERVISOR";
+
+
+        // ---------------------------------------------
+        // INSERT NCA
+        // ---------------------------------------------
+
+        const {
+            data: nca,
+            error: ncaError
+        } =
+            await supabase
+                .from("nca")
+                .insert({
+
+                    nca_number:
+                        formData.nca_number,
+
+                    reported_date:
+                        formData.reported_date,
+
+                    created_by:
+                        formData.created_by,
+
+                    nca_status:
+                        ncaStatus,
+
+                    approval_status:
+                        approvalStatus,
+
+                    defect_name:
+                        formData.defect_name,
+
+                    defect_category:
+                        formData.defect_category,
+
+                    process_station:
+                        formData.process_station,
+
+                    part_number:
+                        formData.part_number,
+
+                    part_name:
+                        formData.part_name,
+
+                    lot_number:
+                        formData.lot_number,
+
+                    reel_number:
+                        formData.reel_number,
+
+                    machine_mold_no:
+                        formData.machine_mold_no,
+
+                    detection_source:
+                        formData.detection_source,
+
+                    defect_description:
+                        formData.defect_description,
+
+                    affected_qty:
+                        formData.affected_qty,
+
+                    sample_size:
+                        formData.sample_size,
+
+                    defective_qty:
+                        formData.defective_qty,
+
+                    defective_percent:
+                        formData.defective_percent
+
+                })
+                .select()
+                .single();
+
+
+        if (ncaError) {
+
+            throw ncaError;
+
+        }
+
+
+        // ---------------------------------------------
+        // WORKFLOW HISTORY
+        // ---------------------------------------------
+
+        const {
+            error: workflowError
+        } =
+            await supabase
+                .from("nca_workflow")
+                .insert({
+
+                    nca_id:
+                        nca.id,
+
+                    from_status:
+                        null,
+
+                    to_status:
+                        "DRAFT",
+
+                    from_approval_status:
+                        null,
+
+                    to_approval_status:
+                        approvalStatus,
+
+                    action_by:
+                        currentProfile.id,
+
+                    action_type:
+                        submitToQC
+                            ? "SUBMIT"
+                            : "CREATE",
+
+                    comments:
+                        submitToQC
+                            ? "NCA submitted to QC Supervisor."
+                            : "NCA saved as draft."
+
+                });
+
+
+        if (workflowError) {
+
+            throw workflowError;
+
+        }
+
 
         showMessage(
-            `NCA ${data.nca_number} created successfully.`,
+            submitToQC
+                ? "NCA submitted successfully."
+                : "NCA draft saved successfully.",
             "success"
         );
 
 
-        saveButton.textContent =
-            "Saved";
+        setTimeout(
+            () => {
 
+                window.location.href =
+                    "nca-detail.html?id=" +
+                    nca.id;
 
-        // Go back after short delay
-
-        setTimeout(() => {
-
-            window.location.href =
-                "dashboard.html";
-
-        }, 1000);
+            },
+            1000
+        );
 
 
     } catch (error) {
@@ -374,52 +990,65 @@ if (workflowError) {
 
 
         showMessage(
-            error.message,
+            error.message ||
+            "Failed to save NCA.",
             "error"
         );
 
 
-        saveButton.disabled =
-            false;
+        setButtonsDisabled(
+            false
+        );
 
-        saveButton.textContent =
-            "Save NCA";
     }
 
 }
 
 
 // =========================================================
-// MESSAGE
+// BUTTONS
 // =========================================================
 
-function showMessage(
-    message,
-    type
-) {
-
-    const element =
-        document.getElementById(
-            "form-message"
-        );
+function setupButtons() {
 
 
-    element.textContent =
-        message;
+    // ---------------------------------------------
+    // Save Draft
+    // ---------------------------------------------
+
+    saveDraftButton.addEventListener(
+        "click",
+        () => {
+
+            saveNCA(
+                false
+            );
+
+        }
+    );
 
 
-    element.className =
-        `form-message ${type}`;
-}
+    // ---------------------------------------------
+    // Submit
+    // ---------------------------------------------
+
+    submitButton.addEventListener(
+        "click",
+        () => {
+
+            saveNCA(
+                true
+            );
+
+        }
+    );
 
 
-// =========================================================
-// BACK / CANCEL
-// =========================================================
+    // ---------------------------------------------
+    // Cancel
+    // ---------------------------------------------
 
-document
-    .getElementById("back-button")
-    .addEventListener(
+    cancelButton.addEventListener(
         "click",
         () => {
 
@@ -430,26 +1059,11 @@ document
     );
 
 
-document
-    .getElementById("cancel-button")
-    .addEventListener(
-        "click",
-        () => {
+    // ---------------------------------------------
+    // Logout
+    // ---------------------------------------------
 
-            window.location.href =
-                "dashboard.html";
-
-        }
-    );
-
-
-// =========================================================
-// LOGOUT
-// =========================================================
-
-document
-    .getElementById("logout-button")
-    .addEventListener(
+    logoutButton.addEventListener(
         "click",
         async () => {
 
@@ -462,8 +1076,52 @@ document
     );
 
 
+    // ---------------------------------------------
+    // QR
+    // ---------------------------------------------
+
+    scanQRButton.addEventListener(
+        "click",
+        testQRParser
+    );
+
+}
+
+
 // =========================================================
-// START
+// BUTTON STATE
 // =========================================================
 
-initializePage();
+function setButtonsDisabled(
+    disabled
+) {
+
+    saveDraftButton.disabled =
+        disabled;
+
+    submitButton.disabled =
+        disabled;
+
+    cancelButton.disabled =
+        disabled;
+
+}
+
+
+// =========================================================
+// MESSAGE
+// =========================================================
+
+function showMessage(
+    message,
+    type = "info"
+) {
+
+    formMessage.textContent =
+        message;
+
+
+    formMessage.className =
+        `form-message ${type}`;
+
+}
