@@ -768,3 +768,194 @@ tbody tr:hover td {
     }
 
 }
+
+/* =========================================================
+   CREATE NCA FORM
+   ========================================================= */
+
+.form-card {
+    background: white;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.05);
+
+    overflow: hidden;
+}
+
+
+.form-section-title {
+    padding: 18px 20px;
+
+    background: #eef3f8;
+
+    color: #0b3a63;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+
+    padding: 25px;
+}
+
+
+.form-field {
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.form-field.full-width {
+    grid-column: 1 / -1;
+}
+
+
+.form-field label {
+    margin-bottom: 7px;
+
+    color: #374151;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.required {
+    color: #dc2626;
+}
+
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+    width: 100%;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 6px;
+
+    padding: 10px 12px;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 13px;
+
+    outline: none;
+}
+
+
+.form-field input {
+    height: 40px;
+}
+
+
+.form-field textarea {
+    resize: vertical;
+}
+
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+    border-color: #1d70b8;
+
+    box-shadow:
+        0 0 0 3px rgba(29,112,184,0.10);
+}
+
+
+.form-field input[readonly] {
+    background: #f3f4f6;
+
+    color: #6b7280;
+}
+
+
+/* =========================
+   Form Actions
+   ========================= */
+
+.form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding: 18px 25px;
+
+    border-top: 1px solid #e5e7eb;
+
+    background: #fafafa;
+}
+
+
+.secondary-button {
+    height: 40px;
+
+    padding: 0 16px;
+
+    background: white;
+
+    color: #374151;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+
+.secondary-button:hover {
+    background: #f3f4f6;
+}
+
+
+.form-message {
+    padding: 0 25px 20px;
+
+    font-size: 13px;
+
+    min-height: 20px;
+}
+
+
+.form-message.success {
+    color: #15803d;
+}
+
+
+.form-message.error {
+    color: #dc2626;
+}
+
+
+@media (max-width: 700px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-field.full-width {
+        grid-column: auto;
+    }
+
+}
