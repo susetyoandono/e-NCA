@@ -1,5 +1,6 @@
 /* =========================================================
-   e-NCA - Main Dashboard
+   e-NCA
+   Global Styles - Login + Dashboard
    ========================================================= */
 
 * {
@@ -10,60 +11,280 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: #f4f7fa;
+    background: #f3f6f9;
     color: #1f2937;
+    min-height: 100vh;
 }
+
+
+/* =========================================================
+   LOGIN PAGE
+   ========================================================= */
+
+.login-page {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eaf2f8 0%,
+            #f7f9fb 50%,
+            #e8f0f7 100%
+        );
+}
+
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+
+    background: #ffffff;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.12);
+
+    overflow: hidden;
+}
+
+
+/* =========================
+   Login Header
+   ========================= */
+
+.login-header {
+    background: #0b3a63;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 35px 30px;
+
+    border-bottom: 4px solid #1d70b8;
+}
+
+
+.login-header h1 {
+    font-size: 34px;
+
+    letter-spacing: 0.5px;
+
+    margin-bottom: 8px;
+}
+
+
+.login-header p {
+    font-size: 14px;
+
+    opacity: 0.9;
+
+    margin-bottom: 14px;
+}
+
+
+.login-header span {
+    font-size: 12px;
+
+    opacity: 0.7;
+}
+
+
+/* =========================
+   Login Form
+   ========================= */
+
+#login-form {
+    padding: 32px;
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+.form-group label {
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #374151;
+
+    margin-bottom: 7px;
+}
+
+
+.form-group input {
+    width: 100%;
+
+    height: 44px;
+
+    padding: 0 13px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 6px;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition: 0.2s;
+}
+
+
+.form-group input:focus {
+    border-color: #1d70b8;
+
+    box-shadow:
+        0 0 0 3px rgba(29, 112, 184, 0.12);
+}
+
+
+/* =========================
+   Login Button
+   ========================= */
+
+#login-button {
+    width: 100%;
+
+    height: 44px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: #0b3a63;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+#login-button:hover {
+    background: #14517f;
+}
+
+
+#login-button:disabled {
+    background: #9ca3af;
+
+    cursor: not-allowed;
+}
+
+
+#login-message {
+    min-height: 20px;
+
+    margin-top: 15px;
+
+    text-align: center;
+
+    color: #dc2626;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
 
 /* =========================
    Header
    ========================= */
 
 .app-header {
-    background: #0b3a63;
-    color: white;
     min-height: 72px;
+
+    background: #0b3a63;
+
+    color: white;
+
     padding: 12px 30px;
 
     display: flex;
-    justify-content: space-between;
+
     align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom: 4px solid #1d70b8;
 }
+
 
 .header-left {
     display: flex;
+
     flex-direction: column;
 }
+
 
 .app-title {
     font-size: 25px;
+
     font-weight: bold;
 }
 
+
 .app-subtitle {
     font-size: 12px;
+
     opacity: 0.8;
 }
 
+
 .header-right {
     display: flex;
+
     align-items: center;
+
     gap: 18px;
 }
 
+
+/* =========================
+   User Info
+   ========================= */
+
 .user-info {
     display: flex;
+
     flex-direction: column;
+
     text-align: right;
 }
+
 
 .user-info strong {
     font-size: 14px;
 }
 
+
 .user-info span {
     font-size: 11px;
+
     opacity: 0.75;
 }
+
 
 /* =========================
    Notification
@@ -72,64 +293,99 @@ body {
 .notification-button {
     position: relative;
 
+    width: 38px;
+    height: 38px;
+
     border: none;
+
     background: transparent;
+
     color: white;
 
-    font-size: 22px;
+    font-size: 21px;
+
     cursor: pointer;
+
+    border-radius: 6px;
 }
+
+
+.notification-button:hover {
+    background: rgba(255,255,255,0.12);
+}
+
 
 #notification-count {
     position: absolute;
 
-    top: -7px;
-    right: -8px;
+    top: -2px;
+    right: -2px;
 
     min-width: 18px;
     height: 18px;
 
+    padding: 0 4px;
+
     background: #dc2626;
+
     color: white;
 
-    border-radius: 50%;
+    border-radius: 10px;
 
     font-size: 10px;
+
     font-weight: bold;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 }
+
 
 /* =========================
    Logout
    ========================= */
 
 .logout-button {
+    height: 36px;
+
+    padding: 0 14px;
+
     background: transparent;
-    border: 1px solid rgba(255,255,255,0.5);
+
+    border: 1px solid rgba(255,255,255,0.45);
+
+    border-radius: 5px;
+
     color: white;
 
-    padding: 7px 12px;
-    border-radius: 5px;
+    font-size: 12px;
 
     cursor: pointer;
 }
 
+
 .logout-button:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.12);
 }
 
+
 /* =========================
-   Container
+   Main Container
    ========================= */
 
 .container {
+    width: 100%;
+
     max-width: 1400px;
-    margin: 30px auto;
-    padding: 0 25px;
+
+    margin: 0 auto;
+
+    padding: 30px 25px 50px;
 }
+
 
 /* =========================
    Page Header
@@ -137,154 +393,225 @@ body {
 
 .page-header {
     display: flex;
-    justify-content: space-between;
+
     align-items: center;
+
+    justify-content: space-between;
 
     margin-bottom: 25px;
 }
 
+
 .page-header h1 {
     color: #0b3a63;
+
+    font-size: 28px;
+
     margin-bottom: 5px;
 }
 
+
 .page-header p {
     color: #6b7280;
-    font-size: 14px;
+
+    font-size: 13px;
 }
 
+
 /* =========================
-   Buttons
+   Primary Button
    ========================= */
 
 .primary-button {
+    height: 40px;
+
+    padding: 0 16px;
+
     background: #0b3a63;
+
     color: white;
 
     border: none;
+
     border-radius: 6px;
 
-    padding: 11px 16px;
+    font-size: 13px;
 
     font-weight: 600;
+
     cursor: pointer;
 }
+
 
 .primary-button:hover {
     background: #14517f;
 }
 
-/* =========================
-   KPI
-   ========================= */
+
+/* =========================================================
+   KPI CARDS
+   ========================================================= */
 
 .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
     gap: 18px;
 
     margin-bottom: 25px;
 }
 
+
 .kpi-card {
     background: white;
+
     border-radius: 8px;
 
     padding: 20px;
 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.06);
 
     border-left: 4px solid #1d70b8;
 }
+
 
 .kpi-card span {
     display: block;
 
     color: #6b7280;
-    font-size: 13px;
+
+    font-size: 12px;
 
     margin-bottom: 8px;
 }
 
+
 .kpi-card strong {
-    font-size: 28px;
+    display: block;
+
     color: #0b3a63;
+
+    font-size: 28px;
 }
 
-/* =========================
-   Filter
-   ========================= */
+
+/* =========================================================
+   FILTER
+   ========================================================= */
 
 .filter-card {
+    display: flex;
+
+    gap: 10px;
+
     background: white;
-    padding: 18px;
+
+    padding: 16px;
 
     border-radius: 8px;
 
-    display: flex;
-    gap: 10px;
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.05);
 
     margin-bottom: 20px;
-
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
+
 
 .filter-card input,
 .filter-card select {
-    padding: 10px;
+    height: 38px;
+
+    padding: 0 11px;
 
     border: 1px solid #d1d5db;
+
     border-radius: 5px;
 
-    font-size: 14px;
+    font-size: 13px;
+
+    outline: none;
 }
+
 
 .filter-card input {
     flex: 1;
 }
 
+
+.filter-card input:focus,
+.filter-card select:focus {
+    border-color: #1d70b8;
+}
+
+
 .filter-card button {
-    padding: 10px 15px;
+    height: 38px;
+
+    padding: 0 15px;
 
     border: 1px solid #d1d5db;
+
     background: #f9fafb;
 
     border-radius: 5px;
 
+    font-size: 13px;
+
     cursor: pointer;
 }
 
-/* =========================
-   Table
-   ========================= */
+
+.filter-card button:hover {
+    background: #eef3f8;
+}
+
+
+/* =========================================================
+   NCA TABLE
+   ========================================================= */
 
 .table-card {
     background: white;
+
     border-radius: 8px;
 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.05);
 
     overflow: hidden;
 }
 
+
 .table-header {
     padding: 18px 20px;
+
     border-bottom: 1px solid #e5e7eb;
 }
 
+
 .table-header h2 {
     color: #0b3a63;
-    font-size: 18px;
+
+    font-size: 17px;
 }
 
+
 .table-wrapper {
+    width: 100%;
+
     overflow-x: auto;
 }
 
+
 table {
     width: 100%;
+
     border-collapse: collapse;
 }
+
 
 th {
     background: #eef3f8;
@@ -295,8 +622,13 @@ th {
 
     padding: 12px 15px;
 
-    font-size: 13px;
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
 }
+
 
 td {
     padding: 13px 15px;
@@ -306,53 +638,133 @@ td {
     font-size: 13px;
 }
 
-tr:hover td {
+
+tbody tr:hover td {
     background: #f9fafb;
 }
 
+
 .empty-state {
     text-align: center;
+
     color: #9ca3af;
-    padding: 30px;
+
+    padding: 35px !important;
 }
 
-/* =========================
-   Responsive
-   ========================= */
+
+/* =========================================================
+   LOGIN SUCCESS
+   ========================================================= */
+
+.login-success {
+    text-align: center;
+}
+
+
+.login-success h2 {
+    color: #0b3a63;
+
+    margin-bottom: 15px;
+}
+
+
+.login-success p {
+    font-size: 13px;
+
+    margin-bottom: 7px;
+
+    color: #4b5563;
+}
+
+
+.login-success button {
+    width: 100%;
+
+    height: 42px;
+
+    background: #0b3a63;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 800px) {
 
     .app-header {
+        padding: 12px 18px;
+
         flex-direction: column;
+
         align-items: flex-start;
+
         gap: 12px;
     }
 
+
     .header-right {
         width: 100%;
-        justify-content: space-between;
+
+        justify-content: flex-end;
     }
+
 
     .kpi-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(2, 1fr);
     }
 
+
     .page-header {
-        flex-direction: column;
         align-items: flex-start;
+
+        flex-direction: column;
+
         gap: 15px;
     }
 
 }
 
+
 @media (max-width: 500px) {
+
+    .login-page {
+        padding: 15px;
+    }
+
+
+    #login-form {
+        padding: 25px;
+    }
+
 
     .kpi-grid {
         grid-template-columns: 1fr;
     }
 
+
     .filter-card {
         flex-direction: column;
+    }
+
+
+    .header-right {
+        justify-content: space-between;
+    }
+
+
+    .user-info {
+        text-align: left;
     }
 
 }
