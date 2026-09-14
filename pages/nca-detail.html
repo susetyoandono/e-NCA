@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>e-NCA | NCA Detail</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- =========================
+         HEADER
+         ========================= -->
+
+    <header class="app-header">
+
+        <div class="header-left">
+
+            <div class="app-title">
+                e-NCA
+            </div>
+
+            <div class="app-subtitle">
+                Electronic Non-Conformance Application
+            </div>
+
+        </div>
+
+
+        <div class="header-right">
+
+            <div class="user-info">
+
+                <strong id="user-name">
+                    Loading...
+                </strong>
+
+                <span id="user-role">
+                    Loading...
+                </span>
+
+            </div>
+
+
+            <button
+                id="logout-button"
+                class="logout-button"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN
+         ========================= -->
+
+    <main class="container">
+
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    NCA Detail
+                </h1>
+
+                <p>
+                    Non-Conformance record details
+                </p>
+
+            </div>
+
+
+            <button
+                id="back-button"
+                class="secondary-button"
+            >
+                ← Back to Dashboard
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+             NCA INFORMATION
+             ========================= -->
+
+        <section class="form-card">
+
+
+            <div class="form-section-title">
+
+                NCA Information
+
+            </div>
+
+
+            <div class="detail-grid">
+
+
+                <div class="detail-item">
+
+                    <span>
+                        NCA Number
+                    </span>
+
+                    <strong id="nca-number">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        NCA Status
+                    </span>
+
+                    <strong id="nca-status">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        Approval Status
+                    </span>
+
+                    <strong id="approval-status">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        Created By
+                    </span>
+
+                    <strong id="created-by">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        Created Date
+                    </span>
+
+                    <strong id="created-date">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        Current Assignee
+                    </span>
+
+                    <strong id="current-assignee">
+                        -
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             WORKFLOW
+             ========================= -->
+
+        <section class="form-card workflow-card">
+
+
+            <div class="form-section-title">
+
+                Workflow History
+
+            </div>
+
+
+            <div
+                id="workflow-history"
+                class="workflow-history"
+            >
+
+                Loading...
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+    <script
+        type="module"
+        src="../js/nca-detail.js"
+    ></script>
+
+</body>
+
+</html>
