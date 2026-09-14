@@ -66,7 +66,7 @@
 
 
     <!-- =====================================================
-         MAIN CONTENT
+         MAIN
     ====================================================== -->
 
     <main class="container">
@@ -99,6 +99,35 @@
                 <h2>
                     NCA Information
                 </h2>
+
+            </div>
+
+
+            <!-- QR SCAN AREA -->
+
+            <div class="qr-scan-card">
+
+                <div>
+
+                    <strong>
+                        Flowsheet QR
+                    </strong>
+
+                    <p>
+                        Scan Flowsheet QR to automatically fill
+                        Part Number, Part Name, Lot Number,
+                        Reel Number and Machine / Mold No.
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="scan-flowsheet-qr"
+                    class="secondary-button"
+                >
+                    📷 Scan Flowsheet QR
+                </button>
 
             </div>
 
@@ -179,10 +208,13 @@
                 <div class="form-group">
 
                     <label for="defect-name">
+
                         Defect Name
+
                         <span class="required">
                             *
                         </span>
+
                     </label>
 
                     <input
@@ -200,10 +232,13 @@
                 <div class="form-group">
 
                     <label for="defect-category">
+
                         Defect Category
+
                         <span class="required">
                             *
                         </span>
+
                     </label>
 
                     <select
@@ -249,10 +284,13 @@
                 <div class="form-group">
 
                     <label for="process-station">
+
                         Process / Station
+
                         <span class="required">
                             *
                         </span>
+
                     </label>
 
                     <input
@@ -273,23 +311,15 @@
                         Part Number
                     </label>
 
-                    <div class="input-with-button">
+                    <input
+                        type="text"
+                        id="part-number"
+                        placeholder="Manual input or QR"
+                    >
 
-                        <input
-                            type="text"
-                            id="part-number"
-                            placeholder="Manual input or scan QR"
-                        >
-
-                        <button
-                            type="button"
-                            class="secondary-button"
-                            id="scan-part-qr"
-                        >
-                            📷 Scan QR
-                        </button>
-
-                    </div>
+                    <small class="field-help">
+                        QR index: 1
+                    </small>
 
                 </div>
 
@@ -308,6 +338,73 @@
                         placeholder="Manual input or QR"
                     >
 
+                    <small class="field-help">
+                        QR index: 19
+                    </small>
+
+                </div>
+
+
+                <!-- Lot Number -->
+
+                <div class="form-group">
+
+                    <label for="lot-number">
+                        Lot Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="lot-number"
+                        placeholder="Manual input or QR"
+                    >
+
+                    <small class="field-help">
+                        QR index: 2
+                    </small>
+
+                </div>
+
+
+                <!-- Reel Number -->
+
+                <div class="form-group">
+
+                    <label for="reel-number">
+                        Reel Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="reel-number"
+                        placeholder="Manual input or QR"
+                    >
+
+                    <small class="field-help">
+                        QR index: 18
+                    </small>
+
+                </div>
+
+
+                <!-- Machine / Mold No. -->
+
+                <div class="form-group">
+
+                    <label for="machine-mold-no">
+                        Machine / Mold No.
+                    </label>
+
+                    <input
+                        type="text"
+                        id="machine-mold-no"
+                        placeholder="Manual input or QR"
+                    >
+
+                    <small class="field-help">
+                        QR index: 10
+                    </small>
+
                 </div>
 
 
@@ -316,10 +413,13 @@
                 <div class="form-group">
 
                     <label for="detection-source">
+
                         Detection Source
+
                         <span class="required">
                             *
                         </span>
+
                     </label>
 
                     <select
@@ -361,10 +461,13 @@
                 <div class="form-group form-group-full">
 
                     <label for="defect-description">
+
                         Defect Description
+
                         <span class="required">
                             *
                         </span>
+
                     </label>
 
                     <textarea
@@ -404,10 +507,13 @@
                 <div class="form-group">
 
                     <label for="affected-qty">
+
                         Affected Qty
+
                         <span class="required">
                             *
                         </span>
+
                     </label>
 
                     <input
@@ -427,10 +533,13 @@
                 <div class="form-group">
 
                     <label for="sample-size">
+
                         Sample Size
+
                         <span class="required">
                             *
                         </span>
+
                     </label>
 
                     <input
@@ -450,10 +559,13 @@
                 <div class="form-group">
 
                     <label for="defective-qty">
+
                         Defective Qty
+
                         <span class="required">
                             *
                         </span>
+
                     </label>
 
                     <input
@@ -520,10 +632,11 @@
                         type="file"
                         id="photo-ok"
                         accept="image/*"
+                        capture="environment"
                     >
 
                     <small class="field-help">
-                        Upload reference OK condition
+                        Upload or take photo using camera
                     </small>
 
                 </div>
@@ -541,10 +654,11 @@
                         type="file"
                         id="photo-ng"
                         accept="image/*"
+                        capture="environment"
                     >
 
                     <small class="field-help">
-                        Upload non-conforming condition
+                        Upload or take photo using camera
                     </small>
 
                 </div>
@@ -604,7 +718,7 @@
 
 
         <!-- =================================================
-             FORM ACTION
+             ACTION BUTTONS
         ================================================== -->
 
         <section class="form-actions">
