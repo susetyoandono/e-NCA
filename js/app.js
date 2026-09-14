@@ -1,67 +1,40 @@
-// app.js
-
-// Fungsi untuk mengecek autentikasi sebelum memuat data e-NCA
-async function requireAuth() {
-    const { data: { session }, error } = await supabase.auth.getSession();
-    
-    // Jika tidak ada sesi login yang valid, lempar kembali ke login.html
-    if (!session || error) {
-        window.location.href = 'login.html';
-        return null;
-    }
-    
-    // Jika ada session, Anda bisa mengambil data user (misal role atau departemen) 
-    // sesuai arsitektur "Users" di database untuk mengatur hak akses
-    const user = session.user;
-    return user;
-}
-
-// Jalankan saat aplikasi dimulai
-document.addEventListener('DOMContentLoaded', async () => {
-    const currentUser = await requireAuth();
-    
-    if (currentUser) {
-        console.log('User terautentikasi:', currentUser.email);
-        // Lanjutkan inisialisasi dashboard dan e-NCA di sini...
-    }
-});
-
-
-
 // =========================================================
-// e-NCA - Authentication Test
+// e-NCA - Login
 // =========================================================
 
 import { supabase } from "./supabase.js";
 
-const statusElement = document.getElementById("connection-status");
+const loginForm = document.getElementById("login-form");
+const loginButton = document.getElementById("login-button");
+const loginMessage = document.getElementById("login-message");
 
-async function testLogin() {
+
+// =========================================================
+// LOGIN
+// =========================================================
+
+loginForm.addEventListener("submit", async function (event) {
+
+    event.preventDefault();
+
+    const badgeId = document
+        .getElementById("badge-id")
+        .value
+        .trim();
+
+    const password = document
+        .getElementById("password")
+        .value;
+
+    loginButton.disabled = true;
+    loginButton.textContent = "Logging in...";
+    loginMessage.textContent = "";
 
     try {
 
-        // ==========================================
-        // 1. LOGIN
-        // ==========================================
-
-        const { data: authData, error: authError } =
-            await supabase.auth.signInWithPassword({
-                email: "susetyo.andono@i-pex.com",
-                password: "1234"
-            });
-
-        if (authError) {
-            throw authError;
-        }
-
-        const user = authData.user;
-
-        console.log("Auth Login successful:", user);
-
-
-        // ==========================================
-        // 2. GET PROFILE
-        // ==========================================
+        // -----------------------------------------
+        // 1. Find email from Badge ID
+        // -----------------------------------------
 
         const { data: profile, error: profileError } =
             await supabase
@@ -77,39 +50,96 @@ async function testLogin() {
                         role_name
                     )
                 `)
-                .eq("id", user.id)
+                .eq("badge_id", badgeId)
                 .single();
 
         if (profileError) {
-            throw profileError;
+            throw new Error("Badge ID or password is incorrect.");
         }
 
+        // -----------------------------------------
+        // 2. Check account status
+        // -----------------------------------------
+
+        if (!profile.active) {
+            throw new Error("This account is inactive.");
+        }
+
+        if (!profile.email) {
+            throw new Error("User email is not configured.");
+        }
+
+        // -----------------------------------------
+        // 3. Login using Supabase Auth
+        // -----------------------------------------
+
+        const { data: authData, error: authError } =
+            await supabase.auth.signInWithPassword({
+                email: profile.email,
+                password: password
+            });
+
+        if (authError) {
+            throw new Error("Badge ID or password is incorrect.");
+        }
+
+        console.log("Login successful:", authData.user);
         console.log("Profile:", profile);
 
+        // -----------------------------------------
+        // 4. Temporary success screen
+        // -----------------------------------------
 
-        // ==========================================
-        // 3. DISPLAY RESULT
-        // ==========================================
+        loginForm.innerHTML = `
+            <div class="login-success">
 
-        statusElement.innerHTML = `
-            <strong>LOGIN SUCCESS</strong><br><br>
+                <h2>Login Successful</h2>
 
-            User: ${profile.full_name}<br>
-            Badge ID: ${profile.badge_id}<br>
-            Email: ${profile.email}<br>
-            Role: ${profile.roles.role_code}<br>
-            Role Name: ${profile.roles.role_name}
+                <p>
+                    Welcome, <strong>${profile.full_name}</strong>
+                </p>
+
+                <p>
+                    Badge ID: ${profile.badge_id}
+                </p>
+
+                <p>
+                    Role: ${profile.roles.role_name}
+                </p>
+
+                <br>
+
+                <button id="logout-button">
+                    Logout
+                </button>
+
+            </div>
         `;
+
+        document
+            .getElementById("logout-button")
+            .addEventListener("click", logout);
 
     } catch (error) {
 
-        console.error("Authentication error:", error);
+        console.error("Login error:", error);
 
-        statusElement.innerHTML = `
-            <strong>LOGIN ERROR</strong><br>
-            ${error.message}
-        `;
+        loginMessage.textContent = error.message;
+
+        loginButton.disabled = false;
+        loginButton.textContent = "Login";
     }
-}
 
-testLogin();
+});
+
+
+// =========================================================
+// LOGOUT
+// =========================================================
+
+async function logout() {
+
+    await supabase.auth.signOut();
+
+    location.reload();
+}
