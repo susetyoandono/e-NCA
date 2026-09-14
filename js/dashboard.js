@@ -529,16 +529,13 @@ document
 // =========================================================
 
 document
-    .getElementById(
-        "new-nca-button"
-    )
+    .getElementById("new-nca-button")
     .addEventListener(
         "click",
         () => {
 
-            alert(
-                "Create New NCA page will be implemented next."
-            );
+            window.location.href =
+                "create-nca.html";
 
         }
     );
