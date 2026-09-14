@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>e-NCA | Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- =========================
+         HEADER
+         ========================= -->
+
+    <header class="app-header">
+
+        <div class="header-left">
+
+            <div class="app-title">
+                e-NCA
+            </div>
+
+            <div class="app-subtitle">
+                Electronic Non-Conformance Application
+            </div>
+
+        </div>
+
+
+        <div class="header-right">
+
+            <button
+                id="notification-button"
+                class="notification-button"
+                title="Notifications"
+            >
+
+                🔔
+
+                <span id="notification-count">
+                    0
+                </span>
+
+            </button>
+
+
+            <div class="user-info">
+
+                <strong id="user-name">
+                    Loading...
+                </strong>
+
+                <span id="user-role">
+                    Loading...
+                </span>
+
+            </div>
+
+
+            <button
+                id="logout-button"
+                class="logout-button"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN
+         ========================= -->
+
+    <main class="container">
+
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p>
+                    Non-Conformance monitoring and management
+                </p>
+
+            </div>
+
+
+            <button
+                id="new-nca-button"
+                class="primary-button"
+            >
+                + Create New NCA
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+             KPI CARDS
+             ========================= -->
+
+        <section class="kpi-grid">
+
+
+            <div class="kpi-card">
+
+                <span>
+                    Total NCA
+                </span>
+
+                <strong id="kpi-total">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <span>
+                    Draft
+                </span>
+
+                <strong id="kpi-draft">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <span>
+                    On Hold
+                </span>
+
+                <strong id="kpi-hold">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <span>
+                    Closed
+                </span>
+
+                <strong id="kpi-closed">
+                    0
+                </strong>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =========================
+             FILTER
+             ========================= -->
+
+        <section class="filter-card">
+
+
+            <input
+                type="text"
+                id="search-nca"
+                placeholder="Search NCA Number..."
+            >
+
+
+            <select id="status-filter">
+
+                <option value="">
+                    All Status
+                </option>
+
+                <option value="DRAFT">
+                    Draft
+                </option>
+
+                <option value="ON HOLD">
+                    On Hold
+                </option>
+
+                <option value="CLOSED">
+                    Closed
+                </option>
+
+            </select>
+
+
+            <button id="clear-filter">
+                Clear
+            </button>
+
+
+        </section>
+
+
+        <!-- =========================
+             NCA TABLE
+             ========================= -->
+
+        <section class="table-card">
+
+
+            <div class="table-header">
+
+                <h2>
+                    NCA List
+                </h2>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                NCA Number
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Approval Status
+                            </th>
+
+                            <th>
+                                Created
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="nca-table-body">
+
+                        <tr>
+
+                            <td
+                                colspan="4"
+                                class="empty-state"
+                            >
+                                Loading...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =========================
+         DASHBOARD JAVASCRIPT
+         ========================= -->
+
+    <script
+        type="module"
+        src="../js/dashboard.js"
+    ></script>
+
+
+</body>
+
+</html>
