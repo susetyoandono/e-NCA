@@ -19,12 +19,11 @@
 
 </head>
 
-
 <body>
 
-    <!-- =========================
+    <!-- =====================================================
          HEADER
-         ========================= -->
+    ====================================================== -->
 
     <header class="app-header">
 
@@ -40,7 +39,6 @@
 
         </div>
 
-
         <div class="header-right">
 
             <div class="user-info">
@@ -55,7 +53,6 @@
 
             </div>
 
-
             <button
                 id="logout-button"
                 class="logout-button"
@@ -68,12 +65,11 @@
     </header>
 
 
-    <!-- =========================
-         MAIN
-         ========================= -->
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
 
     <main class="container">
-
 
         <div class="page-header">
 
@@ -89,36 +85,32 @@
 
             </div>
 
-
-            <button
-                id="back-button"
-                class="secondary-button"
-            >
-                ← Back to Dashboard
-            </button>
-
         </div>
 
 
-        <!-- =========================
-             FORM
-             ========================= -->
+        <!-- =================================================
+             NCA INFORMATION
+        ================================================== -->
 
         <section class="form-card">
 
-            <div class="form-section-title">
-                NCA Information
+            <div class="section-title">
+
+                <h2>
+                    NCA Information
+                </h2>
+
             </div>
 
 
             <div class="form-grid">
 
 
-                <!-- NCA NUMBER -->
+                <!-- NCA Number -->
 
-                <div class="form-field">
+                <div class="form-group">
 
-                    <label>
+                    <label for="nca-number">
                         NCA Number
                     </label>
 
@@ -131,11 +123,28 @@
                 </div>
 
 
-                <!-- CREATED BY -->
+                <!-- Reported Date -->
 
-                <div class="form-field">
+                <div class="form-group">
 
-                    <label>
+                    <label for="reported-date">
+                        Reported Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="reported-date"
+                        readonly
+                    >
+
+                </div>
+
+
+                <!-- Created By -->
+
+                <div class="form-group">
+
+                    <label for="created-by">
                         Created By
                     </label>
 
@@ -148,9 +157,26 @@
                 </div>
 
 
-                <!-- DEFECT NAME -->
+                <!-- Department -->
 
-                <div class="form-field full-width">
+                <div class="form-group">
+
+                    <label for="department">
+                        Department
+                    </label>
+
+                    <input
+                        type="text"
+                        id="department"
+                        readonly
+                    >
+
+                </div>
+
+
+                <!-- Defect Name -->
+
+                <div class="form-group">
 
                     <label for="defect-name">
                         Defect Name
@@ -169,58 +195,448 @@
                 </div>
 
 
-                <!-- DESCRIPTION -->
+                <!-- Defect Category -->
 
-                <div class="form-field full-width">
+                <div class="form-group">
 
-                    <label for="description">
-                        Description
+                    <label for="defect-category">
+                        Defect Category
+                        <span class="required">
+                            *
+                        </span>
                     </label>
 
-                    <textarea
-                        id="description"
-                        rows="5"
-                        placeholder="Enter defect description"
-                    ></textarea>
+                    <select
+                        id="defect-category"
+                        required
+                    >
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <option value="DIMENSION">
+                            Dimension
+                        </option>
+
+                        <option value="APPEARANCE">
+                            Appearance
+                        </option>
+
+                        <option value="FUNCTION">
+                            Function
+                        </option>
+
+                        <option value="MATERIAL">
+                            Material
+                        </option>
+
+                        <option value="PROCESS">
+                            Process
+                        </option>
+
+                        <option value="OTHER">
+                            Other
+                        </option>
+
+                    </select>
 
                 </div>
 
 
+                <!-- Process / Station -->
+
+                <div class="form-group">
+
+                    <label for="process-station">
+                        Process / Station
+                        <span class="required">
+                            *
+                        </span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="process-station"
+                        placeholder="Enter process or station"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Part Number -->
+
+                <div class="form-group">
+
+                    <label for="part-number">
+                        Part Number
+                    </label>
+
+                    <div class="input-with-button">
+
+                        <input
+                            type="text"
+                            id="part-number"
+                            placeholder="Manual input or scan QR"
+                        >
+
+                        <button
+                            type="button"
+                            class="secondary-button"
+                            id="scan-part-qr"
+                        >
+                            📷 Scan QR
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Part Name -->
+
+                <div class="form-group">
+
+                    <label for="part-name">
+                        Part Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="part-name"
+                        placeholder="Manual input or QR"
+                    >
+
+                </div>
+
+
+                <!-- Detection Source -->
+
+                <div class="form-group">
+
+                    <label for="detection-source">
+                        Detection Source
+                        <span class="required">
+                            *
+                        </span>
+                    </label>
+
+                    <select
+                        id="detection-source"
+                        required
+                    >
+
+                        <option value="">
+                            Select source
+                        </option>
+
+                        <option value="PRODUCTION">
+                            Production
+                        </option>
+
+                        <option value="QC">
+                            QC
+                        </option>
+
+                        <option value="CUSTOMER">
+                            Customer
+                        </option>
+
+                        <option value="AUDIT">
+                            Audit
+                        </option>
+
+                        <option value="OTHER">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Defect Description -->
+
+                <div class="form-group form-group-full">
+
+                    <label for="defect-description">
+                        Defect Description
+                        <span class="required">
+                            *
+                        </span>
+                    </label>
+
+                    <textarea
+                        id="defect-description"
+                        rows="4"
+                        placeholder="Describe the non-conformance..."
+                        required
+                    ></textarea>
+
+                </div>
+
             </div>
-
-
-            <!-- =========================
-                 FORM ACTION
-                 ========================= -->
-
-            <div class="form-actions">
-
-                <button
-                    type="button"
-                    id="cancel-button"
-                    class="secondary-button"
-                >
-                    Cancel
-                </button>
-
-
-                <button
-                    type="button"
-                    id="save-button"
-                    class="primary-button"
-                >
-                    Save NCA
-                </button>
-
-            </div>
-
-
-            <div
-                id="form-message"
-                class="form-message"
-            ></div>
 
         </section>
+
+
+        <!-- =================================================
+             QUANTITY / IMPACT
+        ================================================== -->
+
+        <section class="form-card">
+
+            <div class="section-title">
+
+                <h2>
+                    Quantity / Impact
+                </h2>
+
+            </div>
+
+
+            <div class="form-grid">
+
+
+                <!-- Affected Qty -->
+
+                <div class="form-group">
+
+                    <label for="affected-qty">
+                        Affected Qty
+                        <span class="required">
+                            *
+                        </span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="affected-qty"
+                        min="0"
+                        step="1"
+                        placeholder="0"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Sample Size -->
+
+                <div class="form-group">
+
+                    <label for="sample-size">
+                        Sample Size
+                        <span class="required">
+                            *
+                        </span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="sample-size"
+                        min="0"
+                        step="1"
+                        placeholder="0"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Defective Qty -->
+
+                <div class="form-group">
+
+                    <label for="defective-qty">
+                        Defective Qty
+                        <span class="required">
+                            *
+                        </span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="defective-qty"
+                        min="0"
+                        step="1"
+                        placeholder="0"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Defective % -->
+
+                <div class="form-group">
+
+                    <label for="defective-percent">
+                        % Defective
+                    </label>
+
+                    <input
+                        type="text"
+                        id="defective-percent"
+                        value="0.00 %"
+                        readonly
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             EVIDENCE
+        ================================================== -->
+
+        <section class="form-card">
+
+            <div class="section-title">
+
+                <h2>
+                    Evidence
+                </h2>
+
+            </div>
+
+
+            <div class="form-grid">
+
+
+                <!-- Photo OK -->
+
+                <div class="form-group">
+
+                    <label for="photo-ok">
+                        Photo OK
+                    </label>
+
+                    <input
+                        type="file"
+                        id="photo-ok"
+                        accept="image/*"
+                    >
+
+                    <small class="field-help">
+                        Upload reference OK condition
+                    </small>
+
+                </div>
+
+
+                <!-- Photo NG -->
+
+                <div class="form-group">
+
+                    <label for="photo-ng">
+                        Photo NG
+                    </label>
+
+                    <input
+                        type="file"
+                        id="photo-ng"
+                        accept="image/*"
+                    >
+
+                    <small class="field-help">
+                        Upload non-conforming condition
+                    </small>
+
+                </div>
+
+
+                <!-- Attachment 1 -->
+
+                <div class="form-group">
+
+                    <label for="attachment-1">
+                        Attachment 1
+                    </label>
+
+                    <input
+                        type="file"
+                        id="attachment-1"
+                    >
+
+                </div>
+
+
+                <!-- Attachment 2 -->
+
+                <div class="form-group">
+
+                    <label for="attachment-2">
+                        Attachment 2
+                    </label>
+
+                    <input
+                        type="file"
+                        id="attachment-2"
+                    >
+
+                </div>
+
+
+                <!-- Attachment Description -->
+
+                <div class="form-group form-group-full">
+
+                    <label for="attachment-description">
+                        Attachment Description
+                    </label>
+
+                    <textarea
+                        id="attachment-description"
+                        rows="3"
+                        placeholder="Describe the attached documents if applicable..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FORM ACTION
+        ================================================== -->
+
+        <section class="form-actions">
+
+            <button
+                type="button"
+                id="cancel-button"
+                class="secondary-button"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                id="save-draft-button"
+                class="secondary-button"
+            >
+                Save Draft
+            </button>
+
+            <button
+                type="button"
+                id="submit-button"
+                class="primary-button"
+            >
+                Submit to QC Supervisor
+            </button>
+
+        </section>
+
+
+        <div id="form-message"></div>
 
     </main>
 
