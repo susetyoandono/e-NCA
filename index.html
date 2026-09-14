@@ -11,38 +11,51 @@
 
 <body>
 
-    <header class="app-header">
-        <div>
-            <h1>e-NCA</h1>
-            <p>Electronic Non-Conformance Application</p>
-        </div>
-    </header>
+    <main class="login-page">
 
-    <main class="container">
+        <div class="login-card">
 
-        <section class="welcome-card">
-            <h2>Welcome to e-NCA</h2>
-
-            <p>
-                Electronic Non-Conformance Application
-            </p>
-
-            <div id="connection-status">
-                Checking system connection...
+            <div class="login-header">
+                <h1>e-NCA</h1>
+                <p>Electronic Non-Conformance Application</p>
+                <span>PT I-PEX Indonesia Inc.</span>
             </div>
-            <hr style="margin: 20px 0;">
-            <h3>Buat DRAFT NCA</h3>
-            <form id="form-nca" style="margin-top: 15px;">
-                <input type="text" id="nca-number" placeholder="Nomor NCA (Contoh: NCA-260912001)" required style="padding: 10px; width: 100%; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;">
-                <button type="submit" style="padding: 10px 20px; background: #0b3a63; color: white; border: none; border-radius: 4px; cursor: pointer;">Create NCA</button>
+
+            <form id="login-form">
+
+                <div class="form-group">
+                    <label for="badge-id">Badge ID</label>
+                    <input
+                        type="text"
+                        id="badge-id"
+                        placeholder="Enter Badge ID"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter Password"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <button type="submit" id="login-button">
+                    Login
+                </button>
+
+                <div id="login-message"></div>
+
             </form>
-        </section>
+
+        </div>
 
     </main>
-
-    <footer>
-        <p>PT I-PEX Indonesia Inc.</p>
-    </footer>
 
     <script type="module" src="js/app.js"></script>
 
