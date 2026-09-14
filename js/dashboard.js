@@ -323,18 +323,7 @@ function displayNcaTable(records) {
         }).join("");
 }
 
-.nca-link {
-    color: #1d70b8;
 
-    font-weight: 600;
-
-    text-decoration: none;
-}
-
-
-.nca-link:hover {
-    text-decoration: underline;
-}
 // =========================================================
 // SEARCH + FILTER
 // =========================================================
