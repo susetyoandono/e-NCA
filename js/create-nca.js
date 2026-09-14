@@ -279,7 +279,61 @@ async function saveNca() {
 
             throw error;
         }
+        
+// -----------------------------------------
+// Create Initial Workflow History
+// -----------------------------------------
 
+const {
+    error: workflowError
+} = await supabase
+    .from("nca_workflow")
+    .insert([
+        {
+            nca_id: data.id,
+
+            from_status: null,
+
+            to_status: "DRAFT",
+
+            from_approval_status: null,
+
+            to_approval_status:
+                "WAITING QC SUPERVISOR",
+
+            action_by:
+                currentProfile.id,
+
+            action_type:
+                "CREATE",
+
+            comments:
+                "NCA created by user."
+        }
+    ]);
+
+
+if (workflowError) {
+
+    console.error(
+        "Workflow history error:",
+        workflowError
+    );
+
+    // NCA already exists, so don't delete it.
+    // Just inform the user.
+
+    showMessage(
+        "NCA created, but workflow history could not be recorded.",
+        "error"
+    );
+
+} else {
+
+    console.log(
+        "Initial workflow history created."
+    );
+}
 
         console.log(
             "NCA created:",
