@@ -17,8 +17,11 @@ let currentProfile = null;
 // DOM ELEMENTS
 // =========================================================
 
-const userName = document.getElementById("user-name");
-const userRole = document.getElementById("user-role");
+const userName =
+    document.getElementById("user-name");
+
+const userRole =
+    document.getElementById("user-role");
 
 const ncaNumberInput =
     document.getElementById("nca-number");
@@ -74,6 +77,23 @@ const defectiveQtyInput =
 const defectivePercentInput =
     document.getElementById("defective-percent");
 
+const photoOkInput =
+    document.getElementById("photo-ok");
+
+const photoNgInput =
+    document.getElementById("photo-ng");
+
+const attachment1Input =
+    document.getElementById("attachment-1");
+
+const attachment2Input =
+    document.getElementById("attachment-2");
+
+const attachmentDescriptionInput =
+    document.getElementById(
+        "attachment-description"
+    );
+
 const cancelButton =
     document.getElementById("cancel-button");
 
@@ -87,7 +107,9 @@ const logoutButton =
     document.getElementById("logout-button");
 
 const scanQRButton =
-    document.getElementById("scan-flowsheet-qr");
+    document.getElementById(
+        "scan-flowsheet-qr"
+    );
 
 const formMessage =
     document.getElementById("form-message");
@@ -166,26 +188,27 @@ async function loadCurrentUser() {
     const {
         data: profile,
         error: profileError
-    } = await supabase
-        .from("profiles")
-        .select(`
-            id,
-            badge_id,
-            full_name,
-            email,
-            active,
-            department_id,
-            departments (
-                department_code,
-                department_name
-            ),
-            roles (
-                role_code,
-                role_name
-            )
-        `)
-        .eq("id", currentUser.id)
-        .single();
+    } =
+        await supabase
+            .from("profiles")
+            .select(`
+                id,
+                badge_id,
+                full_name,
+                email,
+                active,
+                department_id,
+                departments (
+                    department_code,
+                    department_name
+                ),
+                roles (
+                    role_code,
+                    role_name
+                )
+            `)
+            .eq("id", currentUser.id)
+            .single();
 
 
     if (
@@ -216,8 +239,6 @@ async function loadCurrentUser() {
         profile;
 
 
-    // Header
-
     userName.textContent =
         profile.full_name ||
         profile.badge_id ||
@@ -228,8 +249,6 @@ async function loadCurrentUser() {
         profile.roles?.role_name ||
         "-";
 
-
-    // Form
 
     createdByInput.value =
         profile.full_name ||
@@ -332,7 +351,7 @@ function setReportedDate() {
 
 
 // =========================================================
-// DEFECTIVE % CALCULATION
+// DEFECTIVE %
 // =========================================================
 
 function setupDefectiveCalculation() {
@@ -398,7 +417,7 @@ function calculateDefectivePercent() {
 
 
 // =========================================================
-// FLOWSHEET QR PARSER
+// QR PARSER
 // =========================================================
 
 function parseFlowsheetQR(qrText) {
@@ -421,19 +440,9 @@ function parseFlowsheetQR(qrText) {
             .split(",");
 
 
-    /*
-        QR Mapping
-
-        Index 0  = QR Identifier
-        Index 1  = Part Number
-        Index 2  = Lot Number
-        Index 10 = Machine / Mold No.
-        Index 18 = Reel Number
-        Index 19 = Part Name
-    */
-
-
-    if (fields.length <= 19) {
+    if (
+        fields.length <= 19
+    ) {
 
         throw new Error(
             "Invalid Flowsheet QR format. " +
@@ -469,7 +478,7 @@ function parseFlowsheetQR(qrText) {
 
 
 // =========================================================
-// APPLY QR DATA TO FORM
+// APPLY QR DATA
 // =========================================================
 
 function applyQRData(qrData) {
@@ -503,7 +512,7 @@ function applyQRData(qrData) {
 
 
 // =========================================================
-// QR SCANNER - TEMPORARY TEST
+// TEST QR PARSER
 // =========================================================
 
 function testQRParser() {
@@ -794,6 +803,361 @@ function getFormData() {
 
 
 // =========================================================
+// FILE HELPERS
+// =========================================================
+
+function getFileExtension(
+    fileName
+) {
+
+    const parts =
+        fileName.split(".");
+
+
+    if (
+        parts.length <= 1
+    ) {
+
+        return "";
+
+    }
+
+
+    return (
+        "." +
+        parts
+            .pop()
+            .toLowerCase()
+    );
+
+}
+
+
+function sanitizeFileName(
+    fileName
+) {
+
+    return fileName
+        .replace(
+            /[^a-zA-Z0-9._-]/g,
+            "_"
+        );
+
+}
+
+
+function generateUniqueFileName(
+    prefix,
+    originalName
+) {
+
+    const extension =
+        getFileExtension(
+            originalName
+        );
+
+
+    const timestamp =
+        Date.now();
+
+
+    const random =
+        Math.random()
+            .toString(36)
+            .substring(2, 8);
+
+
+    return (
+        `${prefix}_${timestamp}_${random}${extension}`
+    );
+
+}
+
+
+// =========================================================
+// UPLOAD ONE FILE
+// =========================================================
+
+async function uploadAttachment(
+    ncaId,
+    ncaNumber,
+    file,
+    fileType,
+    prefix
+) {
+
+    if (!file) {
+
+        return null;
+
+    }
+
+
+    const safeOriginalName =
+        sanitizeFileName(
+            file.name
+        );
+
+
+    const uniqueFileName =
+        generateUniqueFileName(
+            prefix,
+            safeOriginalName
+        );
+
+
+    const folder =
+        ncaNumber;
+
+
+    const storagePath =
+        `${folder}/${uniqueFileName}`;
+
+
+    // ---------------------------------------------
+    // Upload to Storage
+    // ---------------------------------------------
+
+    const {
+        error: uploadError
+    } =
+        await supabase
+            .storage
+            .from("nca-attachments")
+            .upload(
+                storagePath,
+                file,
+                {
+                    cacheControl:
+                        "3600",
+
+                    upsert:
+                        false
+                }
+            );
+
+
+    if (uploadError) {
+
+        throw new Error(
+            `Failed to upload ${fileType}: ` +
+            uploadError.message
+        );
+
+    }
+
+
+    // ---------------------------------------------
+    // Save metadata
+    // ---------------------------------------------
+
+    const {
+        error: metadataError
+    } =
+        await supabase
+            .from("nca_attachments")
+            .insert({
+
+                nca_id:
+                    ncaId,
+
+                uploaded_by:
+                    currentProfile.id,
+
+                file_type:
+                    fileType,
+
+                file_name:
+                    file.name,
+
+                storage_path:
+                    storagePath,
+
+                attachment_description:
+                    attachmentDescriptionInput
+                        .value
+                        .trim() ||
+                    null
+
+            });
+
+
+    if (metadataError) {
+
+        // Try to remove uploaded file
+        await supabase
+            .storage
+            .from("nca-attachments")
+            .remove([
+                storagePath
+            ]);
+
+
+        throw new Error(
+            `Failed to save ${fileType} metadata: ` +
+            metadataError.message
+        );
+
+    }
+
+
+    return {
+
+        storagePath:
+            storagePath,
+
+        fileName:
+            file.name,
+
+        fileType:
+            fileType
+
+    };
+
+}
+
+
+// =========================================================
+// UPLOAD ALL EVIDENCE
+// =========================================================
+
+async function uploadAllEvidence(
+    nca
+) {
+
+    const uploadedFiles = [];
+
+
+    // ---------------------------------------------
+    // Photo OK
+    // ---------------------------------------------
+
+    if (
+        photoOkInput.files.length > 0
+    ) {
+
+        const result =
+            await uploadAttachment(
+
+                nca.id,
+
+                nca.nca_number,
+
+                photoOkInput.files[0],
+
+                "PHOTO_OK",
+
+                "photo-ok"
+
+            );
+
+
+        uploadedFiles.push(
+            result
+        );
+
+    }
+
+
+    // ---------------------------------------------
+    // Photo NG
+    // ---------------------------------------------
+
+    if (
+        photoNgInput.files.length > 0
+    ) {
+
+        const result =
+            await uploadAttachment(
+
+                nca.id,
+
+                nca.nca_number,
+
+                photoNgInput.files[0],
+
+                "PHOTO_NG",
+
+                "photo-ng"
+
+            );
+
+
+        uploadedFiles.push(
+            result
+        );
+
+    }
+
+
+    // ---------------------------------------------
+    // Attachment 1
+    // ---------------------------------------------
+
+    if (
+        attachment1Input.files.length > 0
+    ) {
+
+        const result =
+            await uploadAttachment(
+
+                nca.id,
+
+                nca.nca_number,
+
+                attachment1Input.files[0],
+
+                "ATTACHMENT_1",
+
+                "attachment-1"
+
+            );
+
+
+        uploadedFiles.push(
+            result
+        );
+
+    }
+
+
+    // ---------------------------------------------
+    // Attachment 2
+    // ---------------------------------------------
+
+    if (
+        attachment2Input.files.length > 0
+    ) {
+
+        const result =
+            await uploadAttachment(
+
+                nca.id,
+
+                nca.nca_number,
+
+                attachment2Input.files[0],
+
+                "ATTACHMENT_2",
+
+                "attachment-2"
+
+            );
+
+
+        uploadedFiles.push(
+            result
+        );
+
+    }
+
+
+    return uploadedFiles;
+
+}
+
+
+// =========================================================
 // SAVE NCA
 // =========================================================
 
@@ -821,14 +1185,8 @@ async function saveNCA(
             getFormData();
 
 
-        const ncaStatus =
-            "DRAFT";
-
-
         const approvalStatus =
-            submitToQC
-                ? "WAITING QC SUPERVISOR"
-                : "WAITING QC SUPERVISOR";
+            "WAITING QC SUPERVISOR";
 
 
         // ---------------------------------------------
@@ -853,7 +1211,7 @@ async function saveNCA(
                         formData.created_by,
 
                     nca_status:
-                        ncaStatus,
+                        "DRAFT",
 
                     approval_status:
                         approvalStatus,
@@ -913,7 +1271,22 @@ async function saveNCA(
 
 
         // ---------------------------------------------
-        // WORKFLOW HISTORY
+        // UPLOAD EVIDENCE
+        // ---------------------------------------------
+
+        showMessage(
+            "NCA saved. Uploading evidence...",
+            "info"
+        );
+
+
+        await uploadAllEvidence(
+            nca
+        );
+
+
+        // ---------------------------------------------
+        // WORKFLOW
         // ---------------------------------------------
 
         const {
@@ -1012,41 +1385,25 @@ async function saveNCA(
 function setupButtons() {
 
 
-    // ---------------------------------------------
-    // Save Draft
-    // ---------------------------------------------
-
     saveDraftButton.addEventListener(
         "click",
         () => {
 
-            saveNCA(
-                false
-            );
+            saveNCA(false);
 
         }
     );
 
-
-    // ---------------------------------------------
-    // Submit
-    // ---------------------------------------------
 
     submitButton.addEventListener(
         "click",
         () => {
 
-            saveNCA(
-                true
-            );
+            saveNCA(true);
 
         }
     );
 
-
-    // ---------------------------------------------
-    // Cancel
-    // ---------------------------------------------
 
     cancelButton.addEventListener(
         "click",
@@ -1058,10 +1415,6 @@ function setupButtons() {
         }
     );
 
-
-    // ---------------------------------------------
-    // Logout
-    // ---------------------------------------------
 
     logoutButton.addEventListener(
         "click",
@@ -1075,10 +1428,6 @@ function setupButtons() {
         }
     );
 
-
-    // ---------------------------------------------
-    // QR
-    // ---------------------------------------------
 
     scanQRButton.addEventListener(
         "click",
@@ -1119,7 +1468,6 @@ function showMessage(
 
     formMessage.textContent =
         message;
-
 
     formMessage.className =
         `form-message ${type}`;
