@@ -345,7 +345,7 @@ async function loadUsers() {
 
     tableBody.innerHTML = `
         <tr>
-            <td colspan="9" class="table-loading">
+            <td colspan="10" class="table-loading">
                 Loading users...
             </td>
         </tr>
@@ -368,6 +368,11 @@ async function loadUsers() {
                 id,
                 department_code,
                 department_name
+            ),
+            job_positions (
+                id,
+                position_code,
+                position_name
             )
         `)
         .order("full_name");
@@ -404,6 +409,10 @@ function renderUsers() {
             "filter-department"
         ).value;
 
+    const jobPosition =
+    document.getElementById(
+        "filter-job-position"
+    ).value;
 
     const role =
         document.getElementById(
@@ -435,7 +444,6 @@ function renderUsers() {
                 .join(" ")
                 .toLowerCase();
 
-
             if (
                 search &&
                 !searchable.includes(search)
@@ -452,6 +460,13 @@ function renderUsers() {
                 return false;
             }
 
+            if (
+                jobPosition &&
+                String(user.job_position_id) !==
+                String(jobPosition)
+            ) {
+                return false;
+            }
 
             if (
                 role &&
@@ -487,7 +502,7 @@ function renderUsers() {
 
         tableBody.innerHTML = `
             <tr>
-                <td colspan="9" class="table-empty">
+                <td colspan="10" class="table-empty">
                     No users found.
                 </td>
             </tr>
@@ -507,6 +522,11 @@ function renderUsers() {
                         ? `${user.departments.department_code} - ${user.departments.department_name}`
                         : "-";
 
+
+                const jobPositionName =
+                    user.job_positions
+                        ? user.job_positions.position_name
+                        : "-";
 
                 const roleName =
                     user.roles
@@ -544,6 +564,12 @@ function renderUsers() {
                         <td>
                             ${escapeHtml(
                                 departmentName
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                jobPositionName
                             )}
                         </td>
 
@@ -681,6 +707,11 @@ function openEditUser(id) {
     ).value =
         user.department_id || "";
 
+    document.getElementById(
+        "job-position-id"
+    ).value =
+        user.job_position_id || "";
+
 
     document.getElementById(
         "role-id"
@@ -761,6 +792,11 @@ async function saveUser(event) {
         department_id:
             document.getElementById(
                 "department-id"
+            ).value || null,
+
+        job_position_id:
+            document.getElementById(
+                "job-position-id"
             ).value || null,
 
         role_id:
@@ -950,6 +986,12 @@ function setupEvents() {
             renderUsers
         );
 
+    document
+    .getElementById("filter-job-position")
+    .addEventListener(
+        "change",
+        renderUsers
+    );
 
     document
         .getElementById("filter-role")
