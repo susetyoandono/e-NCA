@@ -657,21 +657,6 @@ function openAddUser() {
         "user-form-message"
     ).textContent = "";
 
-    const passwordGroup =
-    document.getElementById(
-        "password-group"
-    );
-
-    const passwordInput =
-        document.getElementById(
-            "temporary-password"
-        );
-    
-    passwordGroup.style.display = "";
-    
-    passwordInput.value = "";
-    
-    passwordInput.required = true;
 
     modal.style.display = "flex";
 
@@ -756,15 +741,6 @@ function openEditUser(id) {
         "user-form-message"
     ).textContent = "";
 
-const passwordGroup =
-    document.getElementById(
-        "password-group"
-    );
-
-    const passwordInput =
-        document.getElementById(
-            "temporary-password"
-        );
     
     passwordGroup.style.display = "none";
     
@@ -801,10 +777,6 @@ async function saveUser(event) {
             "user-id"
         ).value;
 
-    const password =
-    document.getElementById(
-        "temporary-password"
-    ).value;
 
     const payload = {
 
@@ -870,23 +842,6 @@ async function saveUser(event) {
     // =============================================
     // CREATE NEW AUTH USER THROUGH EDGE FUNCTION
     // =============================================
-
-    if (!password) {
-
-        message.textContent =
-            "Temporary Password is required.";
-
-        return;
-    }
-
-
-    if (password.length < 8) {
-
-        message.textContent =
-            "Temporary Password must contain at least 8 characters.";
-
-        return;
-    }
 
 
     const {
