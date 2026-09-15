@@ -1292,3 +1292,67 @@ tbody tr:hover td {
     }
 
 }
+
+/* =====================================================
+   FLOWSHEET QR SCANNER
+   ===================================================== */
+
+.qr-scanner-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #d9e1ea;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.qr-scanner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.qr-scanner-help {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+.qr-reader {
+    width: 100%;
+    max-width: 420px;
+    margin: 15px auto 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+}
+
+.qr-reader video {
+    width: 100% !important;
+    border-radius: 8px;
+}
+
+.qr-scan-status {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.qr-scan-status.success {
+    color: #16803c;
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+
+    .qr-scanner-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .qr-scanner-header .btn {
+        width: 100%;
+    }
+
+}
