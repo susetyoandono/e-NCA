@@ -1656,12 +1656,6 @@ function setupButtons() {
         }
     );
 
-
-    scanQRButton.addEventListener(
-        "click",
-        testQRParser
-    );
-
 }
 
 
