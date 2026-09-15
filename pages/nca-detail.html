@@ -1,75 +1,327 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>e-NCA - NCA Detail</title>
 
-    <link rel="stylesheet" href="../css/style.css">
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
 </head>
+
 
 <body>
 
-<header class="app-header">
+<header class="app-header no-print">
+
     <div class="header-left">
-        <div class="app-logo">e-NCA</div>
-        <div class="app-title">Non-Conformity Analysis</div>
+
+        <div class="app-logo">
+            e-NCA
+        </div>
+
+        <div class="app-title">
+            Non-Conformity Analysis
+        </div>
+
     </div>
+
 
     <div class="header-right">
+
         <span id="user-name"></span>
+
         <span id="user-role"></span>
 
-        <button id="logout-button" class="btn btn-secondary">
+        <button
+            id="logout-button"
+            class="btn btn-secondary"
+        >
             Logout
         </button>
+
     </div>
+
 </header>
 
 
 <main class="page-container">
 
+
     <!-- PAGE HEADER -->
-    <div class="page-header">
+
+    <div class="page-header no-print">
+
         <div>
+
             <h1>NCA Detail</h1>
-            <p id="nca-number-title">Loading...</p>
+
+            <p id="nca-number-title">
+                Loading...
+            </p>
+
         </div>
 
-        <button
-            class="btn btn-secondary"
-            onclick="window.location.href='dashboard.html'">
-            Back to Dashboard
-        </button>
+
+        <div class="page-header-actions">
+
+            <button
+                id="print-nca-button"
+                class="btn btn-primary"
+            >
+                Print NCA
+            </button>
+
+
+            <button
+                class="btn btn-secondary"
+                onclick="window.location.href='dashboard.html'"
+            >
+                Back to Dashboard
+            </button>
+
+        </div>
+
     </div>
 
 
+
+    <!-- ================================================= -->
+    <!-- PRINT AREA -->
+    <!-- ================================================= -->
+
+    <div id="print-area">
+
+
+        <!-- PRINT HEADER -->
+
+        <div class="print-nca-header">
+
+            <div class="print-company">
+                I-PEX Indonesia
+            </div>
+
+            <div class="print-document-title">
+                NON-CONFORMITY ANALYSIS
+            </div>
+
+        </div>
+
+
+        <!-- QR + BASIC INFORMATION -->
+
+        <section class="print-nca-top">
+
+            <div
+                id="print-qrcode"
+                class="print-qrcode"
+            ></div>
+
+
+            <div class="print-basic-info">
+
+                <div class="print-field">
+
+                    <span>
+                        NCA ID
+                    </span>
+
+                    <strong id="print-nca-number">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="print-field">
+
+                    <span>
+                        Part Number
+                    </span>
+
+                    <strong id="print-part-number">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="print-field">
+
+                    <span>
+                        Part Name
+                    </span>
+
+                    <strong id="print-part-name">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- DEFECT -->
+
+        <section class="print-defect-section">
+
+            <div class="print-field">
+
+                <span>
+                    Defect Name
+                </span>
+
+                <strong id="print-defect-name">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="print-field print-description">
+
+                <span>
+                    Defect Description
+                </span>
+
+                <div id="print-defect-description">
+                    -
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- PRINT PHOTOS -->
+
+        <section class="print-photo-section">
+
+            <div class="print-photo-box">
+
+                <div class="print-photo-title">
+                    PHOTO OK
+                </div>
+
+                <div
+                    id="print-photo-ok"
+                    class="print-photo-container"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="print-photo-box">
+
+                <div class="print-photo-title">
+                    PHOTO NG
+                </div>
+
+                <div
+                    id="print-photo-ng"
+                    class="print-photo-container"
+                >
+                    -
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- SCREEN DETAIL -->
+    <!-- ================================================= -->
+
+
     <!-- STATUS -->
-    <section class="detail-section">
+
+    <section class="detail-section no-print">
 
         <h2>NCA Status</h2>
 
         <div class="detail-grid">
 
             <div class="detail-item">
-                <label>NCA Status</label>
-                <div id="nca-status" class="detail-value">-</div>
+
+                <label>
+                    NCA Status
+                </label>
+
+                <div
+                    id="nca-status"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
-            <div class="detail-item">
-                <label>Approval Status</label>
-                <div id="approval-status" class="detail-value">-</div>
-            </div>
 
             <div class="detail-item">
-                <label>Current Assignee</label>
-                <div id="current-assignee" class="detail-value">-</div>
+
+                <label>
+                    Approval Status
+                </label>
+
+                <div
+                    id="approval-status"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
-                <label>Created Date</label>
-                <div id="created-date" class="detail-value">-</div>
+
+                <label>
+                    Current Assignee
+                </label>
+
+                <div
+                    id="current-assignee"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <label>
+                    Created Date
+                </label>
+
+                <div
+                    id="created-date"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
         </div>
@@ -77,116 +329,287 @@
     </section>
 
 
+
     <!-- NCA INFORMATION -->
-    <section class="detail-section">
+
+    <section class="detail-section no-print">
 
         <h2>NCA Information</h2>
 
         <div class="detail-grid">
 
             <div class="detail-item">
+
                 <label>NCA Number</label>
-                <div id="nca-number" class="detail-value">-</div>
+
+                <div
+                    id="nca-number"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Reported Date</label>
-                <div id="reported-date" class="detail-value">-</div>
+
+                <div
+                    id="reported-date"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Created By</label>
-                <div id="created-by" class="detail-value">-</div>
+
+                <div
+                    id="created-by"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Department</label>
-                <div id="department" class="detail-value">-</div>
+
+                <div
+                    id="department"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Defect Name</label>
-                <div id="defect-name" class="detail-value">-</div>
+
+                <div
+                    id="defect-name"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Defect Category</label>
-                <div id="defect-category" class="detail-value">-</div>
+
+                <div
+                    id="defect-category"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Process / Station</label>
-                <div id="process-station" class="detail-value">-</div>
+
+                <div
+                    id="process-station"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Detection Source</label>
-                <div id="detection-source" class="detail-value">-</div>
+
+                <div
+                    id="detection-source"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Part Number</label>
-                <div id="part-number" class="detail-value">-</div>
+
+                <div
+                    id="part-number"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Part Name</label>
-                <div id="part-name" class="detail-value">-</div>
+
+                <div
+                    id="part-name"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Lot Number</label>
-                <div id="lot-number" class="detail-value">-</div>
+
+                <div
+                    id="lot-number"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Reel Number</label>
-                <div id="reel-number" class="detail-value">-</div>
+
+                <div
+                    id="reel-number"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
+
                 <label>Machine / Mold No.</label>
-                <div id="machine-mold-no" class="detail-value">-</div>
+
+                <div
+                    id="machine-mold-no"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
         </div>
 
 
         <div class="detail-item detail-full">
-            <label>Defect Description</label>
-            <div id="defect-description" class="detail-value detail-text">
+
+            <label>
+                Defect Description
+            </label>
+
+            <div
+                id="defect-description"
+                class="detail-value detail-text"
+            >
                 -
             </div>
+
         </div>
 
     </section>
 
 
+
     <!-- QUANTITY -->
-    <section class="detail-section">
+
+    <section class="detail-section no-print">
 
         <h2>Quantity / Impact</h2>
 
         <div class="detail-grid">
 
             <div class="detail-item">
-                <label>Affected Qty</label>
-                <div id="affected-qty" class="detail-value">-</div>
+
+                <label>
+                    Affected Qty
+                </label>
+
+                <div
+                    id="affected-qty"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
-            <div class="detail-item">
-                <label>Sample Size</label>
-                <div id="sample-size" class="detail-value">-</div>
-            </div>
 
             <div class="detail-item">
-                <label>Defective Qty</label>
-                <div id="defective-qty" class="detail-value">-</div>
+
+                <label>
+                    Sample Size
+                </label>
+
+                <div
+                    id="sample-size"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
+
             <div class="detail-item">
-                <label>% Defective</label>
-                <div id="defective-percent" class="detail-value">-</div>
+
+                <label>
+                    Defective Qty
+                </label>
+
+                <div
+                    id="defective-qty"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <label>
+                    % Defective
+                </label>
+
+                <div
+                    id="defective-percent"
+                    class="detail-value"
+                >
+                    -
+                </div>
+
             </div>
 
         </div>
@@ -194,12 +617,19 @@
     </section>
 
 
+
     <!-- EVIDENCE -->
-    <section class="detail-section">
 
-        <h2>Evidence & Attachments</h2>
+    <section class="detail-section no-print">
 
-        <div id="evidence-container" class="evidence-container">
+        <h2>
+            Evidence & Attachments
+        </h2>
+
+        <div
+            id="evidence-container"
+            class="evidence-container"
+        >
 
             <div class="empty-message">
                 Loading evidence...
@@ -210,12 +640,18 @@
     </section>
 
 
+
     <!-- WORKFLOW -->
-    <section class="detail-section">
 
-        <h2>Workflow History</h2>
+    <section class="detail-section no-print">
 
-        <div id="workflow-container">
+        <h2>
+            Workflow History
+        </h2>
+
+        <div
+            id="workflow-container"
+        >
 
             <div class="empty-message">
                 Loading workflow...
@@ -229,7 +665,19 @@
 </main>
 
 
-<script type="module" src="../js/nca-detail.js"></script>
+<!-- QR CODE LIBRARY -->
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
+</script>
+
+
+<script
+    type="module"
+    src="../js/nca-detail.js">
+</script>
+
 
 </body>
+
 </html>
