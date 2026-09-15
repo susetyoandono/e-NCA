@@ -860,9 +860,6 @@ async function saveUser(event) {
                 email:
                     payload.email,
 
-                password:
-                    password,
-
                 department_id:
                     payload.department_id,
 
