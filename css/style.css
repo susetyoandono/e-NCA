@@ -1092,3 +1092,203 @@ tbody tr:hover td {
 .nca-link:hover {
     text-decoration: underline;
 }
+
+/* =====================================================
+   NCA PRINT - A6
+   ===================================================== */
+
+#print-area {
+    display: none;
+}
+
+
+.print-nca-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4mm;
+    margin-bottom: 4mm;
+}
+
+
+.print-company {
+    font-size: 10pt;
+    font-weight: 700;
+}
+
+
+.print-document-title {
+    font-size: 11pt;
+    font-weight: 700;
+}
+
+
+.print-nca-top {
+    display: grid;
+    grid-template-columns: 32mm 1fr;
+    gap: 4mm;
+    margin-bottom: 3mm;
+}
+
+
+.print-qrcode {
+    width: 30mm;
+    height: 30mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.print-qrcode img {
+    width: 30mm;
+    height: 30mm;
+}
+
+
+.print-basic-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2mm;
+}
+
+
+.print-field {
+    font-size: 7.5pt;
+}
+
+
+.print-field span {
+    display: block;
+    font-size: 6.5pt;
+    color: #444;
+    margin-bottom: 0.5mm;
+}
+
+
+.print-field strong {
+    display: block;
+    font-size: 8pt;
+}
+
+
+.print-defect-section {
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    padding: 2mm 0;
+    margin-bottom: 3mm;
+}
+
+
+.print-description {
+    margin-top: 2mm;
+}
+
+
+#print-defect-description {
+    font-size: 7.5pt;
+    line-height: 1.2;
+    max-height: 14mm;
+    overflow: hidden;
+}
+
+
+.print-photo-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3mm;
+}
+
+
+.print-photo-box {
+    border: 1px solid #000;
+    padding: 1.5mm;
+}
+
+
+.print-photo-title {
+    text-align: center;
+    font-size: 7pt;
+    font-weight: 700;
+    margin-bottom: 1mm;
+}
+
+
+.print-photo-container {
+    width: 100%;
+    height: 48mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+
+.print-photo {
+    max-width: 100%;
+    max-height: 48mm;
+    object-fit: contain;
+}
+
+
+/* =====================================================
+   PRINT MEDIA
+   ===================================================== */
+
+@media print {
+
+    @page {
+        size: A6 portrait;
+        margin: 5mm;
+    }
+
+
+    html,
+    body {
+        width: 105mm;
+        height: 148mm;
+        margin: 0;
+        padding: 0;
+        background: #ffffff !important;
+    }
+
+
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+
+    .no-print {
+        display: none !important;
+    }
+
+
+    #print-area {
+        display: block !important;
+        width: 95mm;
+        height: 138mm;
+        overflow: hidden;
+    }
+
+
+    .print-nca-header {
+        margin-bottom: 3mm;
+    }
+
+
+    .print-nca-top {
+        margin-bottom: 2mm;
+    }
+
+
+    .print-photo-container {
+        height: 47mm;
+    }
+
+
+    .print-photo {
+        max-height: 47mm;
+    }
+
+}
