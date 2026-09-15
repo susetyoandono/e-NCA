@@ -11,6 +11,7 @@ let currentProfile = null;
 let users = [];
 let roles = [];
 let departments = [];
+let jobPositions = [];
 
 
 // =====================================================
@@ -38,12 +39,12 @@ async function init() {
 
     try {
 
-        await checkAdmin();
-
         await loadRoles();
-
+        
         await loadDepartments();
-
+        
+        await loadJobPositions();
+        
         await loadUsers();
 
         setupEvents();
@@ -262,6 +263,74 @@ async function loadDepartments() {
             </option>
             `
         );
+
+    });
+
+}
+
+// =====================================================
+// LOAD JOB POSITIONS
+// =====================================================
+
+async function loadJobPositions() {
+
+    const {
+        data,
+        error
+    } = await supabase
+        .from("job_positions")
+        .select("*")
+        .eq("active", true)
+        .order("position_name");
+
+
+    if (error) {
+        throw error;
+    }
+
+
+    jobPositions = data || [];
+
+
+    const filter =
+        document.getElementById(
+            "filter-job-position"
+        );
+
+    const select =
+        document.getElementById(
+            "job-position-id"
+        );
+
+
+    jobPositions.forEach(position => {
+
+        if (filter) {
+
+            filter.insertAdjacentHTML(
+                "beforeend",
+                `
+                <option value="${position.id}">
+                    ${escapeHtml(position.position_name)}
+                </option>
+                `
+            );
+
+        }
+
+
+        if (select) {
+
+            select.insertAdjacentHTML(
+                "beforeend",
+                `
+                <option value="${position.id}">
+                    ${escapeHtml(position.position_name)}
+                </option>
+                `
+            );
+
+        }
 
     });
 
