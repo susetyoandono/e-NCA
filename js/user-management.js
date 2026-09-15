@@ -657,6 +657,21 @@ function openAddUser() {
         "user-form-message"
     ).textContent = "";
 
+    const passwordGroup =
+    document.getElementById(
+        "password-group"
+    );
+
+    const passwordInput =
+        document.getElementById(
+            "temporary-password"
+        );
+    
+    passwordGroup.style.display = "";
+    
+    passwordInput.value = "";
+    
+    passwordInput.required = true;
 
     modal.style.display = "flex";
 
@@ -741,7 +756,22 @@ function openEditUser(id) {
         "user-form-message"
     ).textContent = "";
 
+const passwordGroup =
+    document.getElementById(
+        "password-group"
+    );
 
+    const passwordInput =
+        document.getElementById(
+            "temporary-password"
+        );
+    
+    passwordGroup.style.display = "none";
+    
+    passwordInput.value = "";
+    
+    passwordInput.required = false;
+    
     modal.style.display = "flex";
 
 }
@@ -771,6 +801,10 @@ async function saveUser(event) {
             "user-id"
         ).value;
 
+    const password =
+    document.getElementById(
+        "temporary-password"
+    ).value;
 
     const payload = {
 
@@ -831,23 +865,138 @@ async function saveUser(event) {
                 .update(payload)
                 .eq("id", id);
 
-    } else {
+} else {
 
-        /*
-         * IMPORTANT:
-         * New Auth account creation will be
-         * connected later through Supabase
-         * Edge Function.
-         *
-         * We don't insert a fake profile ID here.
-         */
+    // =============================================
+    // CREATE NEW AUTH USER THROUGH EDGE FUNCTION
+    // =============================================
+
+    if (!password) {
 
         message.textContent =
-            "New user account creation will be connected to Supabase Auth in the next step.";
+            "Temporary Password is required.";
 
         return;
-
     }
+
+
+    if (password.length < 8) {
+
+        message.textContent =
+            "Temporary Password must contain at least 8 characters.";
+
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } = await supabase.functions.invoke(
+        "create-user",
+        {
+            body: {
+                badge_id:
+                    payload.badge_id,
+
+                full_name:
+                    payload.full_name,
+
+                email:
+                    payload.email,
+
+                password:
+                    password,
+
+                department_id:
+                    payload.department_id,
+
+                job_position_id:
+                    payload.job_position_id,
+
+                role_id:
+                    payload.role_id,
+
+                area:
+                    payload.area,
+
+                active:
+                    payload.active
+            }
+        }
+    );
+
+
+    if (error) {
+
+        console.error(
+            "Create user function error:",
+            error
+        );
+
+
+        let errorMessage =
+            "Failed to create user.";
+
+
+        // Edge Function may return useful
+        // error details in the response context.
+        try {
+
+            if (error.context) {
+
+                const errorBody =
+                    await error.context.json();
+
+                errorMessage =
+                    errorBody.error ||
+                    errorMessage;
+            }
+
+        } catch (contextError) {
+
+            console.error(
+                "Unable to read function error:",
+                contextError
+            );
+
+        }
+
+
+        message.textContent =
+            errorMessage;
+
+        return;
+    }
+
+
+    if (!data?.success) {
+
+        message.textContent =
+            data?.error ||
+            "Failed to create user.";
+
+        return;
+    }
+
+
+    message.textContent =
+        "User account created successfully.";
+
+
+    await loadUsers();
+
+
+    setTimeout(() => {
+
+        modal.style.display =
+            "none";
+
+    }, 700);
+
+
+    return;
+}
 
 
     if (result.error) {
