@@ -91,9 +91,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="user-job-position">Job Position</label>
-                    <select id="user-job-position">
-                        <option value="">Select Job Position</option>
+                    <label>Job Position</label>
+                    <select id="filter-job-position">
+                        <option value="">All Job Positions</option>
                     </select>
                 </div>
 
@@ -180,6 +180,7 @@
                             <th>Full Name</th>
                             <th>Email</th>
                             <th>Department</th>
+                            <th>Job Position</th>
                             <th>Role</th>
                             <th>Area</th>
                             <th>Status</th>
@@ -192,7 +193,7 @@
 
                         <tr>
                             <td
-                                colspan="9"
+                                colspan="10"
                                 class="table-loading">
                                 Loading users...
                             </td>
@@ -306,8 +307,21 @@
                             Select Department
                         </option>
                     </select>
+             </div>
+                
+                <div class="form-group">
+                        <label>
+                            Job Position
+                        </label>
 
-                </div>
+                        <select id="job-position-id">
+                            <option value="">
+                                Select Job Position
+                            </option>
+                        </select>
+                 </div>
+
+               
 
 
                 <div class="form-group">
