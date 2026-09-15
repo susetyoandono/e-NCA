@@ -559,6 +559,197 @@ document
         }
     );
 
+// =========================================================
+// CHANGE PASSWORD
+// =========================================================
+
+const changePasswordButton =
+    document.getElementById(
+        "change-password-button"
+    );
+
+const changePasswordModal =
+    document.getElementById(
+        "change-password-modal"
+    );
+
+const changePasswordForm =
+    document.getElementById(
+        "change-password-form"
+    );
+
+const passwordModalClose =
+    document.getElementById(
+        "password-modal-close"
+    );
+
+const cancelPasswordButton =
+    document.getElementById(
+        "cancel-password"
+    );
+
+
+// ---------------------------------------------------------
+// OPEN MODAL
+// ---------------------------------------------------------
+
+changePasswordButton.addEventListener(
+    "click",
+    () => {
+
+        changePasswordForm.reset();
+
+        document.getElementById(
+            "password-message"
+        ).textContent = "";
+
+        changePasswordModal.style.display =
+            "flex";
+
+    }
+);
+
+
+// ---------------------------------------------------------
+// CLOSE MODAL
+// ---------------------------------------------------------
+
+function closePasswordModal() {
+
+    changePasswordModal.style.display =
+        "none";
+
+    changePasswordForm.reset();
+
+}
+
+
+passwordModalClose.addEventListener(
+    "click",
+    closePasswordModal
+);
+
+
+cancelPasswordButton.addEventListener(
+    "click",
+    closePasswordModal
+);
+
+
+// ---------------------------------------------------------
+// UPDATE PASSWORD
+// ---------------------------------------------------------
+
+changePasswordForm.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+
+        const message =
+            document.getElementById(
+                "password-message"
+            );
+
+
+        const saveButton =
+            document.getElementById(
+                "save-password-button"
+            );
+
+
+        const newPassword =
+            document.getElementById(
+                "new-password"
+            ).value;
+
+
+        const confirmPassword =
+            document.getElementById(
+                "confirm-password"
+            ).value;
+
+
+        // ---------------------------------------------
+        // VALIDATION
+        // ---------------------------------------------
+
+        if (newPassword.length < 8) {
+
+            message.textContent =
+                "Password must contain at least 8 characters.";
+
+            return;
+        }
+
+
+        if (
+            newPassword !==
+            confirmPassword
+        ) {
+
+            message.textContent =
+                "Password confirmation does not match.";
+
+            return;
+        }
+
+
+        // ---------------------------------------------
+        // UPDATE SUPABASE AUTH
+        // ---------------------------------------------
+
+        message.textContent =
+            "Updating password...";
+
+        saveButton.disabled = true;
+
+
+        const {
+            error
+        } = await supabase.auth.updateUser({
+            password: newPassword
+        });
+
+
+        saveButton.disabled = false;
+
+
+        if (error) {
+
+            console.error(
+                "Password update error:",
+                error
+            );
+
+            message.textContent =
+                "Failed to update password: " +
+                error.message;
+
+            return;
+        }
+
+
+        // ---------------------------------------------
+        // SUCCESS
+        // ---------------------------------------------
+
+        message.textContent =
+            "Password updated successfully.";
+
+
+        setTimeout(
+            () => {
+
+                closePasswordModal();
+
+            },
+            1000
+        );
+
+    }
+);
 
 // =========================================================
 // START
