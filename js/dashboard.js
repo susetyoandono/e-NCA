@@ -124,7 +124,24 @@ async function initializeDashboard() {
         // -----------------------------------------
 
         await loadNotificationCount();
+        const userManagementButton =
+            document.getElementById("user-management-button");
 
+        if (
+            userManagementButton &&
+            profile.roles &&
+            profile.roles.role_code === "ADMIN"
+        ) {
+            userManagementButton.style.display = "inline-block";
+
+            userManagementButton.addEventListener(
+                "click",
+                () => {
+                    window.location.href =
+                        "user-management.html";
+                }
+            );
+        }
 
     } catch (error) {
 
