@@ -511,61 +511,350 @@ function applyQRData(qrData) {
 }
 
 
-// =========================================================
-// TEST QR PARSER
-// =========================================================
+// =====================================================
+// FLOWSHEET QR SCANNER
+// =====================================================
 
-function testQRParser() {
-
-    const sampleQR =
-        prompt(
-            "Paste Flowsheet QR data for testing:"
-        );
+let qrScanner = null;
+let qrScannerRunning = false;
 
 
-    if (
-        sampleQR === null
-    ) {
+// -----------------------------------------------------
+// START QR SCANNER
+// -----------------------------------------------------
 
-        return;
+async function startFlowsheetQRScanner() {
+
+    const readerElement =
+        document.getElementById("qr-reader");
+
+    const statusElement =
+        document.getElementById("qr-scan-status");
+
+
+    if (!readerElement) return;
+
+
+    readerElement.style.display = "block";
+
+
+    if (statusElement) {
+
+        statusElement.textContent =
+            "Starting camera...";
 
     }
+
+
+    // Stop previous scanner if still running
+
+    if (qrScannerRunning && qrScanner) {
+
+        try {
+
+            await qrScanner.stop();
+
+        } catch (error) {
+
+            console.warn(
+                "Previous scanner stop:",
+                error
+            );
+
+        }
+
+        qrScannerRunning = false;
+    }
+
+
+    qrScanner =
+        new Html5Qrcode("qr-reader");
 
 
     try {
 
-        const qrData =
-            parseFlowsheetQR(
-                sampleQR
-            );
+        await qrScanner.start(
+
+            {
+                facingMode: "environment"
+            },
+
+            {
+                fps: 10,
+
+                qrbox: {
+                    width: 250,
+                    height: 250
+                },
+
+                aspectRatio: 1.0
+            },
+
+            async (decodedText) => {
+
+                console.log(
+                    "QR detected:",
+                    decodedText
+                );
 
 
-        console.log(
-            "Parsed QR:",
-            qrData
+                // Stop scanner immediately
+
+                await stopFlowsheetQRScanner();
+
+
+                // Parse QR
+
+                parseFlowsheetQR(
+                    decodedText
+                );
+
+            },
+
+            (errorMessage) => {
+
+                // Normal scanning errors.
+                // Do not display continuously.
+
+            }
         );
 
 
-        applyQRData(
-            qrData
-        );
+        qrScannerRunning = true;
+
+
+        if (statusElement) {
+
+            statusElement.textContent =
+                "Camera active. Point the camera at the Flowsheet QR.";
+
+        }
+
 
     } catch (error) {
 
         console.error(
-            "QR parsing error:",
+            "QR scanner error:",
             error
         );
 
 
-        showMessage(
-            error.message,
-            "error"
-        );
+        readerElement.style.display =
+            "none";
+
+
+        if (statusElement) {
+
+            statusElement.textContent =
+                "Unable to access camera. Please allow camera permission and try again.";
+
+        }
+
+    }
+}
+
+
+// -----------------------------------------------------
+// STOP QR SCANNER
+// -----------------------------------------------------
+
+async function stopFlowsheetQRScanner() {
+
+    const readerElement =
+        document.getElementById("qr-reader");
+
+    const statusElement =
+        document.getElementById("qr-scan-status");
+
+
+    if (
+        qrScanner &&
+        qrScannerRunning
+    ) {
+
+        try {
+
+            await qrScanner.stop();
+
+        } catch (error) {
+
+            console.warn(
+                "QR scanner stop error:",
+                error
+            );
+
+        }
+
+        qrScannerRunning = false;
+    }
+
+
+    if (readerElement) {
+
+        readerElement.style.display =
+            "none";
+
+        readerElement.innerHTML = "";
 
     }
 
+
+    if (statusElement) {
+
+        statusElement.textContent = "";
+
+    }
 }
+
+
+// -----------------------------------------------------
+// PARSE FLOWSHEET QR
+// -----------------------------------------------------
+
+function parseFlowsheetQR(qrData) {
+
+    if (!qrData) {
+
+        alert(
+            "QR code is empty."
+        );
+
+        return;
+    }
+
+
+    /*
+        Expected example:
+
+        DAI1SEIKO007,
+        20982-051E-01-00F0,
+        250924B131,
+        ...,
+        3BN13,
+        ...,
+        7,
+        MINIFLEX3-BFN L-HD TYPE 51P,
+        ...
+    */
+
+
+    const values =
+        qrData
+            .split(",")
+            .map(value =>
+                value.trim()
+            );
+
+
+    const partNumber =
+        values[1] || "";
+
+    const lotNumber =
+        values[2] || "";
+
+    const machineMoldNo =
+        values[10] || "";
+
+    const reelNumber =
+        values[18] || "";
+
+    const partName =
+        values[19] || "";
+
+
+    // Populate fields
+
+    const partNumberInput =
+        document.getElementById(
+            "part-number"
+        );
+
+    const partNameInput =
+        document.getElementById(
+            "part-name"
+        );
+
+    const lotNumberInput =
+        document.getElementById(
+            "lot-number"
+        );
+
+    const reelNumberInput =
+        document.getElementById(
+            "reel-number"
+        );
+
+    const machineMoldInput =
+        document.getElementById(
+            "machine-mold-no"
+        );
+
+
+    if (partNumberInput) {
+
+        partNumberInput.value =
+            partNumber;
+    }
+
+
+    if (partNameInput) {
+
+        partNameInput.value =
+            partName;
+    }
+
+
+    if (lotNumberInput) {
+
+        lotNumberInput.value =
+            lotNumber;
+    }
+
+
+    if (reelNumberInput) {
+
+        reelNumberInput.value =
+            reelNumber;
+    }
+
+
+    if (machineMoldInput) {
+
+        machineMoldInput.value =
+            machineMoldNo;
+    }
+
+
+    const statusElement =
+        document.getElementById(
+            "qr-scan-status"
+        );
+
+
+    if (statusElement) {
+
+        statusElement.textContent =
+            "QR scanned successfully.";
+
+        statusElement.classList.add(
+            "success"
+        );
+
+    }
+}
+
+
+// =====================================================
+// QR BUTTON
+// =====================================================
+
+document
+    .getElementById("scan-flowsheet-qr")
+    ?.addEventListener(
+        "click",
+        startFlowsheetQRScanner
+    );
+
 
 
 // =========================================================
