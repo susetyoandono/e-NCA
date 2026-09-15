@@ -26,7 +26,7 @@ function setText(id, value) {
 
 
 // =====================================================
-// FORMAT DATE
+// FORMAT
 // =====================================================
 
 function formatDate(value) {
@@ -68,7 +68,7 @@ function formatDateTime(value) {
 
 
 // =====================================================
-// LOAD CURRENT USER
+// CURRENT USER
 // =====================================================
 
 async function loadCurrentUser() {
@@ -82,7 +82,8 @@ async function loadCurrentUser() {
 
     if (!session) {
 
-        window.location.href = "../index.html";
+        window.location.href =
+            "../index.html";
 
         return null;
     }
@@ -110,7 +111,10 @@ async function loadCurrentUser() {
 
     if (error) {
 
-        console.error("Profile error:", error);
+        console.error(
+            "Profile error:",
+            error
+        );
 
         return null;
     }
@@ -118,7 +122,8 @@ async function loadCurrentUser() {
 
     setText(
         "user-name",
-        profile.full_name || profile.email
+        profile.full_name ||
+        profile.email
     );
 
 
@@ -138,9 +143,10 @@ async function loadCurrentUser() {
 
 function getNcaId() {
 
-    const params = new URLSearchParams(
-        window.location.search
-    );
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
 
     return params.get("id");
 }
@@ -164,9 +170,14 @@ async function loadNCA(ncaId) {
 
     if (error) {
 
-        console.error("NCA error:", error);
+        console.error(
+            "NCA error:",
+            error
+        );
 
-        alert("Failed to load NCA.");
+        alert(
+            "Failed to load NCA."
+        );
 
         return null;
     }
@@ -177,7 +188,7 @@ async function loadNCA(ncaId) {
 
 
 // =====================================================
-// LOAD PROFILE
+// PROFILE
 // =====================================================
 
 async function getProfile(userId) {
@@ -207,7 +218,10 @@ async function getProfile(userId) {
 
     if (error) {
 
-        console.error("Profile lookup error:", error);
+        console.error(
+            "Profile lookup error:",
+            error
+        );
 
         return null;
     }
@@ -218,7 +232,7 @@ async function getProfile(userId) {
 
 
 // =====================================================
-// DISPLAY NCA
+// NCA DETAIL
 // =====================================================
 
 async function displayNCA(nca) {
@@ -249,14 +263,18 @@ async function displayNCA(nca) {
 
     setText(
         "created-date",
-        formatDateTime(nca.created_at)
+        formatDateTime(
+            nca.created_at
+        )
     );
 
 
     // CREATED BY
 
     const creator =
-        await getProfile(nca.created_by);
+        await getProfile(
+            nca.created_by
+        );
 
 
     if (creator) {
@@ -279,10 +297,12 @@ async function displayNCA(nca) {
     }
 
 
-    // CURRENT ASSIGNEE
+    // ASSIGNEE
 
     const assignee =
-        await getProfile(nca.current_assignee);
+        await getProfile(
+            nca.current_assignee
+        );
 
 
     if (assignee) {
@@ -294,82 +314,67 @@ async function displayNCA(nca) {
             assignee.email
         );
 
-    } else {
-
-        setText(
-            "current-assignee",
-            "-"
-        );
     }
 
 
-    // NCA INFORMATION
+    // INFORMATION
 
     setText(
         "nca-number",
         nca.nca_number
     );
 
-
     setText(
         "reported-date",
-        formatDate(nca.reported_date)
+        formatDate(
+            nca.reported_date
+        )
     );
-
 
     setText(
         "defect-name",
         nca.defect_name
     );
 
-
     setText(
         "defect-category",
         nca.defect_category
     );
-
 
     setText(
         "process-station",
         nca.process_station
     );
 
-
     setText(
         "detection-source",
         nca.detection_source
     );
-
 
     setText(
         "part-number",
         nca.part_number
     );
 
-
     setText(
         "part-name",
         nca.part_name
     );
-
 
     setText(
         "lot-number",
         nca.lot_number
     );
 
-
     setText(
         "reel-number",
         nca.reel_number
     );
 
-
     setText(
         "machine-mold-no",
         nca.machine_mold_no
     );
-
 
     setText(
         "defect-description",
@@ -384,12 +389,10 @@ async function displayNCA(nca) {
         nca.affected_qty
     );
 
-
     setText(
         "sample-size",
         nca.sample_size
     );
-
 
     setText(
         "defective-qty",
@@ -404,16 +407,87 @@ async function displayNCA(nca) {
 
         setText(
             "defective-percent",
-            `${Number(nca.defective_percent).toFixed(2)} %`
+            `${Number(
+                nca.defective_percent
+            ).toFixed(2)} %`
         );
 
-    } else {
-
-        setText(
-            "defective-percent",
-            "-"
-        );
     }
+
+
+    // PRINT DATA
+
+    setText(
+        "print-nca-number",
+        nca.nca_number
+    );
+
+    setText(
+        "print-part-number",
+        nca.part_number
+    );
+
+    setText(
+        "print-part-name",
+        nca.part_name
+    );
+
+    setText(
+        "print-defect-name",
+        nca.defect_name
+    );
+
+    setText(
+        "print-defect-description",
+        nca.defect_description
+    );
+
+
+    generateQRCode(nca.id);
+}
+
+
+// =====================================================
+// GENERATE UNIQUE QR
+// =====================================================
+
+function generateQRCode(ncaId) {
+
+    const container =
+        el("print-qrcode");
+
+
+    if (!container) return;
+
+
+    container.innerHTML = "";
+
+
+    /*
+       Example URL:
+
+       https://yourgithub.github.io/e-NCA/pages/nca-detail.html?id=UUID
+    */
+
+    const ncaUrl =
+        new URL(
+            `nca-detail.html?id=${encodeURIComponent(ncaId)}`,
+            window.location.href
+        ).href;
+
+
+    new QRCode(
+        container,
+        {
+            text: ncaUrl,
+            width: 110,
+            height: 110,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel:
+                QRCode.CorrectLevel.M
+        }
+    );
 }
 
 
@@ -449,7 +523,7 @@ async function loadAttachments(nca) {
     if (error) {
 
         console.error(
-            "Attachment query error:",
+            "Attachment error:",
             error
         );
 
@@ -464,7 +538,10 @@ async function loadAttachments(nca) {
     }
 
 
-    if (!attachments || attachments.length === 0) {
+    if (
+        !attachments ||
+        attachments.length === 0
+    ) {
 
         container.innerHTML = `
             <div class="empty-message">
@@ -478,34 +555,36 @@ async function loadAttachments(nca) {
 
     const photoOK =
         attachments.find(
-            item => item.file_type === "PHOTO_OK"
+            item =>
+                item.file_type === "PHOTO_OK"
         );
 
 
     const photoNG =
         attachments.find(
-            item => item.file_type === "PHOTO_NG"
+            item =>
+                item.file_type === "PHOTO_NG"
         );
 
 
     const attachment1 =
         attachments.find(
-            item => item.file_type === "ATTACHMENT_1"
+            item =>
+                item.file_type === "ATTACHMENT_1"
         );
 
 
     const attachment2 =
         attachments.find(
-            item => item.file_type === "ATTACHMENT_2"
+            item =>
+                item.file_type === "ATTACHMENT_2"
         );
 
 
     container.innerHTML = "";
 
 
-    // =================================================
-    // PHOTO SECTION
-    // =================================================
+    // PHOTOS
 
     if (photoOK || photoNG) {
 
@@ -518,28 +597,28 @@ async function loadAttachments(nca) {
 
         if (photoOK) {
 
-            const photoCard =
+            const card =
                 await createPhotoCard(
                     "Photo OK",
                     photoOK
                 );
 
             photoSection.appendChild(
-                photoCard
+                card
             );
         }
 
 
         if (photoNG) {
 
-            const photoCard =
+            const card =
                 await createPhotoCard(
                     "Photo NG",
                     photoNG
                 );
 
             photoSection.appendChild(
-                photoCard
+                card
             );
         }
 
@@ -550,56 +629,46 @@ async function loadAttachments(nca) {
     }
 
 
-    // =================================================
-    // ATTACHMENT SECTION
-    // =================================================
+    // ATTACHMENTS
 
     if (attachment1 || attachment2) {
 
-        const attachmentSection =
+        const list =
             document.createElement("div");
 
-        attachmentSection.className =
+        list.className =
             "attachment-list";
 
 
         if (attachment1) {
 
-            const item =
+            list.appendChild(
                 await createAttachmentLink(
                     "Attachment 1",
                     attachment1
-                );
-
-            attachmentSection.appendChild(
-                item
+                )
             );
         }
 
 
         if (attachment2) {
 
-            const item =
+            list.appendChild(
                 await createAttachmentLink(
                     "Attachment 2",
                     attachment2
-                );
-
-            attachmentSection.appendChild(
-                item
+                )
             );
         }
 
 
         container.appendChild(
-            attachmentSection
+            list
         );
     }
 
 
-    // =================================================
     // DESCRIPTION
-    // =================================================
 
     const description =
         attachments.find(
@@ -608,17 +677,23 @@ async function loadAttachments(nca) {
         );
 
 
-    if (description?.attachment_description) {
+    if (
+        description &&
+        description.attachment_description
+    ) {
 
-        const descriptionBox =
+        const box =
             document.createElement("div");
 
-        descriptionBox.className =
+        box.className =
             "attachment-description";
 
 
-        descriptionBox.innerHTML = `
-            <strong>Attachment Description</strong>
+        box.innerHTML = `
+            <strong>
+                Attachment Description
+            </strong>
+
             <div>
                 ${escapeHtml(
                     description.attachment_description
@@ -627,15 +702,68 @@ async function loadAttachments(nca) {
         `;
 
 
-        container.appendChild(
-            descriptionBox
+        container.appendChild(box);
+    }
+
+
+    // PRINT PHOTOS
+
+    if (photoOK) {
+
+        await loadPrintPhoto(
+            photoOK,
+            "print-photo-ok"
+        );
+    }
+
+
+    if (photoNG) {
+
+        await loadPrintPhoto(
+            photoNG,
+            "print-photo-ng"
         );
     }
 }
 
 
 // =====================================================
-// CREATE PHOTO CARD
+// SIGNED URL
+// =====================================================
+
+async function getSignedUrl(
+    storagePath
+) {
+
+    const {
+        data,
+        error
+    } = await supabase
+        .storage
+        .from("nca-attachments")
+        .createSignedUrl(
+            storagePath,
+            3600
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Signed URL error:",
+            error
+        );
+
+        return null;
+    }
+
+
+    return data.signedUrl;
+}
+
+
+// =====================================================
+// PHOTO CARD
 // =====================================================
 
 async function createPhotoCard(
@@ -650,28 +778,17 @@ async function createPhotoCard(
         "evidence-photo-card";
 
 
-    const {
-        data,
-        error
-    } = await supabase
-        .storage
-        .from("nca-attachments")
-        .createSignedUrl(
-            attachment.storage_path,
-            3600
+    const url =
+        await getSignedUrl(
+            attachment.storage_path
         );
 
 
-    if (error) {
-
-        console.error(
-            "Signed URL error:",
-            error
-        );
-
+    if (!url) {
 
         card.innerHTML = `
             <h3>${title}</h3>
+
             <div class="empty-message">
                 Unable to load image.
             </div>
@@ -682,15 +799,19 @@ async function createPhotoCard(
 
 
     card.innerHTML = `
-        <h3>${title}</h3>
+
+        <h3>
+            ${title}
+        </h3>
 
         <a
-            href="${data.signedUrl}"
+            href="${url}"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+        >
 
             <img
-                src="${data.signedUrl}"
+                src="${url}"
                 alt="${title}"
                 class="evidence-photo"
             >
@@ -698,9 +819,11 @@ async function createPhotoCard(
         </a>
 
         <div class="file-name">
+
             ${escapeHtml(
                 attachment.file_name
             )}
+
         </div>
     `;
 
@@ -710,7 +833,49 @@ async function createPhotoCard(
 
 
 // =====================================================
-// CREATE ATTACHMENT LINK
+// PRINT PHOTO
+// =====================================================
+
+async function loadPrintPhoto(
+    attachment,
+    elementId
+) {
+
+    const container =
+        el(elementId);
+
+
+    if (!container) return;
+
+
+    const url =
+        await getSignedUrl(
+            attachment.storage_path
+        );
+
+
+    if (!url) {
+
+        container.textContent =
+            "Image unavailable";
+
+        return;
+    }
+
+
+    container.innerHTML = `
+
+        <img
+            src="${url}"
+            class="print-photo"
+            alt="NCA evidence"
+        >
+    `;
+}
+
+
+// =====================================================
+// ATTACHMENT LINK
 // =====================================================
 
 async function createAttachmentLink(
@@ -725,28 +890,19 @@ async function createAttachmentLink(
         "attachment-item";
 
 
-    const {
-        data,
-        error
-    } = await supabase
-        .storage
-        .from("nca-attachments")
-        .createSignedUrl(
-            attachment.storage_path,
-            3600
+    const url =
+        await getSignedUrl(
+            attachment.storage_path
         );
 
 
-    if (error) {
-
-        console.error(
-            "Signed URL error:",
-            error
-        );
-
+    if (!url) {
 
         item.innerHTML = `
-            <strong>${title}</strong>
+            <strong>
+                ${title}
+            </strong>
+
             <span>
                 Unable to generate file link.
             </span>
@@ -757,20 +913,30 @@ async function createAttachmentLink(
 
 
     item.innerHTML = `
+
         <div>
-            <strong>${title}</strong>
+
+            <strong>
+                ${title}
+            </strong>
+
             <div class="file-name">
+
                 ${escapeHtml(
                     attachment.file_name
                 )}
+
             </div>
+
         </div>
 
+
         <a
-            href="${data.signedUrl}"
+            href="${url}"
             target="_blank"
             rel="noopener noreferrer"
-            class="btn btn-secondary">
+            class="btn btn-secondary"
+        >
             Open File
         </a>
     `;
@@ -781,29 +947,7 @@ async function createAttachmentLink(
 
 
 // =====================================================
-// ESCAPE HTML
-// =====================================================
-
-function escapeHtml(value) {
-
-    if (value === null ||
-        value === undefined) {
-
-        return "";
-    }
-
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-// =====================================================
-// WORKFLOW HISTORY
+// WORKFLOW
 // =====================================================
 
 async function loadWorkflow(ncaId) {
@@ -848,7 +992,10 @@ async function loadWorkflow(ncaId) {
     }
 
 
-    if (!workflow || workflow.length === 0) {
+    if (
+        !workflow ||
+        workflow.length === 0
+    ) {
 
         container.innerHTML = `
             <div class="empty-message">
@@ -860,8 +1007,8 @@ async function loadWorkflow(ncaId) {
     }
 
 
-    container.innerHTML = workflow.map(
-        item => {
+    container.innerHTML =
+        workflow.map(item => {
 
             const user =
                 item.profiles?.full_name ||
@@ -870,20 +1017,26 @@ async function loadWorkflow(ncaId) {
 
 
             return `
+
                 <div class="workflow-item">
 
                     <div class="workflow-header">
 
                         <strong>
+
                             ${escapeHtml(
                                 item.action_type || "-"
                             )}
+
                         </strong>
 
+
                         <span>
+
                             ${formatDateTime(
                                 item.created_at
                             )}
+
                         </span>
 
                     </div>
@@ -925,29 +1078,82 @@ async function loadWorkflow(ncaId) {
 
                         By:
 
-                        ${escapeHtml(user)}
+                        ${escapeHtml(
+                            user
+                        )}
 
                     </div>
 
 
                     ${
                         item.comments
-                        ? `
-                            <div class="workflow-comment">
-
-                                ${escapeHtml(
-                                    item.comments
-                                )}
-
-                            </div>
+                        ?
                         `
-                        : ""
+                        <div class="workflow-comment">
+
+                            ${escapeHtml(
+                                item.comments
+                            )}
+
+                        </div>
+                        `
+                        :
+                        ""
                     }
 
                 </div>
+
             `;
-        }
-    ).join("");
+
+        }).join("");
+}
+
+
+// =====================================================
+// PRINT
+// =====================================================
+
+function printNCA() {
+
+    window.print();
+}
+
+
+// =====================================================
+// ESCAPE HTML
+// =====================================================
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return "";
+    }
+
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 }
 
 
@@ -969,7 +1175,18 @@ el("logout-button")
 
 
 // =====================================================
-// INITIALIZE
+// PRINT BUTTON
+// =====================================================
+
+el("print-nca-button")
+    ?.addEventListener(
+        "click",
+        printNCA
+    );
+
+
+// =====================================================
+// INIT
 // =====================================================
 
 async function init() {
@@ -987,7 +1204,9 @@ async function init() {
 
     if (!ncaId) {
 
-        alert("NCA ID is missing.");
+        alert(
+            "NCA ID is missing."
+        );
 
         window.location.href =
             "dashboard.html";
