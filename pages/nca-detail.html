@@ -1,240 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>e-NCA - NCA Detail</title>
 
-    <title>e-NCA | NCA Detail</title>
-
-    <link
-        rel="stylesheet"
-        href="../css/style.css"
-    >
-
+    <link rel="stylesheet" href="../css/style.css">
 </head>
-
 
 <body>
 
-    <!-- =========================
-         HEADER
-         ========================= -->
+<header class="app-header">
+    <div class="header-left">
+        <div class="app-logo">e-NCA</div>
+        <div class="app-title">Non-Conformity Analysis</div>
+    </div>
 
-    <header class="app-header">
+    <div class="header-right">
+        <span id="user-name"></span>
+        <span id="user-role"></span>
 
-        <div class="header-left">
+        <button id="logout-button" class="btn btn-secondary">
+            Logout
+        </button>
+    </div>
+</header>
 
-            <div class="app-title">
-                e-NCA
+
+<main class="page-container">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <div>
+            <h1>NCA Detail</h1>
+            <p id="nca-number-title">Loading...</p>
+        </div>
+
+        <button
+            class="btn btn-secondary"
+            onclick="window.location.href='dashboard.html'">
+            Back to Dashboard
+        </button>
+    </div>
+
+
+    <!-- STATUS -->
+    <section class="detail-section">
+
+        <h2>NCA Status</h2>
+
+        <div class="detail-grid">
+
+            <div class="detail-item">
+                <label>NCA Status</label>
+                <div id="nca-status" class="detail-value">-</div>
             </div>
 
-            <div class="app-subtitle">
-                Electronic Non-Conformance Application
+            <div class="detail-item">
+                <label>Approval Status</label>
+                <div id="approval-status" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Current Assignee</label>
+                <div id="current-assignee" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Created Date</label>
+                <div id="created-date" class="detail-value">-</div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- NCA INFORMATION -->
+    <section class="detail-section">
+
+        <h2>NCA Information</h2>
+
+        <div class="detail-grid">
+
+            <div class="detail-item">
+                <label>NCA Number</label>
+                <div id="nca-number" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Reported Date</label>
+                <div id="reported-date" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Created By</label>
+                <div id="created-by" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Department</label>
+                <div id="department" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Defect Name</label>
+                <div id="defect-name" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Defect Category</label>
+                <div id="defect-category" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Process / Station</label>
+                <div id="process-station" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Detection Source</label>
+                <div id="detection-source" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Part Number</label>
+                <div id="part-number" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Part Name</label>
+                <div id="part-name" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Lot Number</label>
+                <div id="lot-number" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Reel Number</label>
+                <div id="reel-number" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>Machine / Mold No.</label>
+                <div id="machine-mold-no" class="detail-value">-</div>
             </div>
 
         </div>
 
 
-        <div class="header-right">
+        <div class="detail-item detail-full">
+            <label>Defect Description</label>
+            <div id="defect-description" class="detail-value detail-text">
+                -
+            </div>
+        </div>
 
-            <div class="user-info">
+    </section>
 
-                <strong id="user-name">
-                    Loading...
-                </strong>
 
-                <span id="user-role">
-                    Loading...
-                </span>
+    <!-- QUANTITY -->
+    <section class="detail-section">
 
+        <h2>Quantity / Impact</h2>
+
+        <div class="detail-grid">
+
+            <div class="detail-item">
+                <label>Affected Qty</label>
+                <div id="affected-qty" class="detail-value">-</div>
             </div>
 
+            <div class="detail-item">
+                <label>Sample Size</label>
+                <div id="sample-size" class="detail-value">-</div>
+            </div>
 
-            <button
-                id="logout-button"
-                class="logout-button"
-            >
-                Logout
-            </button>
+            <div class="detail-item">
+                <label>Defective Qty</label>
+                <div id="defective-qty" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-item">
+                <label>% Defective</label>
+                <div id="defective-percent" class="detail-value">-</div>
+            </div>
 
         </div>
 
-    </header>
+    </section>
 
 
-    <!-- =========================
-         MAIN
-         ========================= -->
+    <!-- EVIDENCE -->
+    <section class="detail-section">
 
-    <main class="container">
+        <h2>Evidence & Attachments</h2>
 
+        <div id="evidence-container" class="evidence-container">
 
-        <div class="page-header">
-
-            <div>
-
-                <h1>
-                    NCA Detail
-                </h1>
-
-                <p>
-                    Non-Conformance record details
-                </p>
-
+            <div class="empty-message">
+                Loading evidence...
             </div>
-
-
-            <button
-                id="back-button"
-                class="secondary-button"
-            >
-                ← Back to Dashboard
-            </button>
 
         </div>
 
-
-        <!-- =========================
-             NCA INFORMATION
-             ========================= -->
-
-        <section class="form-card">
+    </section>
 
 
-            <div class="form-section-title">
+    <!-- WORKFLOW -->
+    <section class="detail-section">
 
-                NCA Information
+        <h2>Workflow History</h2>
 
+        <div id="workflow-container">
+
+            <div class="empty-message">
+                Loading workflow...
             </div>
 
+        </div>
 
-            <div class="detail-grid">
-
-
-                <div class="detail-item">
-
-                    <span>
-                        NCA Number
-                    </span>
-
-                    <strong id="nca-number">
-                        -
-                    </strong>
-
-                </div>
+    </section>
 
 
-                <div class="detail-item">
-
-                    <span>
-                        NCA Status
-                    </span>
-
-                    <strong id="nca-status">
-                        -
-                    </strong>
-
-                </div>
+</main>
 
 
-                <div class="detail-item">
-
-                    <span>
-                        Approval Status
-                    </span>
-
-                    <strong id="approval-status">
-                        -
-                    </strong>
-
-                </div>
-
-
-                <div class="detail-item">
-
-                    <span>
-                        Created By
-                    </span>
-
-                    <strong id="created-by">
-                        -
-                    </strong>
-
-                </div>
-
-
-                <div class="detail-item">
-
-                    <span>
-                        Created Date
-                    </span>
-
-                    <strong id="created-date">
-                        -
-                    </strong>
-
-                </div>
-
-
-                <div class="detail-item">
-
-                    <span>
-                        Current Assignee
-                    </span>
-
-                    <strong id="current-assignee">
-                        -
-                    </strong>
-
-                </div>
-
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             WORKFLOW
-             ========================= -->
-
-        <section class="form-card workflow-card">
-
-
-            <div class="form-section-title">
-
-                Workflow History
-
-            </div>
-
-
-            <div
-                id="workflow-history"
-                class="workflow-history"
-            >
-
-                Loading...
-
-            </div>
-
-
-        </section>
-
-
-    </main>
-
-
-    <script
-        type="module"
-        src="../js/nca-detail.js"
-    ></script>
+<script type="module" src="../js/nca-detail.js"></script>
 
 </body>
-
 </html>
