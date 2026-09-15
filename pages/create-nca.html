@@ -121,13 +121,43 @@
 
                 </div>
 
-                <button
-                    type="button"
-                    id="scan-flowsheet-qr"
-                    class="secondary-button"
-                >
-                    📷 Scan Flowsheet QR
-                </button>
+<div class="qr-scanner-section">
+
+    <div class="qr-scanner-header">
+
+        <div>
+            <strong>Flowsheet QR</strong>
+
+            <div class="qr-scanner-help">
+                Scan the flowsheet QR code to automatically
+                populate Part Number, Part Name, Lot Number,
+                Reel Number and Machine / Mold No.
+            </div>
+        </div>
+
+        <button
+            type="button"
+            id="scan-flowsheet-qr"
+            class="btn btn-primary">
+            Scan QR
+        </button>
+
+    </div>
+
+
+    <div
+        id="qr-reader"
+        class="qr-reader"
+        style="display:none;">
+    </div>
+
+
+    <div
+        id="qr-scan-status"
+        class="qr-scan-status">
+    </div>
+
+</div>
 
             </div>
 
@@ -754,7 +784,7 @@
 
     </main>
 
-
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <script
         type="module"
         src="../js/create-nca.js"
