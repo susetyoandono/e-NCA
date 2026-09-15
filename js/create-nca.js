@@ -417,67 +417,6 @@ function calculateDefectivePercent() {
 
 
 // =========================================================
-// QR PARSER
-// =========================================================
-
-function parseFlowsheetQR(qrText) {
-
-    if (
-        !qrText ||
-        !qrText.trim()
-    ) {
-
-        throw new Error(
-            "QR data is empty."
-        );
-
-    }
-
-
-    const fields =
-        qrText
-            .trim()
-            .split(",");
-
-
-    if (
-        fields.length <= 19
-    ) {
-
-        throw new Error(
-            "Invalid Flowsheet QR format. " +
-            "Expected at least 20 fields."
-        );
-
-    }
-
-
-    return {
-
-        qrIdentifier:
-            fields[0]?.trim() || "",
-
-        partNumber:
-            fields[1]?.trim() || "",
-
-        lotNumber:
-            fields[2]?.trim() || "",
-
-        machineMoldNo:
-            fields[10]?.trim() || "",
-
-        reelNumber:
-            fields[18]?.trim() || "",
-
-        partName:
-            fields[19]?.trim() || ""
-
-    };
-
-}
-
-
-// =========================================================
 // APPLY QR DATA
 // =========================================================
 
