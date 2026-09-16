@@ -1627,3 +1627,423 @@ tbody tr:hover td {
         height: 220px;
     }
 }
+
+/* =========================================================
+   NCA DETAIL PAGE
+   ========================================================= */
+
+.page-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 32px 50px;
+}
+
+
+/* =========================================================
+   DETAIL SECTION / CARD
+   ========================================================= */
+
+.detail-section {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    padding: 24px;
+
+    margin-bottom: 22px;
+
+    box-shadow:
+        0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+
+.detail-section h2 {
+    margin: 0 0 20px;
+
+    padding-bottom: 12px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    color: #1f2937;
+}
+
+
+/* =========================================================
+   INFORMATION GRID
+   ========================================================= */
+
+.detail-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+
+.detail-item {
+    min-width: 0;
+}
+
+
+.detail-item label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    color: #6b7280;
+
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+
+.detail-value {
+    min-height: 42px;
+
+    padding: 10px 12px;
+
+    display: flex;
+    align-items: center;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    color: #1f2937;
+
+    overflow-wrap: anywhere;
+}
+
+
+.detail-full {
+    margin-top: 18px;
+}
+
+
+.detail-text {
+    min-height: 80px;
+
+    align-items: flex-start;
+
+    line-height: 1.55;
+
+    white-space: pre-wrap;
+}
+
+
+/* =========================================================
+   EVIDENCE CONTAINER
+   ========================================================= */
+
+.evidence-container {
+    width: 100%;
+}
+
+
+/* PHOTO GRID */
+
+.evidence-photo-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+
+    width: 100%;
+}
+
+
+/* PHOTO CARD */
+
+.evidence-photo-card {
+    min-width: 0;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+
+    padding: 16px;
+
+    overflow: hidden;
+}
+
+
+.evidence-photo-card h3 {
+    margin: 0 0 12px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    color: #374151;
+}
+
+
+/* IMAGE LINK BECOMES FIXED VIEWPORT */
+
+.evidence-photo-card > a {
+    width: 100%;
+    height: 320px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+
+    cursor: zoom-in;
+}
+
+
+/* ACTUAL IMAGE */
+
+.evidence-photo {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    max-width: 100%;
+    max-height: 320px;
+
+    object-fit: contain;
+
+    object-position: center;
+
+    margin: 0;
+}
+
+
+/* FILE NAME */
+
+.evidence-photo-card .file-name {
+    margin-top: 10px;
+
+    font-size: 12px;
+
+    color: #6b7280;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   NORMAL ATTACHMENTS
+   ========================================================= */
+
+.attachment-list {
+    display: grid;
+
+    gap: 10px;
+
+    margin-top: 18px;
+}
+
+
+.attachment-item {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 14px 16px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+}
+
+
+.attachment-item .file-name {
+    margin-top: 4px;
+
+    max-width: 600px;
+
+    font-size: 12px;
+
+    color: #6b7280;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* DESCRIPTION */
+
+.attachment-description {
+    margin-top: 18px;
+
+    padding: 16px;
+
+    background: #f8fafc;
+
+    border-left: 4px solid #64748b;
+    border-radius: 8px;
+}
+
+
+.attachment-description strong {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    color: #374151;
+}
+
+
+.attachment-description div {
+    font-size: 14px;
+
+    color: #4b5563;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   WORKFLOW HISTORY
+   ========================================================= */
+
+.workflow-item {
+    padding: 16px 18px;
+
+    margin-bottom: 12px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+
+.workflow-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 10px;
+}
+
+
+.workflow-header strong {
+    font-size: 14px;
+
+    color: #1f2937;
+}
+
+
+.workflow-header span {
+    font-size: 12px;
+
+    color: #6b7280;
+}
+
+
+.workflow-status,
+.workflow-approval,
+.workflow-user {
+    margin-top: 5px;
+
+    font-size: 13px;
+
+    color: #4b5563;
+}
+
+
+.workflow-comment {
+    margin-top: 10px;
+
+    padding: 10px 12px;
+
+    background: #ffffff;
+
+    border-radius: 7px;
+
+    font-size: 13px;
+
+    color: #374151;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .detail-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .page-container {
+        padding: 18px 14px 40px;
+    }
+
+
+    .detail-section {
+        padding: 18px;
+    }
+
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .evidence-photo-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .evidence-photo-card > a {
+        height: 240px;
+    }
+
+
+    .evidence-photo {
+        max-height: 240px;
+    }
+
+
+    .attachment-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+}
