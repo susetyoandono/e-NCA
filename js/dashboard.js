@@ -12,6 +12,7 @@ import { supabase } from "./supabase.js";
 let currentUser = null;
 let currentProfile = null;
 let allNcaRecords = [];
+let dashboardNotifications = [];
 
 
 // =========================================================
@@ -475,7 +476,7 @@ document
 
 
 // =========================================================
-// NOTIFICATION
+// NOTIFICATIONS
 // =========================================================
 
 async function loadNotificationCount() {
@@ -485,30 +486,37 @@ async function loadNotificationCount() {
     }
 
 
-    const { count, error } =
+    const { data, error } =
         await supabase
             .from("notifications")
-            .select(
-                "id",
-                {
-                    count: "exact",
-                    head: true
-                }
-            )
+            .select(`
+                id,
+                nca_id,
+                notification_type,
+                title,
+                message,
+                target_page,
+                is_read,
+                is_action_required,
+                created_at
+            `)
             .eq(
                 "user_id",
                 currentProfile.id
             )
-            .eq(
-                "is_read",
-                false
-            );
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            )
+            .limit(50);
 
 
     if (error) {
 
         console.error(
-            "Notification error:",
+            "Notification loading error:",
             error
         );
 
@@ -516,10 +524,414 @@ async function loadNotificationCount() {
     }
 
 
-    document.getElementById(
-        "notification-count"
-    ).textContent =
-        count || 0;
+    dashboardNotifications =
+        data || [];
+
+
+    updateNotificationCount();
+
+    renderNotifications();
+}
+
+
+// =========================================================
+// UPDATE NOTIFICATION COUNT
+// =========================================================
+
+function updateNotificationCount() {
+
+    const countElement =
+        document.getElementById(
+            "notification-count"
+        );
+
+
+    if (!countElement) {
+        return;
+    }
+
+
+    const unreadCount =
+        dashboardNotifications.filter(
+            notification =>
+                notification.is_read === false
+        ).length;
+
+
+    countElement.textContent =
+        unreadCount;
+
+
+    countElement.style.display =
+        unreadCount > 0
+            ? "inline-flex"
+            : "none";
+}
+
+
+// =========================================================
+// RENDER NOTIFICATION LIST
+// =========================================================
+
+function renderNotifications() {
+
+    const list =
+        document.getElementById(
+            "notification-list"
+        );
+
+
+    if (!list) {
+        return;
+    }
+
+
+    if (
+        dashboardNotifications.length === 0
+    ) {
+
+        list.innerHTML = `
+            <div class="notification-empty">
+                No notifications.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    list.innerHTML =
+        dashboardNotifications
+            .map(notification => {
+
+                const createdDate =
+                    notification.created_at
+                        ? new Date(
+                            notification.created_at
+                        ).toLocaleString()
+                        : "";
+
+
+                const unreadClass =
+                    notification.is_read
+                        ? ""
+                        : "unread";
+
+
+                const actionLabel =
+                    notification.is_action_required
+                        ? `
+                            <span
+                                class="notification-action-label"
+                            >
+                                Action Required
+                            </span>
+                        `
+                        : "";
+
+
+                return `
+                    <button
+                        type="button"
+                        class="
+                            notification-item
+                            ${unreadClass}
+                        "
+                        data-notification-id="${
+                            notification.id
+                        }"
+                    >
+
+                        <div
+                            class="notification-item-header"
+                        >
+
+                            <strong>
+                                ${
+                                    escapeNotificationHtml(
+                                        notification.title ||
+                                        "Notification"
+                                    )
+                                }
+                            </strong>
+
+                            ${
+                                !notification.is_read
+                                    ? `
+                                        <span
+                                            class="
+                                                notification-unread-dot
+                                            "
+                                        ></span>
+                                    `
+                                    : ""
+                            }
+
+                        </div>
+
+
+                        <div
+                            class="notification-message"
+                        >
+
+                            ${
+                                escapeNotificationHtml(
+                                    notification.message ||
+                                    ""
+                                )
+                            }
+
+                        </div>
+
+
+                        <div
+                            class="notification-meta"
+                        >
+
+                            <span>
+                                ${
+                                    escapeNotificationHtml(
+                                        createdDate
+                                    )
+                                }
+                            </span>
+
+                            ${actionLabel}
+
+                        </div>
+
+                    </button>
+                `;
+
+            })
+            .join("");
+}
+
+
+// =========================================================
+// ESCAPE NOTIFICATION HTML
+// =========================================================
+
+function escapeNotificationHtml(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+}
+
+
+// =========================================================
+// OPEN NOTIFICATION PANEL
+// =========================================================
+
+function openNotificationPanel() {
+
+    const panel =
+        document.getElementById(
+            "notification-panel"
+        );
+
+
+    if (!panel) {
+        return;
+    }
+
+
+    panel.style.display =
+        "block";
+}
+
+
+// =========================================================
+// CLOSE NOTIFICATION PANEL
+// =========================================================
+
+function closeNotificationPanel() {
+
+    const panel =
+        document.getElementById(
+            "notification-panel"
+        );
+
+
+    if (!panel) {
+        return;
+    }
+
+
+    panel.style.display =
+        "none";
+}
+
+
+// =========================================================
+// TOGGLE NOTIFICATION PANEL
+// =========================================================
+
+function toggleNotificationPanel() {
+
+    const panel =
+        document.getElementById(
+            "notification-panel"
+        );
+
+
+    if (!panel) {
+        return;
+    }
+
+
+    const isOpen =
+        panel.style.display ===
+        "block";
+
+
+    panel.style.display =
+        isOpen
+            ? "none"
+            : "block";
+}
+
+
+// =========================================================
+// OPEN NOTIFICATION
+// =========================================================
+
+async function openNotification(
+    notification
+) {
+
+    if (!notification) {
+        return;
+    }
+
+
+    // -----------------------------------------------------
+    // MARK AS READ
+    // -----------------------------------------------------
+
+    if (!notification.is_read) {
+
+        const { error } =
+            await supabase
+                .from("notifications")
+                .update({
+                    is_read: true,
+
+                    read_at:
+                        new Date()
+                            .toISOString()
+                })
+                .eq(
+                    "id",
+                    notification.id
+                )
+                .eq(
+                    "user_id",
+                    currentProfile.id
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Mark notification read error:",
+                error
+            );
+
+            return;
+        }
+
+
+        notification.is_read =
+            true;
+
+
+        updateNotificationCount();
+    }
+
+
+    // -----------------------------------------------------
+    // TARGET PAGE
+    // -----------------------------------------------------
+
+    if (
+        notification.target_page
+    ) {
+
+        const target =
+            String(
+                notification.target_page
+            ).trim();
+
+
+        /*
+         * target_page stored in DB:
+         *
+         * qc-supervisor.html?id=...
+         *
+         * Dashboard is already inside /pages/,
+         * therefore no ../pages/ is required.
+         */
+
+        if (
+            target.startsWith("./") ||
+            target.startsWith("../") ||
+            target.startsWith("/")
+        ) {
+
+            window.location.href =
+                target;
+
+        } else {
+
+            window.location.href =
+                "./" + target;
+
+        }
+
+
+        return;
+    }
+
+
+    // -----------------------------------------------------
+    // FALLBACK
+    // -----------------------------------------------------
+
+    if (
+        notification.nca_id
+    ) {
+
+        window.location.href =
+            "nca-detail.html?id=" +
+            encodeURIComponent(
+                notification.nca_id
+            );
+
+    }
 }
 
 
@@ -533,14 +945,111 @@ document
     )
     .addEventListener(
         "click",
-        () => {
+        event => {
 
-            alert(
-                "Notification center will be implemented next."
+            event.stopPropagation();
+
+            toggleNotificationPanel();
+
+        }
+    );
+
+
+// =========================================================
+// NOTIFICATION CLOSE BUTTON
+// =========================================================
+
+document
+    .getElementById(
+        "notification-close"
+    )
+    ?.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+            closeNotificationPanel();
+
+        }
+    );
+
+
+// =========================================================
+// NOTIFICATION LIST CLICK
+// =========================================================
+
+document
+    .getElementById(
+        "notification-list"
+    )
+    ?.addEventListener(
+        "click",
+        event => {
+
+            const item =
+                event.target.closest(
+                    "[data-notification-id]"
+                );
+
+
+            if (!item) {
+                return;
+            }
+
+
+            const notification =
+                dashboardNotifications.find(
+                    row =>
+                        row.id ===
+                        item.dataset
+                            .notificationId
+                );
+
+
+            if (!notification) {
+                return;
+            }
+
+
+            openNotification(
+                notification
             );
 
         }
     );
+
+
+// =========================================================
+// PREVENT PANEL CLICK FROM CLOSING
+// =========================================================
+
+document
+    .getElementById(
+        "notification-panel"
+    )
+    ?.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+        }
+    );
+
+
+// =========================================================
+// CLICK OUTSIDE PANEL
+// =========================================================
+
+document.addEventListener(
+    "click",
+    () => {
+
+        closeNotificationPanel();
+
+    }
+);
 
 
 // =========================================================
