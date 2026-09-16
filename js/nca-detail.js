@@ -1608,6 +1608,22 @@ async function loadTraceability() {
                 }
             );
 
+    console.log(
+    "TRACE NCA ID:",
+    currentNCA.id
+);
+
+console.log(
+    "TRACEABILITY DATA:",
+    data
+);
+
+console.log(
+    "TRACEABILITY ERROR:",
+    error
+);
+
+    
 
     if (error) {
 
