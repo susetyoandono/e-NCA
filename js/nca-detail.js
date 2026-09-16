@@ -445,6 +445,24 @@ async function displayNCA(nca) {
         nca.defect_description
     );
 
+    // =====================================================
+    // PRINT - LATEST DISPOSITION
+    // =====================================================
+    
+    const latestDisposition =
+        String(
+            nca.nca_status || "-"
+        )
+            .replaceAll("_", " ")
+            .trim()
+            .toUpperCase();
+    
+    
+    setText(
+        "print-disposition",
+        latestDisposition
+    );
+
 
     generateQRCode(nca.id);
 }
