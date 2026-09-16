@@ -1,5 +1,7 @@
 import { supabase } from "./supabase.js";
 
+let currentProfile = null;
+let currentNCA = null;
 
 // =====================================================
 // ELEMENT HELPER
@@ -445,6 +447,254 @@ async function displayNCA(nca) {
 
     generateQRCode(nca.id);
 }
+
+
+// =====================================================
+// DRAFT ACTIONS
+// =====================================================
+
+    function setupDraftActions() {
+    
+        const button =
+            el("submit-review-button");
+    
+    
+        if (
+            !button ||
+            !currentNCA ||
+            !currentProfile
+        ) {
+            return;
+        }
+    
+    
+        const isDraft =
+            String(
+                currentNCA.nca_status || ""
+            ).toUpperCase() === "DRAFT";
+    
+    
+        const isCreator =
+            currentNCA.created_by ===
+            currentProfile.id;
+    
+    
+        if (
+            isDraft &&
+            isCreator
+        ) {
+    
+            button.style.display =
+                "inline-flex";
+    
+        } else {
+    
+            button.style.display =
+                "none";
+    
+        }
+    }
+
+// =====================================================
+// LOAD QC SUPERVISORS
+// =====================================================
+
+async function loadQCSupervisors() {
+
+    const select =
+        el("qc-supervisor-id");
+
+
+    if (!select) return;
+
+
+    select.innerHTML = `
+        <option value="">
+            Loading QC Supervisors...
+        </option>
+    `;
+
+
+    const {
+        data,
+        error
+    } = await supabase
+        .from("profiles")
+        .select(`
+            id,
+            badge_id,
+            full_name,
+            area,
+            active,
+
+            departments (
+                department_code,
+                department_name
+            ),
+
+            job_positions (
+                position_code,
+                position_name
+            )
+        `)
+        .eq("active", true);
+
+
+    if (error) {
+
+        console.error(
+            "QC Supervisor load error:",
+            error
+        );
+
+        select.innerHTML = `
+            <option value="">
+                Failed to load QC Supervisors
+            </option>
+        `;
+
+        return;
+    }
+
+
+    const supervisors =
+        (data || []).filter(profile => {
+
+            const departmentCode =
+                String(
+                    profile.departments
+                        ?.department_code || ""
+                ).toUpperCase();
+
+
+            const positionCode =
+                String(
+                    profile.job_positions
+                        ?.position_code || ""
+                ).toUpperCase();
+
+
+            return (
+                departmentCode === "QC" &&
+                positionCode === "SUPERVISOR"
+            );
+
+        });
+
+
+    select.innerHTML = `
+        <option value="">
+            Select QC Supervisor
+        </option>
+    `;
+
+
+    supervisors.forEach(profile => {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            profile.id;
+
+
+        const area =
+            profile.area &&
+            profile.area !== "General"
+                ? ` • ${profile.area}`
+                : "";
+
+
+        option.textContent =
+            `${profile.full_name} (${profile.badge_id})${area}`;
+
+
+        select.appendChild(option);
+
+    });
+
+
+    if (supervisors.length === 0) {
+
+        select.innerHTML = `
+            <option value="">
+                No active QC Supervisor found
+            </option>
+        `;
+
+    }
+}
+
+// =====================================================
+// SUBMIT REVIEW MODAL
+// =====================================================
+
+async function openSubmitReviewModal() {
+
+    const modal =
+        el("submit-review-modal");
+
+
+    if (!modal) return;
+
+
+    el("submit-review-message")
+        .textContent = "";
+
+
+    await loadQCSupervisors();
+
+
+    modal.style.display =
+        "flex";
+}
+
+
+function closeSubmitReviewModal() {
+
+    const modal =
+        el("submit-review-modal");
+
+
+    if (!modal) return;
+
+
+    modal.style.display =
+        "none";
+
+
+    const form =
+        el("submit-review-form");
+
+
+    if (form) {
+        form.reset();
+    }
+}
+
+
+el("submit-review-button")
+    ?.addEventListener(
+        "click",
+        openSubmitReviewModal
+    );
+
+
+el("submit-review-close")
+    ?.addEventListener(
+        "click",
+        closeSubmitReviewModal
+    );
+
+
+el("cancel-submit-review")
+    ?.addEventListener(
+        "click",
+        closeSubmitReviewModal
+    );
 
 
 // =====================================================
@@ -1366,7 +1616,7 @@ async function init() {
     const profile =
         await loadCurrentUser();
 
-
+    currentProfile = profile;
     if (!profile) return;
 
 
@@ -1392,13 +1642,17 @@ async function init() {
 
 
     if (!nca) return;
+    currentNCA = nca;
 
 
     await displayNCA(nca);
-
+    
+    setupDraftActions();
+    
     await loadAttachments(nca);
-
+    
     await loadWorkflow(nca.id);
+    
 }
 
 
