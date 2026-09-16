@@ -2212,15 +2212,25 @@ el("print-nca-button")
 // =====================================================
 // INIT
 // =====================================================
-
 async function init() {
+
+    // =====================================================
+    // CURRENT USER
+    // =====================================================
 
     const profile =
         await loadCurrentUser();
 
     currentProfile = profile;
-    if (!profile) return;
 
+    if (!currentProfile) {
+        return;
+    }
+
+
+    // =====================================================
+    // NCA ID
+    // =====================================================
 
     const ncaId =
         getNcaId();
@@ -2239,25 +2249,58 @@ async function init() {
     }
 
 
+    // =====================================================
+    // LOAD NCA
+    // =====================================================
+
     const nca =
         await loadNCA(ncaId);
 
 
-    if (!nca) return;
+    if (!nca) {
+        return;
+    }
+
+
     currentNCA = nca;
 
 
-    await displayNCA(nca);
-    
+    // =====================================================
+    // DISPLAY MAIN NCA
+    // =====================================================
+
+    await displayNCA(
+        currentNCA
+    );
+
+
+    // =====================================================
+    // ACTION BUTTONS
+    // =====================================================
+
     setupDraftActions();
-    
-    await loadAttachments(nca);
-    
-    await loadWorkflow(nca.id);
 
     updateQcSupervisorReviewButton();
-    
+
+
+    // =====================================================
+    // LOAD RELATED DATA
+    // =====================================================
+
+    await loadAttachments(
+        currentNCA
+    );
+
+
+    // THIS WAS MISSING
+    await loadTraceability();
+
+
+    await loadWorkflow(
+        currentNCA.id
+    );
 }
+
 
 
 init();
