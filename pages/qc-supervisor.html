@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>QC Supervisor Review | e-NCA</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+<header class="app-header">
+
+    <div>
+        <h1>e-NCA</h1>
+        <span>QC Supervisor Review</span>
+    </div>
+
+    <div class="header-actions">
+
+        <span id="header-user">
+            -
+        </span>
+
+        <button
+            id="back-dashboard"
+            class="btn btn-secondary"
+        >
+            Dashboard
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="page-container">
+
+    <!-- =================================================
+         NCA HEADER
+         ================================================= -->
+
+    <section class="nca-status-panel">
+
+        <div class="nca-status-main">
+
+            <div class="nca-title-area">
+
+                <div class="nca-title-label">
+                    QC SUPERVISOR REVIEW
+                </div>
+
+                <h1 id="nca-number">
+                    -
+                </h1>
+
+            </div>
+
+
+            <div class="nca-status-badges">
+
+                <div
+                    id="nca-status"
+                    class="status-badge"
+                >
+                    -
+                </div>
+
+                <div
+                    id="approval-status"
+                    class="approval-badge"
+                >
+                    -
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         NCA SUMMARY
+         ================================================= -->
+
+    <section class="detail-section">
+
+        <h2>NCA Summary</h2>
+
+        <div class="detail-grid">
+
+            <div class="detail-item">
+                <label>Part Number</label>
+                <div
+                    id="part-number"
+                    class="detail-value"
+                >
+                    -
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <label>Part Name</label>
+                <div
+                    id="part-name"
+                    class="detail-value"
+                >
+                    -
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <label>Lot Number</label>
+                <div
+                    id="lot-number"
+                    class="detail-value"
+                >
+                    -
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <label>Machine / Mold No.</label>
+                <div
+                    id="machine-mold-no"
+                    class="detail-value"
+                >
+                    -
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <label>Defect Name</label>
+                <div
+                    id="defect-name"
+                    class="detail-value"
+                >
+                    -
+                </div>
+            </div>
+
+
+            <div class="detail-item">
+                <label>Process</label>
+                <div
+                    id="process-name"
+                    class="detail-value"
+                >
+                    -
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="detail-full">
+
+            <label>Defect Description</label>
+
+            <div
+                id="defect-description"
+                class="detail-value detail-text"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                id="view-nca-detail"
+                class="btn btn-secondary"
+            >
+                View Full NCA
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         ROUTING / ASSIGNMENT
+         ================================================= -->
+
+    <section class="detail-section">
+
+        <h2>Workflow Assignment</h2>
+
+        <p class="section-description">
+            Select the users responsible for the next NCA workflow actions.
+        </p>
+
+
+        <div class="form-grid-2">
+
+            <!-- AREA HELPER -->
+
+            <div class="form-group">
+
+                <label>
+                    Area Filter
+                </label>
+
+                <select id="assignment-area">
+
+                    <option value="">
+                        All Areas
+                    </option>
+
+                    <option value="Injection">
+                        Injection
+                    </option>
+
+                    <option value="MCX Harness">
+                        MCX Harness
+                    </option>
+
+                    <option value="MHF Harness">
+                        MHF Harness
+                    </option>
+
+                    <option value="Connector Assy">
+                        Connector Assy
+                    </option>
+
+                    <option value="General">
+                        General
+                    </option>
+
+                </select>
+
+                <small class="field-help">
+                    Helper only. Users from other areas can still be selected.
+                </small>
+
+            </div>
+
+
+            <div></div>
+
+
+            <!-- RESPONSIBLE PIC -->
+
+            <div class="form-group">
+
+                <label>
+                    Responsible PIC
+                    <span class="required">*</span>
+                </label>
+
+                <select
+                    id="responsible-pic"
+                    required
+                >
+                    <option value="">
+                        Select Responsible PIC
+                    </option>
+                </select>
+
+                <small class="field-help">
+                    Responsible for investigation.
+                </small>
+
+            </div>
+
+
+            <!-- PE ENGINEER -->
+
+            <div class="form-group">
+
+                <label>
+                    PE Engineer
+                    <span class="required">*</span>
+                </label>
+
+                <select
+                    id="pe-engineer"
+                    required
+                >
+                    <option value="">
+                        Select PE Engineer
+                    </option>
+                </select>
+
+                <small class="field-help">
+                    Engineering acknowledgement.
+                </small>
+
+            </div>
+
+
+            <!-- PRODUCTION SUPERVISOR -->
+
+            <div class="form-group">
+
+                <label>
+                    Production Supervisor
+                    <span class="required">*</span>
+                </label>
+
+                <select
+                    id="production-supervisor"
+                    required
+                >
+                    <option value="">
+                        Select Production Supervisor
+                    </option>
+                </select>
+
+                <small class="field-help">
+                    Production acknowledgement.
+                </small>
+
+            </div>
+
+
+            <!-- QA ENGINEER -->
+
+            <div class="form-group">
+
+                <label>
+                    QA Engineer
+                    <span class="required">*</span>
+                </label>
+
+                <select
+                    id="qa-engineer"
+                    required
+                >
+                    <option value="">
+                        Select QA Engineer
+                    </option>
+                </select>
+
+                <small class="field-help">
+                    Responsible for disposition.
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                QC Supervisor Comment
+            </label>
+
+            <textarea
+                id="qc-comment"
+                rows="4"
+                placeholder="Optional review or assignment comment"
+            ></textarea>
+
+        </div>
+
+
+        <div
+            id="assignment-message"
+            class="form-message"
+        ></div>
+
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                id="confirm-assignment"
+                class="btn btn-primary"
+            >
+                Confirm Assignment
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script
+    type="module"
+    src="../js/qc-supervisor.js"
+></script>
+
+</body>
+</html>
