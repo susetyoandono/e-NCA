@@ -1282,6 +1282,15 @@ el("confirm-assignment")
                 return;
             }
 
+            if (
+                    traceabilityRows.length === 0
+                ) {
+                
+                    message.textContent =
+                        "Please add at least one affected lot before confirming assignment.";
+                
+                    return;
+                }
 
             // ==========================================
             // CONFIRM
@@ -1310,33 +1319,56 @@ el("confirm-assignment")
 
 
             const {
-                data,
-                error
-            } =
-                await supabase.rpc(
-                    "confirm_qc_assignment",
-                    {
+    data,
+    error
+} =
+    await supabase.rpc(
+        "confirm_qc_assignment",
+        {
 
-                        p_nca_id:
-                            currentNCA.id,
+            p_nca_id:
+                currentNCA.id,
 
-                        p_responsible_pic:
-                            responsiblePic,
+            p_responsible_pic:
+                responsiblePic,
 
-                        p_pe_engineer:
-                            peEngineer,
+            p_pe_engineer:
+                peEngineer,
 
-                        p_production_supervisor:
-                            productionSupervisor,
+            p_production_supervisor:
+                productionSupervisor,
 
-                        p_qa_engineer:
-                            qaEngineer,
+            p_qa_engineer:
+                qaEngineer,
 
-                        p_comments:
-                            comments || null
+            p_traceability:
+                traceabilityRows.map(
+                    row => ({
+                        part_number:
+                            row.part_number,
 
-                    }
-                );
+                        part_name:
+                            row.part_name,
+
+                        lot_number:
+                            row.lot_number,
+
+                        reel_number:
+                            row.reel_number,
+
+                        lot_qty:
+                            row.lot_qty,
+
+                        input_method:
+                            row.input_method
+                    })
+                ),
+
+            p_comments:
+                comments || null
+
+        }
+    );
 
 
             button.disabled =
