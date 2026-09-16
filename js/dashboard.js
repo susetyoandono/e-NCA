@@ -12,7 +12,6 @@ import { supabase } from "./supabase.js";
 let currentUser = null;
 let currentProfile = null;
 let allNcaRecords = [];
-let dashboardNotifications = [];
 
 
 // =========================================================
@@ -124,8 +123,7 @@ async function initializeDashboard() {
         // 6. Load Notifications
         // -----------------------------------------
 
-        await loadNotifications();
-        setupNotificationEvents();
+        await loadNotificationCount();
         const userManagementButton =
             document.getElementById("user-management-button");
 
@@ -156,77 +154,6 @@ async function initializeDashboard() {
 
 }
 
-
-// =====================================================
-// OPEN NOTIFICATION
-// =====================================================
-
-async function openNotification(
-    notification
-) {
-
-    if (!notification) {
-        return;
-    }
-
-
-    // -------------------------------------------------
-    // MARK AS READ
-    // -------------------------------------------------
-
-    if (!notification.is_read) {
-
-        const {
-            error
-        } = await supabase
-            .from("notifications")
-            .update({
-                is_read: true,
-                read_at:
-                    new Date().toISOString()
-            })
-            .eq(
-                "id",
-                notification.id
-            );
-
-
-        if (error) {
-
-            console.error(
-                "Mark notification read error:",
-                error
-            );
-
-            return;
-        }
-    }
-
-
-    // -------------------------------------------------
-    // NAVIGATE
-    // -------------------------------------------------
-
-    if (notification.target_page) {
-
-        window.location.href =
-            "./" +
-            notification.target_page;
-
-        return;
-    }
-
-
-    // FALLBACK
-
-    if (notification.nca_id) {
-
-        window.location.href =
-            "./nca-detail.html?id=" +
-            notification.nca_id;
-
-    }
-}
 
 // =========================================================
 // DISPLAY USER
@@ -548,39 +475,40 @@ document
 
 
 // =========================================================
-// NOTIFICATIONS
+// NOTIFICATION
 // =========================================================
 
-async function loadNotifications() {
+async function loadNotificationCount() {
 
     if (!currentProfile) {
         return;
     }
 
-    const { data, error } = await supabase
-        .from("notifications")
-        .select(`
-            id,
-            nca_id,
-            notification_type,
-            title,
-            message,
-            target_page,
-            is_read,
-            is_action_required,
-            created_at
-        `)
-        .eq("user_id", currentProfile.id)
-        .order("created_at", {
-            ascending: false
-        })
-        .limit(50);
+
+    const { count, error } =
+        await supabase
+            .from("notifications")
+            .select(
+                "id",
+                {
+                    count: "exact",
+                    head: true
+                }
+            )
+            .eq(
+                "user_id",
+                currentProfile.id
+            )
+            .eq(
+                "is_read",
+                false
+            );
 
 
     if (error) {
 
         console.error(
-            "Notification loading error:",
+            "Notification error:",
             error
         );
 
@@ -588,553 +516,32 @@ async function loadNotifications() {
     }
 
 
-    dashboardNotifications = data || [];
-
-    updateNotificationCount();
-
-    renderNotifications();
+    document.getElementById(
+        "notification-count"
+    ).textContent =
+        count || 0;
 }
 
 
 // =========================================================
-// NOTIFICATION COUNT
+// NOTIFICATION BUTTON
 // =========================================================
 
-function updateNotificationCount() {
-
-    const countElement =
-        document.getElementById(
-            "notification-count"
-        );
-
-
-    if (!countElement) {
-        return;
-    }
-
-
-    const unreadCount =
-        dashboardNotifications.filter(
-            notification =>
-                !notification.is_read
-        ).length;
-
-
-    countElement.textContent =
-        unreadCount;
-
-
-    countElement.style.display =
-        unreadCount > 0
-            ? "inline-flex"
-            : "none";
-}
-
-
-// =========================================================
-// RENDER NOTIFICATIONS
-// =========================================================
-
-function renderNotifications() {
-
-    const list =
-        document.getElementById(
-            "notification-list"
-        );
-
-
-    if (!list) {
-
-        console.warn(
-            "notification-list not found."
-        );
-
-        return;
-    }
-
-
-    if (
-        dashboardNotifications.length === 0
-    ) {
-
-        list.innerHTML = `
-            <div class="notification-empty">
-                No notifications.
-            </div>
-        `;
-
-        return;
-    }
-
-
-    list.innerHTML =
-        dashboardNotifications
-            .map(notification => {
-
-                const createdDate =
-                    notification.created_at
-                        ? new Date(
-                            notification.created_at
-                        ).toLocaleString()
-                        : "";
-
-
-                const unreadClass =
-                    notification.is_read
-                        ? ""
-                        : "unread";
-
-
-                return `
-                    <button
-                        type="button"
-                        class="
-                            notification-item
-                            ${unreadClass}
-                        "
-                        data-notification-id="${
-                            escapeHtml(
-                                notification.id
-                            )
-                        }"
-                    >
-
-                        <div
-                            class="
-                                notification-item-top
-                            "
-                        >
-
-                            <strong>
-                                ${
-                                    escapeHtml(
-                                        notification.title ||
-                                        "Notification"
-                                    )
-                                }
-                            </strong>
-
-                            ${
-                                !notification.is_read
-                                    ? `
-                                        <span
-                                            class="
-                                                notification-unread-dot
-                                            "
-                                        ></span>
-                                    `
-                                    : ""
-                            }
-
-                        </div>
-
-
-                        <div
-                            class="
-                                notification-message
-                            "
-                        >
-
-                            ${
-                                escapeHtml(
-                                    notification.message ||
-                                    ""
-                                )
-                            }
-
-                        </div>
-
-
-                        <div
-                            class="
-                                notification-meta
-                            "
-                        >
-
-                            <span>
-                                ${
-                                    escapeHtml(
-                                        createdDate
-                                    )
-                                }
-                            </span>
-
-
-                            ${
-                                notification.is_action_required
-                                    ? `
-                                        <span
-                                            class="
-                                                notification-action-label
-                                            "
-                                        >
-                                            Action Required
-                                        </span>
-                                    `
-                                    : ""
-                            }
-
-                        </div>
-
-                    </button>
-                `;
-
-            })
-            .join("");
-}
-
-
-// =========================================================
-// HTML ESCAPE
-// =========================================================
-
-function escapeHtml(value) {
-
-    return String(
-        value ?? ""
+document
+    .getElementById(
+        "notification-button"
     )
-        .replaceAll(
-            "&",
-            "&amp;"
-        )
-        .replaceAll(
-            "<",
-            "&lt;"
-        )
-        .replaceAll(
-            ">",
-            "&gt;"
-        )
-        .replaceAll(
-            '"',
-            "&quot;"
-        )
-        .replaceAll(
-            "'",
-            "&#039;"
-        );
-}
-
-
-// =========================================================
-// OPEN / CLOSE NOTIFICATION PANEL
-// =========================================================
-
-function openNotificationPanel() {
-
-    const panel =
-        document.getElementById(
-            "notification-panel"
-        );
-
-
-    if (!panel) {
-        return;
-    }
-
-
-    panel.classList.add(
-        "open"
-    );
-}
-
-
-function closeNotificationPanel() {
-
-    const panel =
-        document.getElementById(
-            "notification-panel"
-        );
-
-
-    if (!panel) {
-        return;
-    }
-
-
-    panel.classList.remove(
-        "open"
-    );
-}
-
-
-function toggleNotificationPanel() {
-
-    const panel =
-        document.getElementById(
-            "notification-panel"
-        );
-
-
-    if (!panel) {
-        return;
-    }
-
-
-    panel.classList.toggle(
-        "open"
-    );
-}
-
-
-// =========================================================
-// OPEN NOTIFICATION
-// =========================================================
-
-async function openNotification(
-    notification
-) {
-
-    if (!notification) {
-        return;
-    }
-
-
-    // -----------------------------------------------------
-    // MARK AS READ
-    //
-    // IMPORTANT:
-    // This DOES NOT complete the workflow task.
-    // is_action_required remains TRUE.
-    // -----------------------------------------------------
-
-    if (!notification.is_read) {
-
-        const { error } =
-            await supabase
-                .from("notifications")
-                .update({
-                    is_read: true,
-                    read_at:
-                        new Date()
-                            .toISOString()
-                })
-                .eq(
-                    "id",
-                    notification.id
-                )
-                .eq(
-                    "user_id",
-                    currentProfile.id
-                );
-
-
-        if (error) {
-
-            console.error(
-                "Mark notification read error:",
-                error
-            );
-
-            return;
-        }
-
-
-        notification.is_read =
-            true;
-
-
-        updateNotificationCount();
-
-        renderNotifications();
-    }
-
-
-    // -----------------------------------------------------
-    // NAVIGATE USING target_page
-    // -----------------------------------------------------
-
-    if (
-        notification.target_page
-    ) {
-
-        const target =
-            String(
-                notification.target_page
-            ).trim();
-
-
-        if (
-            target.startsWith(
-                "http://"
-            ) ||
-            target.startsWith(
-                "https://"
-            ) ||
-            target.startsWith(
-                "/"
-            ) ||
-            target.startsWith(
-                "../"
-            ) ||
-            target.startsWith(
-                "./"
-            )
-        ) {
-
-            window.location.href =
-                target;
-
-        } else {
-
-            window.location.href =
-                "./" + target;
-
-        }
-
-
-        return;
-    }
-
-
-    // -----------------------------------------------------
-    // FALLBACK
-    // -----------------------------------------------------
-
-    if (
-        notification.nca_id
-    ) {
-
-        window.location.href =
-            "./nca-detail.html?id=" +
-            encodeURIComponent(
-                notification.nca_id
-            );
-
-    }
-}
-
-
-// =========================================================
-// NOTIFICATION EVENTS
-// =========================================================
-
-function setupNotificationEvents() {
-
-    const button =
-        document.getElementById(
-            "notification-button"
-        );
-
-
-    const panel =
-        document.getElementById(
-            "notification-panel"
-        );
-
-
-    const closeButton =
-        document.getElementById(
-            "notification-close"
-        );
-
-
-    const list =
-        document.getElementById(
-            "notification-list"
-        );
-
-
-    // -----------------------------------------------------
-    // BELL
-    // -----------------------------------------------------
-
-    button?.addEventListener(
-        "click",
-        event => {
-
-            event.stopPropagation();
-
-            toggleNotificationPanel();
-
-        }
-    );
-
-
-    // -----------------------------------------------------
-    // CLOSE X
-    // -----------------------------------------------------
-
-    closeButton?.addEventListener(
-        "click",
-        event => {
-
-            event.stopPropagation();
-
-            closeNotificationPanel();
-
-        }
-    );
-
-
-    // -----------------------------------------------------
-    // PREVENT PANEL CLICK FROM CLOSING
-    // -----------------------------------------------------
-
-    panel?.addEventListener(
-        "click",
-        event => {
-
-            event.stopPropagation();
-
-        }
-    );
-
-
-    // -----------------------------------------------------
-    // NOTIFICATION CLICK
-    // -----------------------------------------------------
-
-    list?.addEventListener(
-        "click",
-        event => {
-
-            const item =
-                event.target.closest(
-                    "[data-notification-id]"
-                );
-
-
-            if (!item) {
-                return;
-            }
-
-
-            const notification =
-                dashboardNotifications.find(
-                    row =>
-                        row.id ===
-                        item.dataset
-                            .notificationId
-                );
-
-
-            if (!notification) {
-                return;
-            }
-
-
-            openNotification(
-                notification
-            );
-
-        }
-    );
-
-
-    // -----------------------------------------------------
-    // CLICK OUTSIDE
-    // -----------------------------------------------------
-
-    document.addEventListener(
+    .addEventListener(
         "click",
         () => {
 
-            closeNotificationPanel();
+            alert(
+                "Notification center will be implemented next."
+            );
 
         }
     );
-}
+
 
 // =========================================================
 // CREATE NEW NCA
@@ -1268,10 +675,10 @@ changePasswordForm.addEventListener(
         // VALIDATION
         // ---------------------------------------------
 
-        if (newPassword.length < 4) {
+        if (newPassword.length < 8) {
 
             message.textContent =
-                "Password must contain at least 4 characters.";
+                "Password must contain at least 8 characters.";
 
             return;
         }
