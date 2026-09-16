@@ -2205,3 +2205,198 @@ body.lightbox-open {
     }
 
 }
+
+/* =========================================================
+   NCA STATUS / WORKFLOW HEADER
+   ========================================================= */
+
+.nca-status-panel {
+    margin-bottom: 24px;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    box-shadow:
+        0 3px 12px rgba(15, 23, 42, 0.05);
+}
+
+
+.nca-status-main {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    padding: 22px 24px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.nca-title-label {
+    margin-bottom: 4px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+
+    color: #6b7280;
+}
+
+
+.nca-title-area h1 {
+    margin: 0;
+
+    font-size: 25px;
+    font-weight: 750;
+
+    color: #111827;
+}
+
+
+.nca-status-badges {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+
+.status-badge,
+.approval-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    min-height: 34px;
+
+    padding: 7px 12px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.status-badge {
+    background: #e0f2fe;
+
+    color: #075985;
+}
+
+
+.approval-badge {
+    background: #fef3c7;
+
+    color: #92400e;
+}
+
+
+/* SUMMARY */
+
+.workflow-summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+}
+
+
+.workflow-summary-item {
+    min-width: 0;
+
+    padding: 16px 20px;
+
+    border-right: 1px solid #e5e7eb;
+}
+
+
+.workflow-summary-item:last-child {
+    border-right: none;
+}
+
+
+.summary-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+
+    color: #9ca3af;
+}
+
+
+.workflow-summary-item strong {
+    display: block;
+
+    overflow: hidden;
+
+    color: #374151;
+
+    font-size: 13px;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+@media (max-width: 900px) {
+
+    .workflow-summary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .workflow-summary-item:nth-child(2) {
+        border-right: none;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .nca-status-main {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .workflow-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .workflow-summary-item {
+        border-right: none;
+
+        border-bottom:
+            1px solid #e5e7eb;
+    }
+
+
+    .workflow-summary-item:last-child {
+        border-bottom: none;
+    }
+
+}
