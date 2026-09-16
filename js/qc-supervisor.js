@@ -593,6 +593,179 @@ el("back-dashboard")
 
 
 // =====================================================
+// CONFIRM WORKFLOW ASSIGNMENT
+// =====================================================
+
+el("confirm-assignment")
+    ?.addEventListener(
+        "click",
+        async () => {
+
+            const responsiblePic =
+                el("responsible-pic").value;
+
+            const peEngineer =
+                el("pe-engineer").value;
+
+            const productionSupervisor =
+                el(
+                    "production-supervisor"
+                ).value;
+
+            const qaEngineer =
+                el("qa-engineer").value;
+
+            const comments =
+                el("qc-comment")
+                    .value
+                    .trim();
+
+            const message =
+                el("assignment-message");
+
+            const button =
+                el("confirm-assignment");
+
+
+            // ==========================================
+            // VALIDATION
+            // ==========================================
+
+            if (
+                !responsiblePic ||
+                !peEngineer ||
+                !productionSupervisor ||
+                !qaEngineer
+            ) {
+
+                message.textContent =
+                    "Please complete all workflow assignments.";
+
+                return;
+            }
+
+
+            if (!currentNCA?.id) {
+
+                message.textContent =
+                    "NCA data is not available.";
+
+                return;
+            }
+
+
+            // ==========================================
+            // CONFIRM
+            // ==========================================
+
+            const confirmed =
+                window.confirm(
+                    "Confirm workflow assignment for this NCA?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            // ==========================================
+            // PROCESSING
+            // ==========================================
+
+            button.disabled =
+                true;
+
+            message.textContent =
+                "Creating workflow assignments...";
+
+
+            const {
+                data,
+                error
+            } =
+                await supabase.rpc(
+                    "confirm_qc_assignment",
+                    {
+
+                        p_nca_id:
+                            currentNCA.id,
+
+                        p_responsible_pic:
+                            responsiblePic,
+
+                        p_pe_engineer:
+                            peEngineer,
+
+                        p_production_supervisor:
+                            productionSupervisor,
+
+                        p_qa_engineer:
+                            qaEngineer,
+
+                        p_comments:
+                            comments || null
+
+                    }
+                );
+
+
+            button.disabled =
+                false;
+
+
+            // ==========================================
+            // ERROR
+            // ==========================================
+
+            if (error) {
+
+                console.error(
+                    "Confirm assignment error:",
+                    error
+                );
+
+
+                message.textContent =
+                    error.message ||
+                    "Failed to create assignments.";
+
+                return;
+            }
+
+
+            if (!data?.success) {
+
+                message.textContent =
+                    "Assignment failed.";
+
+                return;
+            }
+
+
+            // ==========================================
+            // SUCCESS
+            // ==========================================
+
+            message.textContent =
+                "Workflow assignment completed successfully.";
+
+
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        "./nca-detail.html?id=" +
+                        currentNCA.id;
+
+                },
+                800
+            );
+
+        }
+    );
+
+// =====================================================
 // INIT
 // =====================================================
 
