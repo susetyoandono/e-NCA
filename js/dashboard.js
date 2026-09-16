@@ -124,7 +124,8 @@ async function initializeDashboard() {
         // 6. Load Notifications
         // -----------------------------------------
 
-        await loadNotificationCount();
+        await loadNotifications();
+        setupNotificationEvents();
         const userManagementButton =
             document.getElementById("user-management-button");
 
