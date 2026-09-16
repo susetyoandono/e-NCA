@@ -696,6 +696,124 @@ el("cancel-submit-review")
         closeSubmitReviewModal
     );
 
+// =====================================================
+// CONFIRM SUBMIT FOR QC REVIEW
+// =====================================================
+
+el("submit-review-form")
+    ?.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+
+            const message =
+                el("submit-review-message");
+
+            const submitButton =
+                el("confirm-submit-review");
+
+            const supervisorId =
+                el("qc-supervisor-id").value;
+
+
+            // -----------------------------------------
+            // VALIDATION
+            // -----------------------------------------
+
+            if (!currentNCA?.id) {
+
+                message.textContent =
+                    "NCA data is not available.";
+
+                return;
+            }
+
+
+            if (!supervisorId) {
+
+                message.textContent =
+                    "Please select a QC Supervisor.";
+
+                return;
+            }
+
+
+            // -----------------------------------------
+            // SUBMIT
+            // -----------------------------------------
+
+            submitButton.disabled = true;
+
+            message.textContent =
+                "Submitting NCA for review...";
+
+
+            const {
+                data,
+                error
+            } = await supabase.rpc(
+                "submit_nca_for_qc_review",
+                {
+                    p_nca_id:
+                        currentNCA.id,
+
+                    p_qc_supervisor_id:
+                        supervisorId
+                }
+            );
+
+
+            submitButton.disabled = false;
+
+
+            // -----------------------------------------
+            // ERROR
+            // -----------------------------------------
+
+            if (error) {
+
+                console.error(
+                    "Submit NCA error:",
+                    error
+                );
+
+
+                message.textContent =
+                    error.message ||
+                    "Failed to submit NCA.";
+
+                return;
+            }
+
+
+            if (!data?.success) {
+
+                message.textContent =
+                    "Failed to submit NCA.";
+
+                return;
+            }
+
+
+            // -----------------------------------------
+            // SUCCESS
+            // -----------------------------------------
+
+            message.textContent =
+                "NCA submitted successfully.";
+
+
+            setTimeout(() => {
+
+                window.location.reload();
+
+            }, 700);
+
+        }
+    );
+
 
 // =====================================================
 // GENERATE UNIQUE QR
