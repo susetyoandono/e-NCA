@@ -697,6 +697,61 @@ el("cancel-submit-review")
     );
 
 // =====================================================
+// QC SUPERVISOR REVIEW ACTION
+// =====================================================
+
+function updateQcSupervisorReviewButton() {
+
+    const button =
+        document.getElementById(
+            "qc-supervisor-review-btn"
+        );
+
+
+    if (!button) {
+        return;
+    }
+
+
+    // Default hidden
+    button.style.display =
+        "none";
+
+
+    if (
+        !currentNCA ||
+        !currentUser
+    ) {
+        return;
+    }
+
+
+    const approvalStatus =
+        String(
+            currentNCA.approval_status || ""
+        ).toUpperCase();
+
+
+    const isCurrentAssignee =
+        currentNCA.current_assignee ===
+        currentUser.id;
+
+
+    // Only selected QC Supervisor
+    // during WAITING_QC_REVIEW
+    if (
+        approvalStatus ===
+            "WAITING_QC_REVIEW" &&
+        isCurrentAssignee
+    ) {
+
+        button.style.display =
+            "inline-flex";
+    }
+}
+
+
+// =====================================================
 // CONFIRM SUBMIT FOR QC REVIEW
 // =====================================================
 
@@ -1372,6 +1427,28 @@ document.addEventListener(
     }
 );
 
+document
+    .getElementById(
+        "qc-supervisor-review-btn"
+    )
+    ?.addEventListener(
+        "click",
+        () => {
+
+            if (!currentNCA?.id) {
+                return;
+            }
+
+
+            window.location.href =
+                "./qc-supervisor.html?id=" +
+                encodeURIComponent(
+                    currentNCA.id
+                );
+
+        }
+    );
+
 // =====================================================
 // PRINT PHOTO
 // =====================================================
@@ -1770,6 +1847,8 @@ async function init() {
     await loadAttachments(nca);
     
     await loadWorkflow(nca.id);
+
+    updateQcSupervisorReviewButton();
     
 }
 
