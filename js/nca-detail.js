@@ -798,39 +798,211 @@ async function createPhotoCard(
     }
 
 
-    card.innerHTML = `
-
-        <h3>
-            ${title}
-        </h3>
-
-        <a
-            href="${url}"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-
-            <img
-                src="${url}"
-                alt="${title}"
-                class="evidence-photo"
+        card.innerHTML = `
+        
+            <h3>
+                ${escapeHtml(title)}
+            </h3>
+        
+            <button
+                type="button"
+                class="evidence-photo-button"
+                data-photo-url="${url}"
+                data-photo-title="${escapeHtml(title)}"
+                data-photo-filename="${escapeHtml(
+                    attachment.file_name || ""
+                )}"
             >
-
-        </a>
-
-        <div class="file-name">
-
-            ${escapeHtml(
-                attachment.file_name
-            )}
-
-        </div>
-    `;
+        
+                <img
+                    src="${url}"
+                    alt="${escapeHtml(title)}"
+                    class="evidence-photo"
+                >
+        
+                <span class="photo-zoom-hint">
+                    View larger
+                </span>
+        
+            </button>
+        
+            <div class="file-name">
+        
+                ${escapeHtml(
+                    attachment.file_name
+                )}
+        
+            </div>
+        `;
 
 
     return card;
 }
 
+// =====================================================
+// PHOTO LIGHTBOX
+// =====================================================
+
+function openPhotoLightbox(
+    url,
+    title,
+    fileName
+) {
+
+    const lightbox =
+        el("photo-lightbox");
+
+    const image =
+        el("lightbox-image");
+
+
+    if (!lightbox || !image) {
+        return;
+    }
+
+
+    image.src = url;
+
+    image.alt =
+        title || "NCA Evidence";
+
+
+    setText(
+        "lightbox-title",
+        title || "Evidence Photo"
+    );
+
+
+    setText(
+        "lightbox-filename",
+        fileName || ""
+    );
+
+
+    lightbox.classList.add(
+        "active"
+    );
+
+    lightbox.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    document.body.classList.add(
+        "lightbox-open"
+    );
+}
+
+
+function closePhotoLightbox() {
+
+    const lightbox =
+        el("photo-lightbox");
+
+    const image =
+        el("lightbox-image");
+
+
+    if (!lightbox) {
+        return;
+    }
+
+
+    lightbox.classList.remove(
+        "active"
+    );
+
+    lightbox.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    document.body.classList.remove(
+        "lightbox-open"
+    );
+
+
+    if (image) {
+        image.src = "";
+    }
+}
+
+
+// PHOTO CLICK
+
+el("evidence-container")
+    ?.addEventListener(
+        "click",
+        event => {
+
+            const button =
+                event.target.closest(
+                    ".evidence-photo-button"
+                );
+
+
+            if (!button) {
+                return;
+            }
+
+
+            openPhotoLightbox(
+                button.dataset.photoUrl,
+                button.dataset.photoTitle,
+                button.dataset.photoFilename
+            );
+
+        }
+    );
+
+
+// X BUTTON
+
+el("lightbox-close")
+    ?.addEventListener(
+        "click",
+        closePhotoLightbox
+    );
+
+
+// CLICK DARK BACKGROUND
+
+el("photo-lightbox")
+    ?.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target.id ===
+                "photo-lightbox"
+            ) {
+
+                closePhotoLightbox();
+
+            }
+
+        }
+    );
+
+
+// ESC KEY
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closePhotoLightbox();
+
+        }
+
+    }
+);
 
 // =====================================================
 // PRINT PHOTO
