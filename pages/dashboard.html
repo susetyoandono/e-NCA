@@ -17,6 +17,35 @@
         href="../css/style.css"
     >
 
+
+    <style>
+        .header-right { position: relative; }
+        .notification-panel {
+            display: none; position: absolute; top: calc(100% + 12px); right: 150px;
+            width: min(390px, calc(100vw - 24px)); max-height: 520px; overflow: hidden;
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
+            box-shadow: 0 18px 50px rgba(15,23,42,.18); z-index: 5000;
+        }
+        .notification-panel.open { display: block; }
+        .notification-panel-header { display:flex; justify-content:space-between; gap:12px; padding:16px 18px; border-bottom:1px solid #e5e7eb; }
+        .notification-panel-header strong { display:block; font-size:15px; }
+        .notification-panel-header span { display:block; margin-top:3px; font-size:11px; color:#6b7280; }
+        .notification-close { border:0; background:transparent; font-size:24px; cursor:pointer; color:#6b7280; }
+        .notification-list { max-height: 440px; overflow-y:auto; }
+        .notification-item { width:100%; text-align:left; display:block; padding:14px 16px; border:0; border-bottom:1px solid #eef2f7; background:#fff; cursor:pointer; }
+        .notification-item:hover { background:#f8fafc; }
+        .notification-item.unread { background:#eff6ff; }
+        .notification-item-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+        .notification-item-top strong { font-size:13px; color:#111827; }
+        .notification-unread-dot { width:8px; height:8px; border-radius:999px; background:#2563eb; flex:0 0 auto; }
+        .notification-message { margin-top:5px; font-size:12px; line-height:1.45; color:#4b5563; }
+        .notification-meta { display:flex; justify-content:space-between; gap:10px; margin-top:8px; font-size:10px; color:#9ca3af; }
+        .notification-action-label { font-weight:700; color:#b45309; }
+        .notification-empty { padding:28px 18px; text-align:center; color:#6b7280; font-size:13px; }
+        #notification-count { min-width:18px; height:18px; align-items:center; justify-content:center; }
+        @media (max-width:700px) { .notification-panel { position:fixed; top:72px; right:12px; left:12px; width:auto; } }
+    </style>
+
 </head>
 
 
@@ -56,6 +85,20 @@
                 </span>
 
             </button>
+
+            <!-- NOTIFICATION CENTER -->
+            <div id="notification-panel" class="notification-panel">
+                <div class="notification-panel-header">
+                    <div>
+                        <strong>Notifications</strong>
+                        <span>Workflow updates and pending actions</span>
+                    </div>
+                    <button type="button" id="notification-close" class="notification-close">×</button>
+                </div>
+                <div id="notification-list" class="notification-list">
+                    <div class="notification-empty">Loading notifications...</div>
+                </div>
+            </div>
 
 
             <div class="user-info">
