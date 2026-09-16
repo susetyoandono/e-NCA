@@ -255,77 +255,99 @@
 
     <!-- STATUS -->
 
-    <section class="detail-section no-print">
+    <section class="nca-status-panel">
 
-        <h2>NCA Status</h2>
+    <div class="nca-status-main">
 
-        <div class="detail-grid">
+        <div class="nca-title-area">
 
-            <div class="detail-item">
-
-                <label>
-                    NCA Status
-                </label>
-
-                <div
-                    id="nca-status"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
+            <div class="nca-title-label">
+                NON-CONFORMANCE ALERT
             </div>
 
+            <h1 id="nca-number-title">
+                -
+            </h1>
 
-            <div class="detail-item">
+        </div>
 
-                <label>
-                    Approval Status
-                </label>
 
-                <div
-                    id="approval-status"
-                    class="detail-value"
-                >
-                    -
-                </div>
+        <div class="nca-status-badges">
 
+            <div
+                id="nca-status"
+                class="status-badge"
+            >
+                -
             </div>
 
-
-            <div class="detail-item">
-
-                <label>
-                    Current Assignee
-                </label>
-
-                <div
-                    id="current-assignee"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>
-                    Created Date
-                </label>
-
-                <div
-                    id="created-date"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
+            <div
+                id="approval-status"
+                class="approval-badge"
+            >
+                -
             </div>
 
         </div>
 
+    </div>
+
+
+        <div class="workflow-summary-grid">
+    
+            <div class="workflow-summary-item">
+    
+                <span class="summary-label">
+                    Current Assignee
+                </span>
+    
+                <strong id="current-assignee">
+                    -
+                </strong>
+    
+            </div>
+    
+    
+            <div class="workflow-summary-item">
+    
+                <span class="summary-label">
+                    Created By
+                </span>
+    
+                <strong id="created-by">
+                    -
+                </strong>
+    
+            </div>
+    
+    
+            <div class="workflow-summary-item">
+    
+                <span class="summary-label">
+                    Department
+                </span>
+    
+                <strong id="department">
+                    -
+                </strong>
+    
+            </div>
+    
+    
+            <div class="workflow-summary-item">
+    
+                <span class="summary-label">
+                    Created
+                </span>
+    
+                <strong id="created-date">
+                    -
+                </strong>
+    
+            </div>
+    
+        </div>
+    
     </section>
 
 
