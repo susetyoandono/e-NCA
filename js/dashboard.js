@@ -12,6 +12,7 @@ import { supabase } from "./supabase.js";
 let currentUser = null;
 let currentProfile = null;
 let allNcaRecords = [];
+let dashboardNotifications = [];
 
 
 // =========================================================
@@ -154,6 +155,77 @@ async function initializeDashboard() {
 
 }
 
+
+// =====================================================
+// OPEN NOTIFICATION
+// =====================================================
+
+async function openNotification(
+    notification
+) {
+
+    if (!notification) {
+        return;
+    }
+
+
+    // -------------------------------------------------
+    // MARK AS READ
+    // -------------------------------------------------
+
+    if (!notification.is_read) {
+
+        const {
+            error
+        } = await supabase
+            .from("notifications")
+            .update({
+                is_read: true,
+                read_at:
+                    new Date().toISOString()
+            })
+            .eq(
+                "id",
+                notification.id
+            );
+
+
+        if (error) {
+
+            console.error(
+                "Mark notification read error:",
+                error
+            );
+
+            return;
+        }
+    }
+
+
+    // -------------------------------------------------
+    // NAVIGATE
+    // -------------------------------------------------
+
+    if (notification.target_page) {
+
+        window.location.href =
+            "./" +
+            notification.target_page;
+
+        return;
+    }
+
+
+    // FALLBACK
+
+    if (notification.nca_id) {
+
+        window.location.href =
+            "./nca-detail.html?id=" +
+            notification.nca_id;
+
+    }
+}
 
 // =========================================================
 // DISPLAY USER
@@ -488,13 +560,17 @@ async function loadNotificationCount() {
     const { count, error } =
         await supabase
             .from("notifications")
-            .select(
-                "id",
-                {
-                    count: "exact",
-                    head: true
-                }
-            )
+            .select(`
+                id,
+                nca_id,
+                notification_type,
+                title,
+                message,
+                target_page,
+                is_read,
+                is_action_required,
+                created_at
+            `)
             .eq(
                 "user_id",
                 currentProfile.id
@@ -515,6 +591,7 @@ async function loadNotificationCount() {
         return;
     }
 
+    dashboardNotifications = data || [];
 
     document.getElementById(
         "notification-count"
@@ -537,6 +614,45 @@ document
 
             alert(
                 "Notification center will be implemented next."
+            );
+
+        }
+    );
+
+document
+    .getElementById(
+        "notification-list"
+    )
+    ?.addEventListener(
+        "click",
+        event => {
+
+            const item =
+                event.target.closest(
+                    "[data-notification-id]"
+                );
+
+
+            if (!item) {
+                return;
+            }
+
+
+            const notification =
+                dashboardNotifications.find(
+                    row =>
+                        row.id ===
+                        item.dataset.notificationId
+                );
+
+
+            if (!notification) {
+                return;
+            }
+
+
+            openNotification(
+                notification
             );
 
         }
@@ -675,10 +791,10 @@ changePasswordForm.addEventListener(
         // VALIDATION
         // ---------------------------------------------
 
-        if (newPassword.length < 8) {
+        if (newPassword.length < 4) {
 
             message.textContent =
-                "Password must contain at least 8 characters.";
+                "Password must contain at least 4 characters.";
 
             return;
         }
