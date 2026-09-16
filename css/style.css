@@ -2623,3 +2623,94 @@ body.lightbox-open {
     }
 
 }
+
+/* =========================================================
+   QC TRACEABILITY
+   ========================================================= */
+
+.section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.traceability-table-wrap {
+    margin-top: 22px;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.traceability-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.traceability-table th,
+.traceability-table td {
+    padding: 11px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.traceability-table th {
+    font-size: 12px;
+    font-weight: 700;
+    background: #f8fafc;
+}
+
+.traceability-table td {
+    font-size: 13px;
+}
+
+.traceability-table tfoot td {
+    background: #f8fafc;
+}
+
+.table-empty {
+    text-align: center !important;
+    color: #94a3b8;
+    padding: 28px !important;
+}
+
+.trace-delete-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.qr-scanner-container {
+    max-width: 520px;
+    margin: 0 auto 24px;
+    padding: 12px;
+    background: #111827;
+    border-radius: 12px;
+}
+
+#traceability-qr-video {
+    display: block;
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.qr-scanner-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+@media (max-width: 700px) {
+
+    .section-header-row {
+        flex-direction: column;
+    }
+
+    #scan-traceability-qr {
+        width: 100%;
+    }
+
+}
