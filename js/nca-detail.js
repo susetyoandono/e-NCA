@@ -2,6 +2,7 @@ import { supabase } from "./supabase.js";
 
 let currentProfile = null;
 let currentNCA = null;
+let traceabilityData = [];
 
 // =====================================================
 // ELEMENT HELPER
@@ -1560,6 +1561,400 @@ async function createAttachmentLink(
 
 
     return item;
+}
+
+
+// =====================================================
+// LOAD TRACEABILITY / CONTAINMENT
+// =====================================================
+
+async function loadTraceability() {
+
+    if (!currentNCA?.id) {
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabase
+            .from("nca_traceability")
+            .select(`
+                id,
+                nca_id,
+                part_number,
+                part_name,
+                lot_number,
+                reel_number,
+                lot_qty,
+                defect_name,
+                defect_qty,
+                sorting_rework_by,
+                inspected_by,
+                input_method,
+                created_at,
+                updated_at
+            `)
+            .eq(
+                "nca_id",
+                currentNCA.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
+
+
+    if (error) {
+
+        console.error(
+            "Traceability loading error:",
+            error
+        );
+
+        return;
+    }
+
+
+    traceabilityData =
+        data || [];
+
+
+    renderTraceability();
+}
+
+
+// =====================================================
+// TRACEABILITY HTML ESCAPE
+// =====================================================
+
+function escapeTraceabilityHtml(value) {
+
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+// =====================================================
+// FORMAT QTY
+// =====================================================
+
+function formatTraceQty(value) {
+
+    const number =
+        Number(value);
+
+
+    if (
+        !Number.isFinite(number)
+    ) {
+        return "0";
+    }
+
+
+    return number.toLocaleString();
+}
+
+
+// =====================================================
+// RENDER TRACEABILITY
+// =====================================================
+
+function renderTraceability() {
+
+    const tbody =
+        document.getElementById(
+            "traceability-detail-list"
+        );
+
+
+    if (!tbody) {
+        return;
+    }
+
+
+    // -------------------------------------------------
+    // EMPTY
+    // -------------------------------------------------
+
+    if (
+        traceabilityData.length === 0
+    ) {
+
+        tbody.innerHTML = `
+            <tr>
+
+                <td
+                    colspan="10"
+                    class="table-empty"
+                >
+                    No traceability data.
+                </td>
+
+            </tr>
+        `;
+
+
+        updateTraceabilitySummary();
+
+        return;
+    }
+
+
+    // -------------------------------------------------
+    // ROWS
+    // -------------------------------------------------
+
+    tbody.innerHTML =
+        traceabilityData
+            .map(
+                (row, index) => {
+
+                    const completed =
+                        row.defect_qty !== null &&
+                        row.defect_qty !== undefined &&
+                        String(
+                            row.sorting_rework_by || ""
+                        ).trim() !== "" &&
+                        String(
+                            row.inspected_by || ""
+                        ).trim() !== "";
+
+
+                    return `
+                        <tr
+                            class="${
+                                completed
+                                    ? "trace-row-completed"
+                                    : "trace-row-pending"
+                            }"
+                        >
+
+                            <td>
+                                ${index + 1}
+                            </td>
+
+
+                            <td>
+                                ${
+                                    escapeTraceabilityHtml(
+                                        row.part_number
+                                    )
+                                }
+                            </td>
+
+
+                            <td>
+                                ${
+                                    escapeTraceabilityHtml(
+                                        row.part_name
+                                    )
+                                }
+                            </td>
+
+
+                            <td>
+                                ${
+                                    escapeTraceabilityHtml(
+                                        row.lot_number
+                                    )
+                                }
+                            </td>
+
+
+                            <td>
+                                ${
+                                    escapeTraceabilityHtml(
+                                        row.reel_number ||
+                                        "-"
+                                    )
+                                }
+                            </td>
+
+
+                            <td>
+                                ${
+                                    formatTraceQty(
+                                        row.lot_qty
+                                    )
+                                }
+                            </td>
+
+
+                            <td>
+                                ${
+                                    escapeTraceabilityHtml(
+                                        row.defect_name ||
+                                        "-"
+                                    )
+                                }
+                            </td>
+
+
+                            <td>
+                                ${
+                                    row.defect_qty === null ||
+                                    row.defect_qty === undefined
+
+                                        ? "-"
+
+                                        : formatTraceQty(
+                                            row.defect_qty
+                                        )
+                                }
+                            </td>
+
+
+                            <td>
+                                ${
+                                    escapeTraceabilityHtml(
+                                        row.sorting_rework_by ||
+                                        "-"
+                                    )
+                                }
+                            </td>
+
+
+                            <td>
+                                ${
+                                    escapeTraceabilityHtml(
+                                        row.inspected_by ||
+                                        "-"
+                                    )
+                                }
+                            </td>
+
+                        </tr>
+                    `;
+
+                }
+            )
+            .join("");
+
+
+    updateTraceabilitySummary();
+}
+
+
+// =====================================================
+// TRACEABILITY SUMMARY
+// =====================================================
+
+function updateTraceabilitySummary() {
+
+    const affectedCount =
+        traceabilityData.length;
+
+
+    const totalHold =
+        traceabilityData.reduce(
+            (sum, row) =>
+                sum +
+                Number(
+                    row.lot_qty || 0
+                ),
+            0
+        );
+
+
+    const totalDefect =
+        traceabilityData.reduce(
+            (sum, row) =>
+                sum +
+                Number(
+                    row.defect_qty || 0
+                ),
+            0
+        );
+
+
+    /*
+     * For now a row is considered completed when:
+     *
+     * - Defect Qty entered
+     * - Sorting/Rework By entered
+     * - Inspected By entered
+     *
+     * We can formalize this with containment_status later.
+     */
+
+    const completed =
+        traceabilityData.filter(
+            row =>
+                row.defect_qty !== null &&
+                row.defect_qty !== undefined &&
+                String(
+                    row.sorting_rework_by || ""
+                ).trim() !== "" &&
+                String(
+                    row.inspected_by || ""
+                ).trim() !== ""
+        ).length;
+
+
+    const affectedElement =
+        document.getElementById(
+            "trace-affected-count"
+        );
+
+    const holdElement =
+        document.getElementById(
+            "trace-total-hold"
+        );
+
+    const defectElement =
+        document.getElementById(
+            "trace-total-defect"
+        );
+
+    const completedElement =
+        document.getElementById(
+            "trace-completed"
+        );
+
+
+    if (affectedElement) {
+
+        affectedElement.textContent =
+            affectedCount;
+
+    }
+
+
+    if (holdElement) {
+
+        holdElement.textContent =
+            formatTraceQty(
+                totalHold
+            );
+
+    }
+
+
+    if (defectElement) {
+
+        defectElement.textContent =
+            formatTraceQty(
+                totalDefect
+            );
+
+    }
+
+
+    if (completedElement) {
+
+        completedElement.textContent =
+            `${completed} / ${affectedCount}`;
+
+    }
 }
 
 
