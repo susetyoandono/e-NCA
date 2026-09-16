@@ -11,6 +11,17 @@ let currentNCA = null;
 
 let assignmentUsers = [];
 
+let traceabilityRows = [];
+
+let traceabilityInputMethod =
+    "MANUAL";
+
+let traceabilityStream =
+    null;
+
+let traceabilityScanActive =
+    false;
+
 
 // =====================================================
 // HELPERS
@@ -42,6 +53,624 @@ function getNcaId() {
 
     return params.get("id");
 }
+
+// =====================================================
+// TRACEABILITY QR PARSER
+// =====================================================
+
+function parseTraceabilityQR(text) {
+
+    const values =
+        String(text)
+            .split(",")
+            .map(value =>
+                value.trim()
+            );
+
+
+    /*
+     * FLOWSHEET QR MAPPING
+     *
+     * [1]  Part Number
+     * [2]  Lot Number
+     * [11] Lot Qty
+     * [18] Reel Number
+     * [19] Part Name
+     */
+
+    if (values.length < 20) {
+
+        throw new Error(
+            "Invalid flowsheet QR format."
+        );
+    }
+
+
+    return {
+
+        part_number:
+            values[1] || "",
+
+        lot_number:
+            values[2] || "",
+
+        lot_qty:
+            values[11] || "",
+
+        reel_number:
+            values[18] || "",
+
+        part_name:
+            values[19] || ""
+
+    };
+}
+
+
+// =====================================================
+// APPLY QR RESULT
+// =====================================================
+
+function applyTraceabilityQR(
+    result
+) {
+
+    el("trace-part-number").value =
+        result.part_number;
+
+    el("trace-part-name").value =
+        result.part_name;
+
+    el("trace-lot-number").value =
+        result.lot_number;
+
+    el("trace-reel-number").value =
+        result.reel_number;
+
+    el("trace-lot-qty").value =
+        result.lot_qty;
+
+
+    traceabilityInputMethod =
+        "QR";
+
+
+    const message =
+        el("traceability-message");
+
+
+    if (message) {
+
+        message.textContent =
+            "Flowsheet QR read successfully. Verify the data, then click Add Affected Lot.";
+
+    }
+}
+
+
+// =====================================================
+// CLEAR TRACEABILITY INPUT
+// =====================================================
+
+function clearTraceabilityInput() {
+
+    el("trace-part-number").value =
+        "";
+
+    el("trace-part-name").value =
+        "";
+
+    el("trace-lot-number").value =
+        "";
+
+    el("trace-reel-number").value =
+        "";
+
+    el("trace-lot-qty").value =
+        "";
+
+
+    traceabilityInputMethod =
+        "MANUAL";
+}
+
+
+// =====================================================
+// ADD TRACEABILITY ROW
+// =====================================================
+
+function addTraceabilityRow() {
+
+    const partNumber =
+        el("trace-part-number")
+            .value
+            .trim();
+
+    const partName =
+        el("trace-part-name")
+            .value
+            .trim();
+
+    const lotNumber =
+        el("trace-lot-number")
+            .value
+            .trim();
+
+    const reelNumber =
+        el("trace-reel-number")
+            .value
+            .trim();
+
+    const lotQty =
+        Number(
+            el("trace-lot-qty")
+                .value
+        );
+
+
+    const message =
+        el("traceability-message");
+
+
+    // -------------------------------------------------
+    // VALIDATION
+    // -------------------------------------------------
+
+    if (
+        !partNumber ||
+        !partName ||
+        !lotNumber
+    ) {
+
+        message.textContent =
+            "Part Number, Part Name and Lot Number are required.";
+
+        return;
+    }
+
+
+    if (
+        !Number.isFinite(lotQty) ||
+        lotQty <= 0
+    ) {
+
+        message.textContent =
+            "Lot Qty must be greater than 0.";
+
+        return;
+    }
+
+
+    // -------------------------------------------------
+    // DUPLICATE CHECK
+    // -------------------------------------------------
+
+    const duplicate =
+        traceabilityRows.some(
+            row =>
+                row.part_number ===
+                    partNumber &&
+
+                row.lot_number ===
+                    lotNumber &&
+
+                row.reel_number ===
+                    reelNumber
+        );
+
+
+    if (duplicate) {
+
+        message.textContent =
+            "This Lot / Reel has already been added.";
+
+        return;
+    }
+
+
+    // -------------------------------------------------
+    // ADD
+    // -------------------------------------------------
+
+    traceabilityRows.push({
+
+        temp_id:
+            crypto.randomUUID(),
+
+        part_number:
+            partNumber,
+
+        part_name:
+            partName,
+
+        lot_number:
+            lotNumber,
+
+        reel_number:
+            reelNumber,
+
+        lot_qty:
+            lotQty,
+
+        input_method:
+            traceabilityInputMethod
+
+    });
+
+
+    renderTraceabilityRows();
+
+
+    clearTraceabilityInput();
+
+
+    message.textContent =
+        "Affected lot added.";
+
+}
+
+
+// =====================================================
+// REMOVE TRACEABILITY ROW
+// =====================================================
+
+function removeTraceabilityRow(
+    tempId
+) {
+
+    traceabilityRows =
+        traceabilityRows.filter(
+            row =>
+                row.temp_id !==
+                tempId
+        );
+
+
+    renderTraceabilityRows();
+}
+
+
+// =====================================================
+// HTML ESCAPE
+// =====================================================
+
+function escapeTraceHtml(value) {
+
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+// =====================================================
+// RENDER TRACEABILITY
+// =====================================================
+
+function renderTraceabilityRows() {
+
+    const tbody =
+        el("traceability-list");
+
+    const totalElement =
+        el("traceability-total");
+
+
+    if (!tbody) {
+        return;
+    }
+
+
+    if (
+        traceabilityRows.length === 0
+    ) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td
+                    colspan="8"
+                    class="table-empty"
+                >
+                    No affected lots added.
+                </td>
+            </tr>
+        `;
+
+
+        if (totalElement) {
+            totalElement.textContent = "0";
+        }
+
+
+        return;
+    }
+
+
+    tbody.innerHTML =
+        traceabilityRows
+            .map(
+                (row, index) => `
+                    <tr>
+
+                        <td>
+                            ${index + 1}
+                        </td>
+
+                        <td>
+                            ${escapeTraceHtml(
+                                row.part_number
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeTraceHtml(
+                                row.part_name
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeTraceHtml(
+                                row.lot_number
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeTraceHtml(
+                                row.reel_number ||
+                                "-"
+                            )}
+                        </td>
+
+                        <td>
+                            ${
+                                Number(
+                                    row.lot_qty
+                                ).toLocaleString()
+                            }
+                        </td>
+
+                        <td>
+                            ${escapeTraceHtml(
+                                row.input_method
+                            )}
+                        </td>
+
+                        <td>
+
+                            <button
+                                type="button"
+                                class="
+                                    btn
+                                    btn-secondary
+                                    trace-delete-btn
+                                "
+                                data-trace-id="${
+                                    row.temp_id
+                                }"
+                            >
+                                Delete
+                            </button>
+
+                        </td>
+
+                    </tr>
+                `
+            )
+            .join("");
+
+
+    const total =
+        traceabilityRows.reduce(
+            (sum, row) =>
+                sum +
+                Number(
+                    row.lot_qty || 0
+                ),
+            0
+        );
+
+
+    if (totalElement) {
+
+        totalElement.textContent =
+            total.toLocaleString();
+
+    }
+}
+
+// =====================================================
+// START TRACEABILITY QR SCANNER
+// =====================================================
+
+async function startTraceabilityScanner() {
+
+    const message =
+        el("traceability-message");
+
+
+    if (
+        !("BarcodeDetector" in window)
+    ) {
+
+        message.textContent =
+            "QR scanning is not supported by this browser.";
+
+        return;
+    }
+
+
+    try {
+
+        const detector =
+            new BarcodeDetector({
+                formats: ["qr_code"]
+            });
+
+
+        traceabilityStream =
+            await navigator.mediaDevices
+                .getUserMedia({
+
+                    video: {
+                        facingMode: {
+                            ideal: "environment"
+                        }
+                    },
+
+                    audio: false
+
+                });
+
+
+        const video =
+            el("traceability-qr-video");
+
+
+        video.srcObject =
+            traceabilityStream;
+
+
+        el(
+            "traceability-scanner-container"
+        ).style.display =
+            "block";
+
+
+        traceabilityScanActive =
+            true;
+
+
+        await video.play();
+
+
+        async function detectQR() {
+
+            if (
+                !traceabilityScanActive
+            ) {
+                return;
+            }
+
+
+            try {
+
+                const codes =
+                    await detector.detect(
+                        video
+                    );
+
+
+                if (
+                    codes.length > 0
+                ) {
+
+                    const rawValue =
+                        codes[0]
+                            .rawValue;
+
+
+                    const parsed =
+                        parseTraceabilityQR(
+                            rawValue
+                        );
+
+
+                    applyTraceabilityQR(
+                        parsed
+                    );
+
+
+                    stopTraceabilityScanner();
+
+                    return;
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "QR detection:",
+                    error
+                );
+
+            }
+
+
+            requestAnimationFrame(
+                detectQR
+            );
+        }
+
+
+        detectQR();
+
+
+    } catch (error) {
+
+        console.error(
+            "Camera error:",
+            error
+        );
+
+
+        message.textContent =
+            "Unable to access camera.";
+
+    }
+}
+
+
+// =====================================================
+// STOP TRACEABILITY QR SCANNER
+// =====================================================
+
+function stopTraceabilityScanner() {
+
+    traceabilityScanActive =
+        false;
+
+
+    if (traceabilityStream) {
+
+        traceabilityStream
+            .getTracks()
+            .forEach(
+                track =>
+                    track.stop()
+            );
+
+        traceabilityStream =
+            null;
+    }
+
+
+    const video =
+        el("traceability-qr-video");
+
+
+    if (video) {
+
+        video.srcObject =
+            null;
+
+    }
+
+
+    const container =
+        el(
+            "traceability-scanner-container"
+        );
+
+
+    if (container) {
+
+        container.style.display =
+            "none";
+
+    }
+}
+
 
 
 // =====================================================
@@ -764,6 +1393,79 @@ el("confirm-assignment")
 
         }
     );
+
+// =====================================================
+// TRACEABILITY EVENTS
+// =====================================================
+
+el("add-traceability")
+    ?.addEventListener(
+        "click",
+        addTraceabilityRow
+    );
+
+
+el("clear-traceability")
+    ?.addEventListener(
+        "click",
+        () => {
+
+            clearTraceabilityInput();
+
+            el(
+                "traceability-message"
+            ).textContent = "";
+
+        }
+    );
+
+
+el("scan-traceability-qr")
+    ?.addEventListener(
+        "click",
+        startTraceabilityScanner
+    );
+
+
+el("stop-traceability-scan")
+    ?.addEventListener(
+        "click",
+        stopTraceabilityScanner
+    );
+
+
+el("traceability-list")
+    ?.addEventListener(
+        "click",
+        event => {
+
+            const button =
+                event.target.closest(
+                    "[data-trace-id]"
+                );
+
+
+            if (!button) {
+                return;
+            }
+
+
+            removeTraceabilityRow(
+                button.dataset.traceId
+            );
+
+        }
+    );
+
+
+// Stop camera if user leaves page
+
+window.addEventListener(
+    "beforeunload",
+    stopTraceabilityScanner
+);
+
+
 
 // =====================================================
 // INIT
