@@ -2714,3 +2714,74 @@ body.lightbox-open {
     }
 
 }
+
+/* =========================================================
+   PRINT - LATEST DISPOSITION
+   ========================================================= */
+
+.print-disposition-section {
+    display: none;
+}
+
+
+@media print {
+
+    /* -----------------------------------------
+       ONLY PRINT CONTENT
+       ----------------------------------------- */
+
+    .no-print {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------
+       DISPOSITION
+       ----------------------------------------- */
+
+    .print-disposition-section {
+        display: flex !important;
+
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+
+        min-height: 18mm;
+
+        margin: 2mm 0 3mm 0;
+
+        padding: 2mm;
+
+        box-sizing: border-box;
+
+        border-top: 1px solid #222;
+        border-bottom: 1px solid #222;
+
+        text-align: center;
+    }
+
+
+    .print-disposition-label {
+        font-size: 6.5pt;
+        font-weight: 600;
+
+        letter-spacing: 0.6px;
+
+        margin-bottom: 1mm;
+    }
+
+
+    .print-disposition-value {
+        font-size: 19pt;
+        line-height: 1;
+
+        font-weight: 800;
+
+        letter-spacing: 1px;
+
+        text-transform: uppercase;
+    }
+
+}
