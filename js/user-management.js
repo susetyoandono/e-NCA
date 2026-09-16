@@ -740,14 +740,8 @@ function openEditUser(id) {
     document.getElementById(
         "user-form-message"
     ).textContent = "";
-
     
-    passwordGroup.style.display = "none";
-    
-    passwordInput.value = "";
-    
-    passwordInput.required = false;
-    
+  
     modal.style.display = "flex";
 
 }
