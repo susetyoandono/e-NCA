@@ -708,46 +708,42 @@ function updateQcSupervisorReviewButton() {
             "qc-supervisor-review-btn"
         );
 
-
     if (!button) {
         return;
     }
 
-
     // Default hidden
-    button.style.display =
-        "none";
+    button.style.display = "none";
 
-
-    if (
-        !currentNCA ||
-        !currentUser
-    ) {
+    if (!currentNCA) {
         return;
     }
-
 
     const approvalStatus =
         String(
             currentNCA.approval_status || ""
         ).toUpperCase();
 
+    /*
+     * Use logged-in Supabase user ID
+     * directly from the existing session.
+     */
+    const loggedInUserId =
+        currentProfile?.id || null;
+
+    if (!loggedInUserId) {
+        return;
+    }
 
     const isCurrentAssignee =
         currentNCA.current_assignee ===
-        currentUser.id;
+        loggedInUserId;
 
-
-    // Only selected QC Supervisor
-    // during WAITING_QC_REVIEW
     if (
-        approvalStatus ===
-            "WAITING_QC_REVIEW" &&
+        approvalStatus === "WAITING_QC_REVIEW" &&
         isCurrentAssignee
     ) {
-
-        button.style.display =
-            "inline-flex";
+        button.style.display = "inline-flex";
     }
 }
 
