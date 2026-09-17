@@ -1,1 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>IPI Document Finder</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         APP CONTAINER
+    ====================================================== -->
+
+    <div class="app">
+
+
+        <!-- =================================================
+             JSON LOADER SCREEN
+        ================================================== -->
+
+        <section
+            id="loaderPage"
+            class="loader-page"
+        >
+
+            <div class="loader-card">
+
+                <div class="brand-mark">
+                    IPI
+                </div>
+
+
+                <div class="loader-title">
+                    Document Finder
+                </div>
+
+
+                <div class="loader-subtitle">
+                    Search and access IPI controlled documents
+                </div>
+
+
+                <div
+                    id="dropZone"
+                    class="drop-zone"
+                >
+
+                    <div class="upload-icon">
+                        ↑
+                    </div>
+
+
+                    <div class="upload-title">
+                        Load Masterlist JSON
+                    </div>
+
+
+                    <div class="upload-description">
+                        Select your IPI_Masterlist.json file
+                    </div>
+
+
+                    <label
+                        for="jsonFile"
+                        class="browse-button"
+                    >
+                        Browse JSON File
+                    </label>
+
+
+                    <input
+                        type="file"
+                        id="jsonFile"
+                        accept=".json,application/json"
+                        hidden
+                    >
+
+
+                    <div
+                        id="fileName"
+                        class="selected-file"
+                    ></div>
+
+                </div>
+
+
+                <div
+                    id="loaderError"
+                    class="loader-error"
+                ></div>
+
+
+                <div class="loader-note">
+                    Your JSON file is processed locally in this browser.
+                    No data is uploaded to a server.
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             DOCUMENT FINDER PAGE
+        ================================================== -->
+
+        <section
+            id="finderPage"
+            class="finder-page hidden"
+        >
+
+
+            <!-- =============================================
+                 TOP HEADER
+            ============================================== -->
+
+            <header class="top-header">
+
+                <div class="header-left">
+
+                    <div class="brand-logo">
+                        IPI
+                    </div>
+
+
+                    <div>
+
+                        <div class="header-title">
+                            Document Finder
+                        </div>
+
+                        <div class="header-subtitle">
+                            IPEX Indonesia Inc.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="header-right">
+
+                    <button
+                        id="reloadJsonButton"
+                        class="header-button"
+                    >
+                        Load New JSON
+                    </button>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- =============================================
+                 MAIN CONTENT
+            ============================================== -->
+
+            <main class="main-content">
+
+
+                <!-- =========================================
+                     SEARCH AREA
+                ========================================== -->
+
+                <div class="search-panel">
+
+                    <div class="search-wrapper">
+
+                        <span class="search-icon">
+                            ⌕
+                        </span>
+
+
+                        <input
+                            type="text"
+                            id="searchInput"
+                            class="search-input"
+                            placeholder="Search document number, title, department, PIC, revision..."
+                            autocomplete="off"
+                        >
+
+
+                        <button
+                            id="clearSearch"
+                            class="clear-search"
+                            title="Clear search"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+
+                    <div class="search-help">
+                        Search across all document information
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     FILTER BAR
+                ========================================== -->
+
+                <div class="filter-bar">
+
+
+                    <div class="filter-group">
+
+                        <label>
+                            Document Type
+                        </label>
+
+                        <select
+                            id="documentTypeFilter"
+                            class="filter-select"
+                        >
+
+                            <option value="">
+                                All Document Types
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="filter-group">
+
+                        <label>
+                            Department
+                        </label>
+
+                        <select
+                            id="departmentFilter"
+                            class="filter-select"
+                        >
+
+                            <option value="">
+                                All Departments
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <button
+                        id="resetFilters"
+                        class="reset-button"
+                    >
+                        Reset Filters
+                    </button>
+
+
+                </div>
+
+
+
+                <!-- =========================================
+                     RESULT HEADER
+                ========================================== -->
+
+                <div class="result-header">
+
+                    <div>
+
+                        <span
+                            id="resultCount"
+                            class="result-count"
+                        >
+                            0
+                        </span>
+
+                        <span class="result-label">
+                            documents found
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        id="activeSearch"
+                        class="active-search"
+                    ></div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     TABLE
+                ========================================== -->
+
+                <div class="table-container">
+
+                    <table class="document-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="col-type">
+                                    Document Type
+                                </th>
+
+                                <th class="col-dept">
+                                    Dep. Acronym
+                                </th>
+
+                                <th class="col-document">
+                                    Document No.
+                                </th>
+
+                                <th class="col-title">
+                                    Document Title
+                                </th>
+
+                                <th class="col-revision">
+                                    Rev.
+                                </th>
+
+                                <th class="col-date">
+                                    Latest Release
+                                </th>
+
+                                <th class="col-pic">
+                                    PIC
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="documentTableBody"
+                        >
+                        </tbody>
+
+                    </table>
+
+
+
+                    <!-- =====================================
+                         EMPTY STATE
+                    ====================================== -->
+
+                    <div
+                        id="emptyState"
+                        class="empty-state hidden"
+                    >
+
+                        <div class="empty-icon">
+                            ⌕
+                        </div>
+
+                        <div class="empty-title">
+                            No documents found
+                        </div>
+
+                        <div class="empty-description">
+                            Try another keyword or change the filters.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </main>
+
+
+            <!-- =============================================
+                 FOOTER
+            ============================================== -->
+
+            <footer class="footer">
+
+                <span>
+                    IPI Document Finder
+                </span>
+
+                <span>
+                    Local JSON Database
+                </span>
+
+            </footer>
+
+
+        </section>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
