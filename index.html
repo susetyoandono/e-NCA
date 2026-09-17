@@ -1,85 +1,1240 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>e-NCA | IPEX Indonesia</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="css/style.css">
+    <meta
+        name="theme-color"
+        content="#008fdd"
+    >
+
+    <title>IPI Quality Portal</title>
+
+    <style>
+
+        /* =========================================================
+           ROOT
+           ========================================================= */
+
+        :root {
+
+            --ipex-blue: #0095df;
+            --ipex-blue-dark: #006eae;
+            --ipex-blue-deep: #004d7f;
+            --ipex-red: #ed1c24;
+
+            --white: #ffffff;
+
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+
+            --border: rgba(255,255,255,.22);
+
+            --glass:
+                rgba(255,255,255,.12);
+
+            --glass-hover:
+                rgba(255,255,255,.20);
+
+        }
+
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+
+        body {
+
+            font-family:
+                Inter,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background: #071827;
+
+            color: var(--white);
+
+            overflow-x: hidden;
+        }
+
+
+        button,
+        a {
+            font: inherit;
+        }
+
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+
+        /* =========================================================
+           BACKGROUND
+           ========================================================= */
+
+        .portal-background {
+
+            position: fixed;
+            inset: 0;
+
+            background-image:
+                url("./assets/images/IPI-Front.png");
+
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+
+            z-index: -3;
+
+            transform: scale(1.015);
+        }
+
+
+        .portal-overlay {
+
+            position: fixed;
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(3, 19, 32, .91) 0%,
+                    rgba(4, 30, 49, .78) 40%,
+                    rgba(4, 37, 59, .46) 72%,
+                    rgba(3, 20, 32, .42) 100%
+                );
+
+            z-index: -2;
+        }
+
+
+        .portal-gradient {
+
+            position: fixed;
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(0,0,0,.16),
+                    transparent 30%,
+                    rgba(0,0,0,.28)
+                );
+
+            z-index: -1;
+        }
+
+
+        /* =========================================================
+           APP
+           ========================================================= */
+
+        .portal {
+
+            min-height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+
+        .portal-header {
+
+            height: 88px;
+
+            padding:
+                0 clamp(24px, 5vw, 80px);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom:
+                1px solid rgba(255,255,255,.15);
+
+            background:
+                rgba(3, 23, 38, .30);
+
+            backdrop-filter:
+                blur(12px);
+
+            -webkit-backdrop-filter:
+                blur(12px);
+        }
+
+
+        .brand {
+
+            display: flex;
+            align-items: center;
+
+            gap: 20px;
+        }
+
+
+        .brand-logo-box {
+
+            height: 52px;
+
+            min-width: 150px;
+
+            display: flex;
+            align-items: center;
+
+            padding:
+                8px 14px;
+
+            background: white;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(0,0,0,.15);
+        }
+
+
+        .brand-logo {
+
+            width: 130px;
+            max-height: 38px;
+
+            object-fit: contain;
+        }
+
+
+        .brand-divider {
+
+            width: 1px;
+            height: 36px;
+
+            background:
+                rgba(255,255,255,.25);
+        }
+
+
+        .brand-company {
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 2px;
+        }
+
+
+        .brand-company strong {
+
+            font-size: 14px;
+
+            letter-spacing:
+                .03em;
+        }
+
+
+        .brand-company span {
+
+            font-size: 11px;
+
+            color:
+                rgba(255,255,255,.65);
+
+            letter-spacing:
+                .04em;
+        }
+
+
+        /* =========================================================
+           HEADER LOGIN
+           ========================================================= */
+
+        .header-login {
+
+            display: inline-flex;
+            align-items: center;
+
+            gap: 9px;
+
+            padding:
+                10px 17px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.35);
+
+            border-radius: 9px;
+
+            background:
+                rgba(255,255,255,.10);
+
+            color: white;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            transition:
+                .2s ease;
+        }
+
+
+        .header-login:hover {
+
+            background:
+                rgba(255,255,255,.18);
+
+            border-color:
+                rgba(255,255,255,.60);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        /* =========================================================
+           MAIN
+           ========================================================= */
+
+        .portal-main {
+
+            flex: 1;
+
+            width: 100%;
+
+            max-width: 1500px;
+
+            margin: 0 auto;
+
+            padding:
+                clamp(55px, 8vh, 100px)
+                clamp(24px, 6vw, 90px)
+                45px;
+
+            display: flex;
+            flex-direction: column;
+
+            justify-content: center;
+        }
+
+
+        /* =========================================================
+           HERO
+           ========================================================= */
+
+        .hero {
+
+            max-width: 800px;
+
+            margin-bottom:
+                clamp(38px, 6vh, 65px);
+        }
+
+
+        .hero-eyebrow {
+
+            display: inline-flex;
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 18px;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing:
+                .16em;
+
+            color: #8ed8ff;
+        }
+
+
+        .hero-eyebrow::before {
+
+            content: "";
+
+            width: 34px;
+            height: 3px;
+
+            border-radius: 20px;
+
+            background:
+                var(--ipex-red);
+        }
+
+
+        .hero h1 {
+
+            font-size:
+                clamp(38px, 5vw, 68px);
+
+            line-height: 1.02;
+
+            letter-spacing:
+                -.045em;
+
+            font-weight: 700;
+
+            margin-bottom: 18px;
+        }
+
+
+        .hero h1 span {
+
+            color: #59c5f5;
+        }
+
+
+        .hero-description {
+
+            max-width: 670px;
+
+            font-size:
+                clamp(14px, 1.4vw, 17px);
+
+            line-height: 1.65;
+
+            color:
+                rgba(255,255,255,.77);
+        }
+
+
+        /* =========================================================
+           MODULE AREA
+           ========================================================= */
+
+        .module-heading {
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 15px;
+
+            gap: 20px;
+        }
+
+
+        .module-heading h2 {
+
+            font-size: 13px;
+
+            text-transform: uppercase;
+
+            letter-spacing:
+                .12em;
+
+            font-weight: 700;
+
+            color:
+                rgba(255,255,255,.72);
+        }
+
+
+        .module-heading span {
+
+            font-size: 11px;
+
+            color:
+                rgba(255,255,255,.48);
+        }
+
+
+        .module-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, minmax(0, 1fr));
+
+            gap: 14px;
+        }
+
+
+        /* =========================================================
+           MODULE CARD
+           ========================================================= */
+
+        .module-card {
+
+            position: relative;
+
+            min-height: 175px;
+
+            padding: 22px;
+
+            display: flex;
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 16px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.16),
+                    rgba(255,255,255,.07)
+                );
+
+            backdrop-filter:
+                blur(14px);
+
+            -webkit-backdrop-filter:
+                blur(14px);
+
+            box-shadow:
+                0 15px 40px
+                rgba(0,0,0,.13);
+
+            overflow: hidden;
+
+            transition:
+                transform .22s ease,
+                border-color .22s ease,
+                background .22s ease,
+                box-shadow .22s ease;
+        }
+
+
+        .module-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            top: 0;
+
+            width: 3px;
+            height: 0;
+
+            background:
+                var(--ipex-blue);
+
+            transition:
+                height .25s ease;
+        }
+
+
+        .module-card:hover {
+
+            transform:
+                translateY(-5px);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.23),
+                    rgba(255,255,255,.11)
+                );
+
+            border-color:
+                rgba(255,255,255,.40);
+
+            box-shadow:
+                0 22px 50px
+                rgba(0,0,0,.20);
+        }
+
+
+        .module-card:hover::before {
+
+            height: 100%;
+        }
+
+
+        .module-top {
+
+            display: flex;
+            justify-content: space-between;
+
+            align-items: flex-start;
+        }
+
+
+        .module-icon {
+
+            width: 44px;
+            height: 44px;
+
+            border-radius: 11px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                rgba(0,149,223,.18);
+
+            border:
+                1px solid
+                rgba(96,200,248,.28);
+
+            font-size: 21px;
+        }
+
+
+        .module-arrow {
+
+            width: 30px;
+            height: 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            color:
+                rgba(255,255,255,.60);
+
+            transition:
+                .2s ease;
+        }
+
+
+        .module-card:hover
+        .module-arrow {
+
+            background:
+                rgba(255,255,255,.13);
+
+            color: white;
+
+            transform:
+                translateX(2px);
+        }
+
+
+        .module-content {
+
+            margin-top: 24px;
+        }
+
+
+        .module-content h3 {
+
+            font-size: 16px;
+
+            margin-bottom: 6px;
+        }
+
+
+        .module-content p {
+
+            font-size: 11.5px;
+
+            line-height: 1.45;
+
+            color:
+                rgba(255,255,255,.62);
+        }
+
+
+        /* =========================================================
+           e-NCA FEATURED CARD
+           ========================================================= */
+
+        .module-card.featured {
+
+            border-color:
+                rgba(76,195,250,.48);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(0,149,223,.38),
+                    rgba(0,83,132,.24)
+                );
+        }
+
+
+        .module-card.featured::before {
+
+            background:
+                var(--ipex-red);
+        }
+
+
+        .secure-badge {
+
+            position: absolute;
+
+            top: 15px;
+            right: 15px;
+
+            padding:
+                4px 7px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(255,255,255,.15);
+
+            border:
+                1px solid
+                rgba(255,255,255,.18);
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing:
+                .07em;
+
+            color:
+                rgba(255,255,255,.80);
+        }
+
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+
+        .portal-footer {
+
+            padding:
+                18px
+                clamp(24px, 5vw, 80px);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            border-top:
+                1px solid rgba(255,255,255,.10);
+
+            background:
+                rgba(2, 17, 28, .35);
+
+            font-size: 10px;
+
+            color:
+                rgba(255,255,255,.46);
+        }
+
+
+        .footer-system {
+
+            display: flex;
+            align-items: center;
+
+            gap: 7px;
+        }
+
+
+        .system-dot {
+
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background:
+                #39d98a;
+
+            box-shadow:
+                0 0 10px
+                rgba(57,217,138,.65);
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @media (max-width: 1150px) {
+
+            .module-grid {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 760px) {
+
+            .portal-header {
+
+                height: 72px;
+
+                padding:
+                    0 18px;
+            }
+
+
+            .brand-logo-box {
+
+                min-width: auto;
+                height: 44px;
+
+                padding:
+                    7px 10px;
+            }
+
+
+            .brand-logo {
+
+                width: 105px;
+            }
+
+
+            .brand-divider,
+            .brand-company {
+
+                display: none;
+            }
+
+
+            .header-login span {
+
+                display: none;
+            }
+
+
+            .portal-main {
+
+                padding:
+                    55px 18px
+                    35px;
+            }
+
+
+            .hero {
+
+                margin-bottom: 38px;
+            }
+
+
+            .hero h1 {
+
+                font-size: 40px;
+            }
+
+
+            .module-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .module-heading span {
+
+                display: none;
+            }
+
+
+            .portal-footer {
+
+                padding:
+                    15px 18px;
+
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .module-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .module-card {
+
+                min-height: 150px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-    <main class="login-page">
 
-        <div class="login-card">
+    <!-- =====================================================
+         FACTORY BACKGROUND
+         ===================================================== -->
 
-            <div class="login-header">
-                <h1>e-NCA</h1>
+    <div class="portal-background"></div>
+    <div class="portal-overlay"></div>
+    <div class="portal-gradient"></div>
 
-                <p>
-                    Electronic Non-Conformance Application
-                </p>
 
-                <span>
-                    PT I-PEX Indonesia Inc.
-                </span>
+    <div class="portal">
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
+        <header class="portal-header">
+
+
+            <div class="brand">
+
+                <div class="brand-logo-box">
+
+                    <img
+                        src="./assets/images/i-pex-logo.png"
+                        alt="I-PEX"
+                        class="brand-logo"
+                    >
+
+                </div>
+
+
+                <div class="brand-divider"></div>
+
+
+                <div class="brand-company">
+
+                    <strong>
+                        PT. I-PEX Indonesia Inc.
+                    </strong>
+
+                    <span>
+                        QUALITY MANAGEMENT SYSTEM
+                    </span>
+
+                </div>
+
             </div>
 
-            <form id="login-form">
 
-                <div class="form-group">
+            <a
+                href="./pages/login.html"
+                class="header-login"
+            >
 
-                    <label for="badge-id">
-                        Badge ID
-                    </label>
+                <span>Portal Login</span>
 
-                    <input
-                        type="text"
-                        id="badge-id"
-                        placeholder="Enter Badge ID"
-                        required
-                        autocomplete="username"
-                    >
+                <strong>→</strong>
+
+            </a>
+
+
+        </header>
+
+
+        <!-- =================================================
+             MAIN
+             ================================================= -->
+
+        <main class="portal-main">
+
+
+            <!-- HERO -->
+
+            <section class="hero">
+
+                <div class="hero-eyebrow">
+                    Quality Management Portal
+                </div>
+
+
+                <h1>
+                    Quality.
+                    <br>
+                    <span>Connected.</span>
+                </h1>
+
+
+                <p class="hero-description">
+
+                    Central access to PT. I-PEX Indonesia
+                    quality systems, information, documents,
+                    customer feedback and non-conformity
+                    management.
+
+                </p>
+
+            </section>
+
+
+            <!-- =================================================
+                 MODULES
+                 ================================================= -->
+
+            <section>
+
+
+                <div class="module-heading">
+
+                    <h2>
+                        Quality Applications
+                    </h2>
+
+                    <span>
+                        Select a module to continue
+                    </span>
 
                 </div>
 
-                <div class="form-group">
 
-                    <label for="password">
-                        Password
-                    </label>
+                <div class="module-grid">
 
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder="Enter Password"
-                        required
-                        autocomplete="current-password"
+
+                    <!-- ORGANIZATION -->
+
+                    <a
+                        href="./pages/organization.html"
+                        class="module-card"
                     >
+
+                        <div class="module-top">
+
+                            <div class="module-icon">
+                                ◫
+                            </div>
+
+                            <div class="module-arrow">
+                                →
+                            </div>
+
+                        </div>
+
+
+                        <div class="module-content">
+
+                            <h3>
+                                Organization
+                            </h3>
+
+                            <p>
+                                Quality organization,
+                                responsibilities and structure.
+                            </p>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- CUSTOMER FEEDBACK -->
+
+                    <a
+                        href="./pages/customer-feedback.html"
+                        class="module-card"
+                    >
+
+                        <div class="module-top">
+
+                            <div class="module-icon">
+                                ◇
+                            </div>
+
+                            <div class="module-arrow">
+                                →
+                            </div>
+
+                        </div>
+
+
+                        <div class="module-content">
+
+                            <h3>
+                                Customer Feedback
+                            </h3>
+
+                            <p>
+                                Customer complaints, feedback
+                                and quality performance.
+                            </p>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- CALIBRATION -->
+
+                    <a
+                        href="./pages/calibration.html"
+                        class="module-card"
+                    >
+
+                        <div class="module-top">
+
+                            <div class="module-icon">
+                                ◎
+                            </div>
+
+                            <div class="module-arrow">
+                                →
+                            </div>
+
+                        </div>
+
+
+                        <div class="module-content">
+
+                            <h3>
+                                Calibration
+                            </h3>
+
+                            <p>
+                                Measuring equipment and
+                                calibration management.
+                            </p>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- DOCUMENT CONTROL -->
+
+                    <a
+                        href="./pages/document-control.html"
+                        class="module-card"
+                    >
+
+                        <div class="module-top">
+
+                            <div class="module-icon">
+                                ▤
+                            </div>
+
+                            <div class="module-arrow">
+                                →
+                            </div>
+
+                        </div>
+
+
+                        <div class="module-content">
+
+                            <h3>
+                                Document Control
+                            </h3>
+
+                            <p>
+                                Search and access controlled
+                                quality documents.
+                            </p>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- e-NCA -->
+
+                    <a
+                        href="./pages/login.html"
+                        class="module-card featured"
+                    >
+
+                        <div class="secure-badge">
+                            Login Required
+                        </div>
+
+
+                        <div class="module-top">
+
+                            <div class="module-icon">
+                                !
+                            </div>
+
+                        </div>
+
+
+                        <div class="module-content">
+
+                            <h3>
+                                e-NCA
+                            </h3>
+
+                            <p>
+                                Electronic Non-Conformity
+                                Analysis and workflow management.
+                            </p>
+
+                        </div>
+
+                    </a>
+
 
                 </div>
 
-                <button
-                    type="submit"
-                    id="login-button"
-                >
-                    Login
-                </button>
+            </section>
 
-                <div id="login-message"></div>
 
-            </form>
+        </main>
 
-        </div>
 
-    </main>
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
 
-    <script
-        type="module"
-        src="js/login.js"
-    ></script>
+        <footer class="portal-footer">
+
+
+            <div>
+                PT. I-PEX Indonesia Inc. · Quality Portal
+            </div>
+
+
+            <div class="footer-system">
+
+                <span class="system-dot"></span>
+
+                Internal Quality System
+
+            </div>
+
+
+        </footer>
+
+
+    </div>
+
 
 </body>
+
 </html>
