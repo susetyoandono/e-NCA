@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>e-NCA | IPEX Indonesia</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <main class="login-page">
+
+        <div class="login-card">
+
+            <div class="login-header">
+                <h1>e-NCA</h1>
+
+                <p>
+                    Electronic Non-Conformance Application
+                </p>
+
+                <span>
+                    PT I-PEX Indonesia Inc.
+                </span>
+            </div>
+
+            <form id="login-form">
+
+                <div class="form-group">
+
+                    <label for="badge-id">
+                        Badge ID
+                    </label>
+
+                    <input
+                        type="text"
+                        id="badge-id"
+                        placeholder="Enter Badge ID"
+                        required
+                        autocomplete="username"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter Password"
+                        required
+                        autocomplete="current-password"
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    id="login-button"
+                >
+                    Login
+                </button>
+
+                <div id="login-message"></div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+    <script
+        type="module"
+        src="js/login.js"
+    ></script>
+
+</body>
+</html>
