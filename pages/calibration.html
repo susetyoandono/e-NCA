@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>IPEX | Calibration Masterlist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- SheetJS (xlsx) CDN for Excel parsing -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<!-- jsPDF + autotable for formal PDF report export -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+<style>
+  :root{
+    /* Brand palette derived from the I-PEX logo (blue wordmark + red flag) */
+    --navy:#073b63;        /* deep brand-blue, used for headers / nav / table head */
+    --navy-2:#0a4d80;      /* hover shade of brand-blue-dark */
+    --cyan:#0091e6;        /* primary I-PEX blue — buttons, links, focus */
+    --cyan-ink:#0077bd;    /* hover shade of primary blue */
+    --brand-red:#e60012;   /* I-PEX flag red — used sparingly as an alert accent */
+    --steel:#5b7690;
+    --ink:#0f1b2d;
+    --muted:#64748b;
+    --bg:#eef2f7;
+    --card:#ffffff;
+    --line:#e2e8f0;
+    --amber:#d97706;
+    --yellow:#ca8a04;
+    --red:#e60012;
+    --green:#15803d;
+    --violet:#6d28d9;
+    --radius:14px;
+    --shadow: 0 1px 2px rgba(7,59,99,.05), 0 8px 24px rgba(7,59,99,.08);
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:'Inter',Segoe UI,Roboto,Arial,sans-serif;
+    margin:0; background:var(--bg); color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace}
+  .center{max-width:1280px;margin:0 auto;padding:24px}
+  .card{background:var(--card);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border:1px solid var(--line)}
+
+  /* ---------- Brand mark ---------- */
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo-img{display:block;height:auto}
+  .logo-dash{width:88px}
+  .logo-login{width:160px;margin:0 auto}
+  .brand-login{flex-direction:column;gap:8px}
+  .brand-text .name{font-weight:800;font-size:20px;letter-spacing:.5px;color:var(--navy);line-height:1}
+  .brand-text .tag{font-size:10.5px;letter-spacing:1.6px;color:var(--muted);text-transform:uppercase;margin-top:3px;font-weight:600}
+  .brand-login .tag{margin-top:0}
+
+  /* ---------- Login ---------- */
+  .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(255,255,255,.06), transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(0,145,230,.35), transparent 45%),
+      linear-gradient(160deg, var(--navy) 0%, #041c30 100%);
+    padding:24px;
+  }
+  .login-card{width:100%;max-width:440px;background:var(--card);border-radius:20px;padding:36px 34px;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+  .login-card .brand{justify-content:center;margin-bottom:22px}
+  .login-card h2{margin:0 0 4px;font-size:19px;text-align:center;color:var(--navy)}
+  .login-sub{text-align:center;color:var(--muted);font-size:13px;margin:0 0 22px}
+  .dropzone{border:2px dashed #c9d5e2;border-radius:12px;padding:20px;text-align:center;background:#f8fafc;transition:.15s;cursor:pointer;position:relative}
+  .dropzone:hover{border-color:var(--cyan);background:#f0fbfd}
+  .dropzone svg{color:var(--steel);margin-bottom:6px}
+  .dropzone .dz-title{font-weight:600;font-size:13.5px;color:var(--navy)}
+  .dropzone .dz-sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .dropzone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+  .file-note{font-size:12.5px;padding:10px 12px;border-radius:10px;background:#ecfdf5;color:#047857;margin:14px 0 0;display:none;font-weight:600;border:1px solid #a7f3d0}
+  .divider-text{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:20px 0 14px}
+  .divider-text::before,.divider-text::after{content:'';flex:1;height:1px;background:var(--line)}
+
+  input[type=text], input[type=password], input[type=number], input[type=date], select{
+    width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;
+    margin:6px 0 12px;font-family:inherit;font-size:13.5px;color:var(--ink);
+    background:#fff;transition:.12s;
+  }
+  input:focus, select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(8,145,168,.12)}
+  input:disabled{background:#f1f5f9;color:#94a3b8;cursor:not-allowed}
+  label{display:block;font-size:11.5px;font-weight:700;color:var(--steel);text-transform:uppercase;letter-spacing:.5px;margin:2px 0 0}
+
+  button{background:var(--navy);color:#fff;border:none;padding:11px 18px;border-radius:10px;cursor:pointer;
+    font-family:inherit;font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:8px;transition:.12s}
+  button:hover{background:var(--navy-2);transform:translateY(-1px)}
+  button:active{transform:translateY(0)}
+  button:disabled{background:#cbd5e1;color:#94a3b8;cursor:not-allowed;transform:none}
+  button.secondary{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+  button.secondary:hover{background:#f8fafc;border-color:#cbd5e1}
+  button.danger{background:#fff;color:var(--red);border:1.5px solid #fecaca}
+  button.danger:hover{background:#fef2f2}
+  button.accent{background:var(--cyan)}
+  button.accent:hover{background:var(--cyan-ink)}
+  button.full{width:100%;justify-content:center}
+
+  /* ---------- App shell / topbar ---------- */
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+  .role-pill{display:inline-flex;align-items:center;gap:6px;background:#f1f5f9;border:1px solid var(--line);
+    padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;color:var(--navy)}
+  .role-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+
+  /* ---------- Stat cards ---------- */
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);
+    display:flex;align-items:center;gap:12px}
+  .stat .icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .stat .val{font-size:22px;font-weight:800;line-height:1;color:var(--ink)}
+  .stat .lbl{font-size:11.5px;color:var(--muted);font-weight:600;margin-top:3px}
+  .stat.tot .icon{background:#eef2f7;color:var(--navy)}
+  .stat.red .icon{background:#fef2f2;color:var(--red)}
+  .stat.amber .icon{background:#fffbeb;color:var(--amber)}
+  .stat.yellow .icon{background:#fefce8;color:var(--yellow)}
+  .stat.green .icon{background:#f0fdf4;color:var(--green)}
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{display:flex;gap:10px;align-items:center;margin:0 0 16px;flex-wrap:wrap}
+  .search-wrap{position:relative;flex:1;min-width:220px;max-width:360px}
+  .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+  .search-wrap input{padding-left:36px;margin:0}
+  .toolbar-spacer{flex:1}
+
+  /* ---------- Table ---------- */
+  .table-wrap{overflow:auto;max-height:480px;border:1px solid var(--line);border-radius:12px}
+  table{width:100%;border-collapse:collapse;min-width:1150px}
+  th,td{padding:11px 13px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;white-space:nowrap}
+  th{background:var(--navy);color:#fff;position:sticky;top:0;font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;z-index:1}
+  th.sortable{cursor:pointer;user-select:none}
+  th.sortable:hover{background:var(--navy-2)}
+  .sort-arrow{display:inline-block;font-size:9px;margin-left:3px;opacity:.85}
+  tbody tr:nth-child(even){background:#f8fafc}
+  tbody tr:hover{background:#eef6f8}
+  tbody tr.selected{background:#e0f2f5 !important}
+  td.wrap{white-space:normal}
+
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700}
+  .badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+  .badge-red{background:#fef2f2;color:var(--red)}
+  .badge-amber{background:#fffbeb;color:var(--amber)}
+  .badge-yellow{background:#fefce8;color:var(--yellow)}
+  .badge-green{background:#f0fdf4;color:var(--green)}
+  .badge-violet{background:#f5f3ff;color:var(--violet)}
+  .badge-grey{background:#f1f5f9;color:var(--muted)}
+
+  /* ---------- Activity log ---------- */
+  .log-area{max-height:130px;overflow:auto;padding:4px 2px;border-radius:10px}
+  .log-item{padding:8px 10px;font-size:12.5px;color:var(--ink);border-bottom:1px solid var(--line)}
+  .log-item:last-child{border-bottom:none}
+  .log-item .t{color:var(--muted);font-size:11px;margin-right:6px}
+
+  .popup{position:fixed;right:20px;top:20px;background:var(--navy);color:#fff;padding:11px 16px;border-radius:10px;display:none;z-index:999;font-size:13.5px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(8,17,30,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px}
+  .modal-box{max-width:520px;width:100%;max-height:90vh;overflow:auto}
+  .modal-box h3{margin:0 0 4px;color:var(--navy);font-size:18px}
+  .modal-sub{color:var(--muted);font-size:12.5px;margin:0 0 18px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+  .grid2 .full{grid-column:1/-1}
+  .modal-actions{display:flex;gap:10px;margin-top:16px}
+
+  section-title, .section-title{font-size:11px;font-weight:800;color:var(--steel);text-transform:uppercase;letter-spacing:1px;margin:18px 0 4px}
+
+  @media(max-width:900px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .grid2{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginWrap" class="login-wrap">
+  <div class="login-card">
+    <div class="brand brand-login">
+      <img id="loginLogoImg" class="logo-img logo-login" alt="I-PEX" />
+      <div class="tag">Calibration Masterlist</div>
+    </div>
+    <h2>Sign in to continue</h2>
+    <p class="login-sub">Upload masterlist file untuk mengaktifkan akses</p>
+
+    <label class="dropzone" id="dropzone">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16a4 4 0 0 1-1-7.87A5.5 5.5 0 0 1 16.5 8h.5a4 4 0 0 1 1 7.87"/><path d="M12 11v8"/><path d="M9 14l3-3 3 3"/></svg>
+      <div class="dz-title">Klik atau drop file di sini</div>
+      <div class="dz-sub">.csv, .xlsx, .xls</div>
+      <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" />
+    </label>
+    <div id="fileNote" class="file-note"></div>
+
+    <div class="divider-text">Login</div>
+
+    <label>Username</label>
+    <input id="username" type="text" placeholder="Admin" disabled>
+    <label>Password</label>
+    <input id="password" type="password" placeholder="••••••••" disabled>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button id="btnLogin" class="full" onclick="login()" disabled>Login as Admin</button>
+    </div>
+    <button id="btnGuest" class="secondary full" style="margin-top:8px" onclick="guestLogin()" disabled>Continue as Guest</button>
+    <p class="muted" style="text-align:center;font-size:11.5px;color:var(--muted);margin-top:16px"></p>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="dashboardWrap" style="display:none">
+  <div class="center">
+
+    <div class="topbar">
+      <div class="brand">
+        <img id="dashLogoImg" class="logo-img logo-dash" alt="I-PEX" />
+        <div class="brand-text">
+          <div class="tag">Calibration Masterlist</div>
+        </div>
+      </div>
+      <div class="role-pill"><span class="role-dot"></span>Role: <span id="roleLabel"></span></div>
+    </div>
+
+    <div class="stats" id="summary"></div>
+
+    <div class="card">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="searchBox" type="text" placeholder="Search equipment, tag, owner..." oninput="filterTable()" style="margin:0" />
+        </div>
+        <div class="toolbar-spacer"></div>
+        <button id="btnAdd" class="accent" onclick="addNew()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add New</button>
+        <button id="btnEdit" class="secondary" onclick="editRow()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Edit</button>
+        <button id="btnRemove" class="danger" onclick="removeRow()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>Remove</button>
+        <button id="btnObsolete" class="secondary" onclick="obsoleteRow()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9"/><path d="M10 13h4"/></svg>Obsolete</button>
+        <button class="secondary" onclick="exportPDF()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Export PDF Report</button>
+        <button class="secondary" onclick="exportCSV()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Export CSV</button>
+        <button class="secondary" onclick="changeUser()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>Change User</button>
+      </div>
+
+      <div class="table-wrap">
+        <table id="masterTable">
+          <thead>
+            <tr>
+              <th style="width:44px">No</th>
+              <th>Tag No.</th>
+              <th style="min-width:220px">Equipment / Document Title</th>
+              <th>Serial No.</th>
+              <th>Cal. Freq</th>
+              <th>Last Calibration</th>
+              <th id="thNext" class="sortable" onclick="toggleSort()" title="Click to sort">Next Calibration <span id="sortArrow" class="sort-arrow">\u25b2</span></th>
+              <th>Status</th>
+              <th>Owner</th>
+              <th>Location</th>
+              <th>Type of Calibration</th>
+              <th style="min-width:160px">Remark</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <div class="section-title">Activity Log</div>
+      <div id="logArea" class="log-area"></div>
+    </div>
+
+  </div>
+</div>
+
+<div id="popup" class="popup"></div>
+
+<!-- ADD / EDIT MODAL -->
+<div id="recordModal" class="modal-overlay" style="display:none">
+  <div class="modal-box card">
+    <h3 id="modalTitle">Edit Item</h3>
+    <p class="modal-sub" id="modalSub">Update equipment calibration record</p>
+
+    <div class="grid2">
+      <div class="full">
+        <label>Equipment / Document Title</label>
+        <input id="mEquipment" type="text" placeholder="e.g. DIGIMATIC MICROMETER (0~25mm)">
+      </div>
+
+      <div>
+        <label>Tag No.</label>
+        <input id="mTag" type="text" placeholder="B531">
+      </div>
+      <div>
+        <label>Serial No.</label>
+        <input id="mSerial" type="text" placeholder="NA">
+      </div>
+
+      <div>
+        <label>Calibration Frequency (years)</label>
+        <input id="mCalFreq" type="number" min="0.5" step="0.5" value="1">
+      </div>
+      <div>
+        <label>Last Calibration Date</label>
+        <input id="mLast" type="date">
+      </div>
+
+      <div>
+        <label>Owner / PIC</label>
+        <input id="mOwner" type="text" placeholder="Owner">
+      </div>
+      <div>
+        <label>Location</label>
+        <input id="mLocation" type="text" placeholder="IPI QC WH">
+      </div>
+
+      <div class="full">
+        <label>Type of Calibration</label>
+        <input id="mTypeCal" type="text" list="typeCalOptions" placeholder="Internal Verification / External Calibration">
+        <datalist id="typeCalOptions">
+          <option value="Internal Verification">
+          <option value="External Calibration">
+        </datalist>
+      </div>
+
+      <div class="full">
+        <label>Status</label>
+        <select id="mStatusSelect" onchange="onStatusSelectChange()">
+          <option value="auto">Auto (berdasarkan tanggal jatuh tempo)</option>
+          <option value="Overdue">Overdue</option>
+          <option value="Due \u226414d">Due \u226414d</option>
+          <option value="Due 15-30d">Due 15-30d</option>
+          <option value="Due >30d">Due >30d</option>
+          <option value="PO Release to Supplier">PO Release to Supplier</option>
+          <option value="Already Contact Supplier">Already Contact Supplier</option>
+          <option value="In Calibration Process">In Calibration Process</option>
+          <option value="Waiting for Approval">Waiting for Approval</option>
+          <option value="Obsolete">Obsolete</option>
+          <option value="custom">Custom...</option>
+        </select>
+        <input id="mStatusCustom" type="text" placeholder="Tulis status custom di sini" style="display:none">
+      </div>
+
+      <div class="full">
+        <label>Remark</label>
+        <input id="mRemark" type="text" placeholder="Remark (optional)">
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button onclick="saveModal()">Save</button>
+      <button class="secondary" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ======================================================================
+   BRAND — official I-PEX logo, embedded as a base64 PNG (transparent bg)
+   so the file stays fully self-contained. Reused on the login screen,
+   the dashboard header, and the exported PDF report letterhead.
+   ====================================================================== */
+const LOGO_DATA_URI = 'data:image/png;base64,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';
+const LOGO_ASPECT = 4.2982; // width / height, used to size the logo correctly in the PDF
+document.getElementById('loginLogoImg').src = LOGO_DATA_URI;
+document.getElementById('dashLogoImg').src = LOGO_DATA_URI;
+
+/* ======= App state ======= */
+let role = null;
+let data = []; // array of objects parsed from CSV/Excel
+let selectedIndex = null;
+let fileLoaded = false;
+let sourceFileName = '';
+let modalMode = null; // 'add' | 'edit'
+let modalIndex = null;
+const STORAGE_KEY = 'ipex_calibration_masterlist_v4';
+const STORAGE_FILE_KEY = 'ipex_calibration_source_name_v4';
+
+/* ======= Utility: show popup ======= */
+function showPopup(msg){
+  const p = document.getElementById('popup');
+  p.textContent = msg;
+  p.style.display = 'block';
+  clearTimeout(p._t);
+  p._t = setTimeout(()=> p.style.display='none', 3000);
+}
+
+/* ======= Persistent masterlist ======= */
+function saveDataToStorage(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem(STORAGE_FILE_KEY, sourceFileName || '');
+  }catch(err){
+    console.error('Unable to save masterlist:', err);
+  }
+}
+
+function loadDataFromStorage(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(!saved) return false;
+    const parsed = JSON.parse(saved);
+    if(!Array.isArray(parsed) || !parsed.length) return false;
+    data = parsed;
+    sourceFileName = localStorage.getItem(STORAGE_FILE_KEY) || '';
+    fileLoaded = true;
+    setLoginEnabled(true, true);
+    return true;
+  }catch(err){
+    console.error('Unable to restore masterlist:', err);
+    return false;
+  }
+}
+
+function setLoginEnabled(enabled, restored=false){
+  document.getElementById('username').disabled = !enabled;
+  document.getElementById('password').disabled = !enabled;
+  document.getElementById('btnLogin').disabled = !enabled;
+  document.getElementById('btnGuest').disabled = !enabled;
+  const note = document.getElementById('fileNote');
+  if(enabled){
+    note.style.display = 'block';
+    const src = sourceFileName ? ` — ${escapeHtml(sourceFileName)}` : '';
+    note.innerHTML = restored
+      ? `✓ Saved masterlist restored (${data.length} rows)${src}.`
+      : `✓ File berhasil dimuat (${data.length} baris)${src}. Silakan login untuk melanjutkan.`;
+  } else {
+    note.style.display = 'none';
+  }
+}
+
+/* ======= Login gating: disabled until a file is successfully loaded ======= */
+/* ======= Login / Role ======= */
+function login(){
+  if(!fileLoaded){ alert('Silakan upload file masterlist terlebih dahulu.'); return; }
+  const u = document.getElementById('username').value.trim();
+  const p = document.getElementById('password').value;
+  if(u === 'Admin' && p === 'Admin123'){
+    role = 'Admin';
+    openDashboard();
+  } else {
+    alert('Invalid credentials');
+  }
+}
+function guestLogin(){
+  if(!fileLoaded){ alert('Silakan upload file masterlist terlebih dahulu.'); return; }
+  role = 'Guest';
+  openDashboard();
+}
+
+/* ======= Open dashboard and apply role-based UI ======= */
+function openDashboard(){
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('dashboardWrap').style.display = 'block';
+  document.getElementById('roleLabel').innerText = role;
+  const adminOnlyIds = ['btnAdd','btnEdit','btnRemove','btnObsolete'];
+  adminOnlyIds.forEach(id => document.getElementById(id).style.display = (role === 'Guest') ? 'none' : '');
+  renderTable();
+  renderSummary();
+  loadLogToUI();
+}
+
+/* ======= File input: Excel (.xlsx/.xls) or CSV ======= */
+const fileInput = document.getElementById('fileInput');
+fileInput.addEventListener('change', async (e) => {
+  const f = e.target.files[0];
+  if(!f) return;
+  showPopup('Loading file, please wait...');
+  const overlay = document.createElement('div');
+  overlay.id = 'loadingOverlay';
+  overlay.style = 'position:fixed;inset:0;background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;z-index:9999;font-size:15px;font-weight:600;color:#0b2340;font-family:Inter,sans-serif';
+  overlay.innerText = 'Parsing file...';
+  document.body.appendChild(overlay);
+
+  try {
+    const name = f.name.toLowerCase();
+    if(name.endsWith('.csv')){
+      const text = await f.text();
+      setTimeout(()=> { parseCSVText(text); if(document.getElementById('loadingOverlay')) document.body.removeChild(overlay); }, 50);
+    } else if(name.endsWith('.xlsx') || name.endsWith('.xls')){
+      const arrayBuffer = await f.arrayBuffer();
+      setTimeout(()=>{
+        try{
+          const workbook = XLSX.read(arrayBuffer, {type:'array'});
+          const firstSheetName = workbook.SheetNames[0];
+          const csv = XLSX.utils.sheet_to_csv(workbook.Sheets[firstSheetName]);
+          parseCSVText(csv);
+        }catch(err){
+          console.error(err);
+          alert('Error parsing Excel: '+err.message);
+        } finally {
+          if(document.getElementById('loadingOverlay')) document.body.removeChild(overlay);
+        }
+      }, 50);
+    } else {
+      alert('Unsupported file type. Use .csv or .xlsx/.xls');
+      document.body.removeChild(overlay);
+    }
+  } catch(err){
+    console.error(err);
+    alert('Failed to read file: '+err.message);
+    if(document.getElementById('loadingOverlay')) document.body.removeChild(overlay);
+  }
+});
+
+
+/* ======================================================================
+   CSV PARSING — maps the masterlist columns:
+   Tag No. | Document Tittle | Serial No. | Cal Freq. | First Calibration
+   Date | Last Calibration Date | Next Calibration Date | Owner | Location
+   | Type of Calibration
+   ====================================================================== */
+function parseCSVText(text){
+  // Robust CSV parser: supports comma / semicolon / tab delimiters,
+  // BOM, quoted values and CRLF. Location = column 10, Type of Calibration = column 11 (1-based).
+  text = String(text || '').replace(/^\uFEFF/, '');
+  const lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+  if(!lines.some(l => l.trim() !== '')){ alert('File empty'); return; }
+
+  // Detect delimiter from the header. Prefer comma when present, otherwise ; or tab.
+  const headerLine = lines.find(l => l.trim() !== '') || '';
+  const delimiter = detectCSVDelimiter(headerLine);
+
+  const records = parseCSVRecords(text, delimiter);
+  if(records.length < 2){ alert('No data rows found'); return; }
+
+  const headers = records[0].map(v => String(v ?? '').replace(/^\uFEFF/, '').trim());
+  const rows = records.slice(1).filter(r => r.some(v => String(v ?? '').trim() !== ''));
+
+  const headerMap = {};
+  headers.forEach((raw,i)=>{
+    const h = String(raw || '').replace(/[\uFEFF\u200B]/g,'').trim().toLowerCase().replace(/\s+/g,' ');
+    if(/type\s*of\s*calib|calibration\s*type|type\s*calibration/.test(h)) headerMap['typeCal'] = i;
+    else if(/cal\.?\s*freq|calibration\s*freq|frequency/.test(h)) headerMap['calFreq'] = i;
+    else if(/equipment|document\s*tittle|document\s*title/.test(h)) headerMap['equipment'] = i;
+    else if(/^tag|tag\s*no|tag\.?\s*no|tag\s*number|tagno/.test(h)) headerMap['tag'] = i;
+    else if(/serial|serial\s*no|serial\s*number/.test(h)) headerMap['serial'] = i;
+    else if(/first\s*calibration|first\s*calibrat/.test(h)) headerMap['first'] = i;
+    else if(/last\s*calibration|last\s*calibrat/.test(h)) headerMap['last'] = i;
+    else if(/next\s*calibration|next\s*calibrat/.test(h)) headerMap['nextFromFile'] = i;
+    else if(/owner|pic|person\s*in\s*charge/.test(h)) headerMap['owner'] = i;
+    else if(/^location$|location\s*of|\blocation\b/.test(h)) headerMap['location'] = i;
+    else if(/remark|remarks/.test(h)) headerMap['remark'] = i;
+    else if(/^status$|calibration\s*status/.test(h)) headerMap['status'] = i;
+  });
+
+  // IMPORTANT: source specification is fixed:
+  // Column 10 = Location, Column 11 = Type of Calibration.
+  // These positions are authoritative and override header-name detection.
+  const LOCATION_COL = 9; // 10th column, zero-based
+  const TYPE_CAL_COL = 10; // 11th column, zero-based
+  if(headers.length > LOCATION_COL) headerMap.location = LOCATION_COL;
+  if(headers.length > TYPE_CAL_COL) headerMap.typeCal = TYPE_CAL_COL;
+
+  data = rows.map(cols => {
+    const get = (idx) => idx !== undefined ? String(cols[idx] ?? '').trim() : '';
+    const obj = {};
+
+    obj.equipment = get(headerMap.equipment) || get(0);
+    obj.tag = get(headerMap.tag);
+    obj.serial = get(headerMap.serial);
+    obj.owner = get(headerMap.owner);
+    obj.location = get(headerMap.location);
+    obj.typeCal = get(headerMap.typeCal);
+    obj.remark = get(headerMap.remark);
+
+    const rawFreq = get(headerMap.calFreq);
+    const freqNum = parseFloat(rawFreq.replace(',', '.'));
+    obj.calFreq = (!isNaN(freqNum) && freqNum > 0) ? freqNum : 1;
+
+    obj.first = normalizeDateString(get(headerMap.first));
+    obj.last = normalizeDateString(get(headerMap.last));
+    obj.next = computeNextCalibration(obj.last, obj.calFreq);
+
+    // Preserve manually-set / custom statuses across export -> re-import.
+    // If the "Status" column holds one of the auto-computed labels (i.e. it
+    // was never overridden, just the calculated value at export time), treat
+    // it as "auto" so it keeps recalculating live. Anything else (e.g. a
+    // custom status like "PO Release to Supplier") is restored as an override.
+    const rawStatus = get(headerMap.status);
+    const AUTO_STATUS_LABELS = ['overdue','due \u226414d','due 15-30d','due >30d','no date',''];
+    obj.statusOverride = AUTO_STATUS_LABELS.includes(rawStatus.toLowerCase()) ? '' : rawStatus;
+
+    return obj;
+  }).filter(o => o.equipment || o.last || o.location || o.typeCal);
+
+  fileLoaded = data.length > 0;
+  if(fileLoaded){
+    saveDataToStorage();
+    // Keep the uploaded file available in the UI after refresh/change-user.
+    localStorage.setItem('cal_source_file_name', document.getElementById('fileInput').files[0]?.name || localStorage.getItem('cal_source_file_name') || 'Masterlist.csv');
+  }
+  setLoginEnabled(fileLoaded);
+  logActivity(`Masterlist loaded (${data.length} rows)`);
+  showPopup(`Masterlist loaded — ${data.length} rows`);
+  console.log('Calibration import:', {
+    delimiter,
+    columns: headers.length,
+    locationColumn: LOCATION_COL + 1,
+    typeCalibrationColumn: TYPE_CAL_COL + 1,
+    sample: data[0] ? {location:data[0].location, typeCal:data[0].typeCal} : null
+  });
+}
+
+function detectCSVDelimiter(line){
+  const candidates = [',',';','\t'];
+  let best = ',';
+  let bestCount = -1;
+  candidates.forEach(d=>{
+    let count = 0, quoted = false;
+    for(let i=0;i<line.length;i++){
+      const ch=line[i];
+      if(ch === '"') quoted = !quoted;
+      else if(ch === d && !quoted) count++;
+    }
+    if(count > bestCount){ bestCount=count; best=d; }
+  });
+  return best;
+}
+
+function parseCSVRecords(text, delimiter){
+  const records = [];
+  let row = [], cur = '', inQuotes = false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    const next=text[i+1];
+    if(ch === '"'){
+      if(inQuotes && next === '"'){ cur += '"'; i++; }
+      else { inQuotes = !inQuotes; }
+    } else if(ch === delimiter && !inQuotes){
+      row.push(cur); cur='';
+    } else if((ch === '\n' || ch === '\r') && !inQuotes){
+      if(ch === '\r' && next === '\n') i++;
+      row.push(cur); cur='';
+      if(row.some(v => String(v).trim() !== '')) records.push(row);
+      row=[];
+    } else {
+      cur += ch;
+    }
+  }
+  row.push(cur);
+  if(row.some(v => String(v).trim() !== '')) records.push(row);
+  return records;
+}
+
+/* CSV row parser that handles quoted fields with commas */
+function parseCSVRow(line){
+  const result = [];
+  let cur = '', inQuotes = false;
+  for(let i=0;i<line.length;i++){
+    const ch = line[i];
+    if(ch === '"' ){
+      if(inQuotes && line[i+1] === '"'){ cur += '"'; i++; }
+      else inQuotes = !inQuotes;
+    } else if(ch === ',' && !inQuotes){
+      result.push(cur);
+      cur = '';
+    } else cur += ch;
+  }
+  result.push(cur);
+  return result.map(s => s.trim());
+}
+
+/* ======================================================================
+   DATE HELPERS
+   Internal storage is always ISO "yyyy-mm-dd" (string based, no Date()
+   round-tripping) so there is never a timezone off-by-one issue.
+   Display is always converted back to "dd-MMM-yyyy" to match the source
+   CSV format, via pure string manipulation (no Date object involved).
+   ====================================================================== */
+
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTH_INDEX = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+
+function normalizeDateString(s){
+  if(!s) return '';
+  s = String(s).trim();
+  if(!s) return '';
+
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+
+  // dd-mmm-yyyy / dd mmm yyyy / dd/mmm/yyyy (main CSV format, e.g. "8-Sep-25" or "8-Sep-2025")
+  m = s.match(/^(\d{1,2})[-\/\s]([A-Za-z]{3,})[-\/\s](\d{2,4})$/);
+  if(m){
+    const mi = MONTH_INDEX[m[2].toLowerCase().slice(0,3)];
+    if(mi !== undefined){
+      const dd = m[1].padStart(2,'0');
+      const mm = String(mi+1).padStart(2,'0');
+      let yyyy = m[3];
+      if(yyyy.length === 2) yyyy = (parseInt(yyyy,10) < 70 ? '20' : '19') + yyyy;
+      return `${yyyy}-${mm}-${dd}`;
+    }
+  }
+
+  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m){
+    const dd = m[1].padStart(2,'0'), mm = m[2].padStart(2,'0'), yyyy = m[3];
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if(m){
+    const dd = m[1].padStart(2,'0'), mm = m[2].padStart(2,'0'), yyyy = m[3];
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  const dt = new Date(s);
+  if(!isNaN(dt)){
+    return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+  }
+  return s;
+}
+
+function formatDateDDMMMYYYY(iso){
+  if(!iso) return '';
+  const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return iso;
+  const monthIdx = parseInt(m[2],10) - 1;
+  const mon = MONTHS[monthIdx] || m[2];
+  return `${m[3]}-${mon}-${m[1]}`;
+}
+
+/* last (ISO) + calFreq years -> next (ISO). UTC-based construction only. */
+function computeNextCalibration(lastIso, calFreq){
+  const m = lastIso && String(lastIso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return '';
+  const freq = Math.round(parseFloat(calFreq)) || 1;
+  const y = parseInt(m[1],10) + freq;
+  const mo = parseInt(m[2],10) - 1;
+  const d = parseInt(m[3],10);
+  const dt = new Date(Date.UTC(y, mo, d));
+  const yyyy = dt.getUTCFullYear();
+  const mm = String(dt.getUTCMonth()+1).padStart(2,'0');
+  const dd = String(dt.getUTCDate()).padStart(2,'0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+/* ======= Status logic (date-based, or manual override) ======= */
+function statusLabel(row){
+  if(!row) return {label:'No Date', cls:'badge-grey'};
+  if(row.statusOverride){
+    return {label: row.statusOverride, cls: 'badge-violet'};
+  }
+  const nextIso = row.next;
+  const m = nextIso && String(nextIso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return {label:'No Date', cls:'badge-grey'};
+  const nextUTC = Date.UTC(parseInt(m[1],10), parseInt(m[2],10)-1, parseInt(m[3],10));
+  const now = new Date();
+  const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const diffDays = Math.round((nextUTC - todayUTC) / 86400000);
+  if(diffDays < 0) return {label:'Overdue', cls:'badge-red'};
+  if(diffDays <= 14) return {label:'Due \u226414d', cls:'badge-amber'};
+  if(diffDays <= 30) return {label:'Due 15-30d', cls:'badge-yellow'};
+  return {label:'Due >30d', cls:'badge-green'};
+}
+
+/* ======= Sorting — list is always kept ordered by Next Calibration date,
+   nearest due date (incl. overdue) first, so it self-updates after any
+   edit/add/remove/CSV reload without needing a manual refresh button.
+   Click the "Next Calibration" column header to flip the direction. ======= */
+let sortDir = 'asc'; // 'asc' = nearest due date first, 'desc' = furthest first
+
+function nextSortKey(row){
+  const iso = row && row.next;
+  return (iso && /^\d{4}-\d{2}-\d{2}$/.test(iso)) ? iso : null;
+}
+
+function sortDataByNextDate(){
+  data.sort((a,b)=>{
+    const ka = nextSortKey(a), kb = nextSortKey(b);
+    if(ka === null && kb === null) return 0;
+    if(ka === null) return 1;  // rows without a valid date always sink to the bottom
+    if(kb === null) return -1;
+    return sortDir === 'asc' ? ka.localeCompare(kb) : kb.localeCompare(ka);
+  });
+}
+
+function toggleSort(){
+  sortDir = (sortDir === 'asc') ? 'desc' : 'asc';
+  renderTable();
+}
+
+/* ======= Render table & summary ======= */
+function renderTable(){
+  sortDataByNextDate();
+  selectedIndex = null; // row order may have changed, force re-selection before edit/remove
+  const arrow = document.getElementById('sortArrow');
+  if(arrow) arrow.textContent = sortDir === 'asc' ? '\u25b2' : '\u25bc';
+
+  const tbody = document.querySelector('#masterTable tbody');
+  tbody.innerHTML = '';
+  data.forEach((row,i)=>{
+    const st = statusLabel(row);
+    const tr = document.createElement('tr');
+    tr.onclick = ()=> selectRow(i);
+    tr.innerHTML = `
+        <td class="mono">${i+1}</td>
+        <td class="mono">${escapeHtml(row.tag||'')}</td>
+        <td class="wrap">${escapeHtml(row.equipment)}</td>
+        <td class="mono">${escapeHtml(row.serial||'')}</td>
+        <td>${row.calFreq ? row.calFreq + ' yr' : '1 yr'}</td>
+        <td>${formatDateDDMMMYYYY(row.last)}</td>
+        <td>${formatDateDDMMMYYYY(row.next)}</td>
+        <td><span class="badge ${st.cls}">${escapeHtml(st.label)}</span></td>
+        <td>${escapeHtml(row.owner||'')}</td>
+        <td>${escapeHtml(row.location||'')}</td>
+        <td>${escapeHtml(row.typeCal||'')}</td>
+        <td class="wrap">${escapeHtml(row.remark||'')}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function statIcon(name){
+  const icons = {
+    total:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 3v3h6V3"/><path d="M8 12h8M8 16h5"/></svg>',
+    overdue:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>',
+    clock:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>',
+    ok:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 5-5"/></svg>'
+  };
+  return icons[name] || '';
+}
+
+/* Summary stat cards */
+function renderSummary(){
+  const s = document.getElementById('summary');
+  const total = data.length;
+  const counts = {};
+  data.forEach(r=>{
+    const st = statusLabel(r).label;
+    counts[st] = (counts[st]||0) + 1;
+  });
+  const overdue = counts['Overdue']||0;
+  const due14 = counts['Due \u226414d']||0;
+  const due30 = counts['Due 15-30d']||0;
+  const dueOver30 = counts['Due >30d']||0;
+  s.innerHTML = `
+    <div class="stat tot"><div class="icon">${statIcon('total')}</div><div><div class="val">${total}</div><div class="lbl">Total Equipment</div></div></div>
+    <div class="stat red"><div class="icon">${statIcon('overdue')}</div><div><div class="val">${overdue}</div><div class="lbl">Overdue</div></div></div>
+    <div class="stat amber"><div class="icon">${statIcon('clock')}</div><div><div class="val">${due14}</div><div class="lbl">Due \u226414 days</div></div></div>
+    <div class="stat yellow"><div class="icon">${statIcon('clock')}</div><div><div class="val">${due30}</div><div class="lbl">Due 15-30 days</div></div></div>
+    <div class="stat green"><div class="icon">${statIcon('ok')}</div><div><div class="val">${dueOver30}</div><div class="lbl">Due >30 days</div></div></div>
+  `;
+}
+
+/* ======= Search filter (multi-field) ======= */
+function filterTable(){
+  const q = document.getElementById('searchBox').value.trim().toLowerCase();
+  const rows = document.querySelectorAll('#masterTable tbody tr');
+  rows.forEach((tr) => {
+    if(!q){ tr.style.display=''; return; }
+    const text = tr.innerText.toLowerCase();
+    tr.style.display = text.includes(q) ? '' : 'none';
+  });
+}
+
+/* ======= Row selection ======= */
+function selectRow(i){
+  selectedIndex = i;
+  document.querySelectorAll('#masterTable tbody tr').forEach((tr, idx)=> tr.classList.toggle('selected', idx===i));
+}
+
+/* ======================================================================
+   ADD / EDIT modal
+   ====================================================================== */
+const KNOWN_STATUS_VALUES = ['Overdue','Due \u226414d','Due 15-30d','Due >30d','PO Release to Supplier','Already Contact Supplier','In Calibration Process','Waiting for Approval','Obsolete'];
+
+function onStatusSelectChange(){
+  const sel = document.getElementById('mStatusSelect').value;
+  document.getElementById('mStatusCustom').style.display = (sel === 'custom') ? 'block' : 'none';
+}
+
+function openRecordModal(mode){
+  if(role !== 'Admin') return;
+  modalMode = mode;
+  const isEdit = mode === 'edit';
+  if(isEdit){
+    if(selectedIndex === null){ alert('Pilih baris dulu'); return; }
+    modalIndex = selectedIndex;
+  } else {
+    modalIndex = null;
+  }
+  const row = isEdit ? data[modalIndex] : {equipment:'',tag:'',serial:'',calFreq:1,last:'',owner:'',location:'',typeCal:'',remark:'',statusOverride:''};
+
+  document.getElementById('modalTitle').innerText = isEdit ? 'Edit Item' : 'Add New Item';
+  document.getElementById('modalSub').innerText = isEdit ? 'Update equipment calibration record' : 'Register a new equipment into the masterlist';
+  document.getElementById('mEquipment').value = row.equipment || '';
+  document.getElementById('mTag').value = row.tag || '';
+  document.getElementById('mSerial').value = row.serial || '';
+  document.getElementById('mCalFreq').value = row.calFreq || 1;
+  document.getElementById('mLast').value = row.last || '';
+  document.getElementById('mOwner').value = row.owner || '';
+  document.getElementById('mLocation').value = row.location || '';
+  document.getElementById('mTypeCal').value = row.typeCal || '';
+  document.getElementById('mRemark').value = row.remark || '';
+
+  const statusSelect = document.getElementById('mStatusSelect');
+  const statusCustom = document.getElementById('mStatusCustom');
+  if(row.statusOverride && KNOWN_STATUS_VALUES.includes(row.statusOverride)){
+    statusSelect.value = row.statusOverride;
+    statusCustom.style.display = 'none';
+    statusCustom.value = '';
+  } else if(row.statusOverride){
+    statusSelect.value = 'custom';
+    statusCustom.style.display = 'block';
+    statusCustom.value = row.statusOverride;
+  } else {
+    statusSelect.value = 'auto';
+    statusCustom.style.display = 'none';
+    statusCustom.value = '';
+  }
+
+  document.getElementById('recordModal').style.display = 'flex';
+}
+
+function closeModal(){
+  document.getElementById('recordModal').style.display = 'none';
+  modalMode = null;
+  modalIndex = null;
+}
+
+function saveModal(){
+  const equipment = document.getElementById('mEquipment').value.trim();
+  if(!equipment){ alert('Equipment name wajib diisi'); return; }
+  const tag = document.getElementById('mTag').value.trim();
+  const serial = document.getElementById('mSerial').value.trim();
+  const calFreqRaw = parseFloat(document.getElementById('mCalFreq').value);
+  const calFreq = (!isNaN(calFreqRaw) && calFreqRaw > 0) ? calFreqRaw : 1;
+  const lastIso = document.getElementById('mLast').value; // <input type=date> gives yyyy-mm-dd
+  const owner = document.getElementById('mOwner').value.trim();
+  const location = document.getElementById('mLocation').value.trim();
+  const typeCal = document.getElementById('mTypeCal').value.trim();
+  const remark = document.getElementById('mRemark').value.trim();
+
+  const statusSel = document.getElementById('mStatusSelect').value;
+  let statusOverride = '';
+  if(statusSel === 'custom'){
+    statusOverride = document.getElementById('mStatusCustom').value.trim();
+  } else if(statusSel !== 'auto'){
+    statusOverride = statusSel;
+  }
+
+  const last = lastIso ? normalizeDateString(lastIso) : '';
+  const next = computeNextCalibration(last, calFreq);
+
+  const obj = {equipment, tag, serial, calFreq, last, next, owner, location, typeCal, remark, statusOverride};
+
+  if(modalMode === 'edit'){
+    data[modalIndex] = Object.assign({}, data[modalIndex], obj);
+    logActivity(`Edit: ${equipment}`);
+    showPopup('Row updated');
+  } else {
+    data.push(obj);
+    logActivity(`Add New: ${equipment}`);
+    showPopup('New item added');
+  }
+
+  saveDataToStorage();
+  closeModal();
+  renderTable();
+  renderSummary();
+}
+
+function addNew(){ openRecordModal('add'); }
+function editRow(){ openRecordModal('edit'); }
+
+function removeRow(){
+  if(role !== 'Admin') return;
+  if(selectedIndex === null){ alert('Pilih baris dulu'); return; }
+  const removed = data.splice(selectedIndex,1);
+  selectedIndex = null;
+  saveDataToStorage();
+  renderTable(); renderSummary();
+  logActivity(`Remove: ${removed[0].equipment}`);
+  showPopup('Row removed');
+}
+
+function obsoleteRow(){
+  if(role !== 'Admin') return;
+  if(selectedIndex === null){ alert('Pilih baris dulu'); return; }
+  data[selectedIndex].remark = (data[selectedIndex].remark || '') + ' Obsolete';
+  data[selectedIndex].statusOverride = 'Obsolete';
+  saveDataToStorage();
+  renderTable(); renderSummary();
+  logActivity(`Marked Obsolete: ${data[selectedIndex].equipment}`);
+  showPopup('Marked obsolete');
+}
+
+/* ======= Export current masterlist to CSV ======= */
+function csvEscape(value){
+  const s = value == null ? '' : String(value);
+  return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+}
+
+function exportCSV(){
+  if(!data.length){ alert('No data'); return; }
+  const headers = ['Tag No.','Equipment / Document Title','Serial No.','Cal. Freq','First Calibration','Last Calibration','Next Calibration','Status','Owner','Location','Type of Calibration','Remark'];
+  const rows = data.map(r=>[
+    r.tag||'', r.equipment||'', r.serial||'', r.calFreq||'',
+    formatDateDDMMMYYYY(r.first||''), formatDateDDMMMYYYY(r.last||''),
+    formatDateDDMMMYYYY(r.next||''), statusLabel(r).label, r.owner||'',
+    r.location||'', r.typeCal||'', r.remark||''
+  ]);
+  const csv = '\uFEFF' + [headers,...rows].map(row=>row.map(csvEscape).join(',')).join('\r\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const now = new Date();
+  a.href = url;
+  a.download = `IPEX_Calibration_Masterlist_${now.toISOString().split('T')[0]}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  logActivity('Exported CSV masterlist');
+  showPopup('CSV exported');
+}
+
+/* ======= Return to login without clearing saved masterlist ======= */
+function changeUser(){
+  role = null;
+  selectedIndex = null;
+  document.getElementById('password').value = '';
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('dashboardWrap').style.display = 'none';
+  document.getElementById('roleLabel').innerText = '';
+  setLoginEnabled(fileLoaded);
+  showPopup('Back to login — masterlist tetap tersimpan');
+}
+
+// Restore the last uploaded masterlist automatically on page load.
+loadDataFromStorage();
+
+/* ======================================================================
+   EXPORT — formal PDF report (IPEX letterhead, repeated on every page)
+   ====================================================================== */
+function exportPDF(){
+  if(!data.length){ alert('No data'); return; }
+  if(!window.jspdf){ alert('PDF library failed to load. Check your internet connection.'); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:'landscape', unit:'pt', format:'a4'});
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const marginX = 36;
+
+  doc.setProperties({
+    title: 'IPEX Calibration Masterlist Report',
+    subject: 'Calibration Masterlist',
+    author: 'IPEX Calibration Masterlist App'
+  });
+
+  const counts = {};
+  data.forEach(r=>{ const st = statusLabel(r).label; counts[st] = (counts[st]||0) + 1; });
+  const now = new Date();
+  const genDateStr = `${String(now.getDate()).padStart(2,'0')}-${MONTHS[now.getMonth()]}-${now.getFullYear()}`;
+
+  function drawHeader(){
+    // Official I-PEX logo, top-left
+    const logoH = 22;
+    const logoW = logoH * LOGO_ASPECT;
+    doc.addImage(LOGO_DATA_URI, 'PNG', marginX, 16, logoW, logoH);
+
+    doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(100,116,139);
+    doc.text('CALIBRATION MASTERLIST REPORT', marginX + logoW + 14, 30);
+
+    doc.setFontSize(8.5); doc.setTextColor(100,116,139);
+    doc.text(`Generated: ${genDateStr}`, pageWidth-marginX, 22, {align:'right'});
+    doc.text(`Generated by: ${role || '-'}`, pageWidth-marginX, 32, {align:'right'});
+    doc.text(`Total items: ${data.length}`, pageWidth-marginX, 42, {align:'right'});
+
+    doc.setDrawColor(11,35,64); doc.setLineWidth(1.1);
+    doc.line(marginX, 50, pageWidth-marginX, 50);
+
+    // summary strip
+    const boxes = [
+      {label:'TOTAL', value:data.length, color:[11,35,64]},
+      {label:'OVERDUE', value:counts['Overdue']||0, color:[220,38,38]},
+      {label:'DUE \u226414D', value:counts['Due \u226414d']||0, color:[217,119,6]},
+      {label:'DUE 15-30D', value:counts['Due 15-30d']||0, color:[161,98,7]},
+      {label:'DUE >30D', value:counts['Due >30d']||0, color:[21,128,61]}
+    ];
+    const gap = 8;
+    const boxW = (pageWidth - marginX*2 - gap*(boxes.length-1)) / boxes.length;
+    let bx = marginX;
+    const boxY = 60, boxH = 30;
+    boxes.forEach(b=>{
+      doc.setFillColor(b.color[0],b.color[1],b.color[2]);
+      doc.roundedRect(bx, boxY, boxW, boxH, 4, 4, 'F');
+      doc.setTextColor(255,255,255);
+      doc.setFont('helvetica','bold'); doc.setFontSize(13);
+      doc.text(String(b.value), bx+10, boxY+16);
+      doc.setFont('helvetica','normal'); doc.setFontSize(7);
+      doc.text(b.label, bx+10, boxY+25);
+      bx += boxW + gap;
+    });
+  }
+
+  function drawFooter(){
+    const pageNum = doc.internal.getCurrentPageInfo().pageNumber;
+    doc.setDrawColor(226,232,240); doc.setLineWidth(0.6);
+    doc.line(marginX, pageHeight-30, pageWidth-marginX, pageHeight-30);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(148,163,184);
+    doc.text('IPEX \u2014 System-generated document. Confidential, for internal use only.', marginX, pageHeight-18);
+    doc.text(`Page ${pageNum}`, pageWidth-marginX, pageHeight-18, {align:'right'});
+  }
+
+  const statusColors = {
+    'Overdue':[220,38,38],
+    'Due \u226414d':[217,119,6],
+    'Due 15-30d':[161,98,7],
+    'Due >30d':[21,128,61],
+    'No Date':[100,116,139]
+  };
+
+  const body = data.map((r,i)=>{
+    const st = statusLabel(r);
+    return [
+      i+1,
+      r.tag||'',
+      r.equipment||'',
+      r.serial||'',
+      (r.calFreq||1)+' yr',
+      formatDateDDMMMYYYY(r.last),
+      formatDateDDMMMYYYY(r.next),
+      st.label,
+      r.owner||'',
+      r.location||'',
+      r.typeCal||'',
+      r.remark||''
+    ];
+  });
+
+  doc.autoTable({
+    startY: 100,
+    margin:{left:marginX, right:marginX, top:100, bottom:40},
+    head:[['No','Tag No.','Equipment / Document Title','Serial No.','Freq','Last Cal.','Next Cal.','Status','Owner','Location','Type of Calibration','Remark']],
+    body: body,
+    theme:'grid',
+    styles:{fontSize:7.8, cellPadding:5, textColor:[30,41,59], lineColor:[226,232,240], lineWidth:0.5, valign:'middle'},
+    headStyles:{fillColor:[11,35,64], textColor:255, fontStyle:'bold', fontSize:8},
+    alternateRowStyles:{fillColor:[246,249,252]},
+    columnStyles:{
+      0:{cellWidth:22,halign:'center'},
+      1:{cellWidth:44},
+      3:{cellWidth:56},
+      4:{cellWidth:32,halign:'center'},
+      5:{cellWidth:52,halign:'center'},
+      6:{cellWidth:52,halign:'center'},
+      7:{cellWidth:62,halign:'center'}
+    },
+    didParseCell: function(hookData){
+      if(hookData.section==='body' && hookData.column.index===7){
+        const label = hookData.cell.raw;
+        const c = statusColors[label] || [109,40,217];
+        hookData.cell.styles.textColor = c;
+        hookData.cell.styles.fontStyle = 'bold';
+      }
+    },
+    didDrawPage: function(){
+      drawHeader();
+      drawFooter();
+    }
+  });
+
+  const fname = `IPEX_Calibration_Report_${now.toISOString().split('T')[0]}.pdf`;
+  doc.save(fname);
+  logActivity('Exported PDF report');
+  showPopup('PDF report generated');
+}
+
+/* ======= Logging (localStorage) ======= */
+function logActivity(msg){
+  const time = new Date().toLocaleString();
+  const logs = JSON.parse(localStorage.getItem('cal_logs') || '[]');
+  logs.unshift({time, msg});
+  localStorage.setItem('cal_logs', JSON.stringify(logs.slice(0,200)));
+  loadLogToUI();
+}
+function loadLogToUI(){
+  const logs = JSON.parse(localStorage.getItem('cal_logs') || '[]');
+  const area = document.getElementById('logArea');
+  area.innerHTML = logs.map(l => `<div class="log-item"><span class="t">${escapeHtml(l.time)}</span>${escapeHtml(l.msg)}</div>`).join('') || '<div class="log-item" style="color:var(--muted)">No activity yet.</div>';
+}
+
+/* ======= Helpers ======= */
+function escapeHtml(s){ if(s==null) return ''; return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); }
+</script>
+</body>
+</html>
