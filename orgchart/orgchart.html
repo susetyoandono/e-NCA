@@ -1,639 +1,956 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I-PEX Quality Organization Chart</title>
-    <style>
-        :root {
-            --ipex-blue: #007dc5;
-            --ipex-red: #e60012;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --border-color: #dee2e6;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PT I-PEX Indonesia — Quality Department Organization Chart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#0091e6;
+    --blue-700:#0071b3;
+    --blue-100:#e4f3fd;
+    --navy:#0b2a43;
+    --red:#e60012;
+    --bg:#eef3f8;
+    --card:#ffffff;
+    --ink:#10263b;
+    --muted:#5c7085;
+    --line:#dce6ef;
+    --line-strong:#b9cada;
+    --radius-card:14px;
+    --radius-pill:999px;
+    --c-upstream:#0091e6;
+    --c-downstream:#0b2a43;
+    --c-assurance:#0071b3;
+    --c-process:#19a3dd;
+    --c-support:#5c7085;
+  }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 20px;
-        }
+  *{ box-sizing:border-box; }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid var(--ipex-blue);
-        }
+  html{ scroll-behavior:smooth; }
 
-        .header h1 {
-            color: var(--ipex-blue);
-            margin: 0 0 10px 0;
-            font-size: 28px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 500px at 90% -10%, rgba(0,145,230,.08), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Inter', -apple-system, Segoe UI, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
 
-        .header h2 {
-            color: var(--text-light);
-            margin: 0;
-            font-size: 16px;
-            font-weight: normal;
-        }
+  h1,h2,h3, .num, .brand-word{
+    font-family:'Manrope', 'Inter', sans-serif;
+  }
 
-        /* Top Management */
-        .top-management {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-bottom: 40px;
-            position: relative;
-        }
+  /* ============ TOPBAR ============ */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:1360px; margin:0 auto;
+    padding:14px 28px;
+    display:flex; align-items:center; gap:24px;
+  }
+  .logo-mark{ height:30px; display:block; flex-shrink:0; }
+  .brand-divider{
+    width:1px; height:28px; background:var(--line-strong); flex-shrink:0;
+  }
+  .brand-text{ line-height:1.15; }
+  .brand-text .eyebrow{
+    font-size:11.5px; color:var(--muted); font-weight:600;
+  }
+  .brand-text .title{
+    font-size:15px; font-weight:700; color:var(--navy);
+  }
+  .topbar-search{ margin-left:auto; position:relative; width:min(320px, 40vw); }
+  .topbar-search input{
+    width:100%;
+    padding:9px 14px 9px 36px;
+    border-radius:var(--radius-pill);
+    border:1px solid var(--line-strong);
+    background:#fff;
+    font-family:inherit; font-size:13.5px; color:var(--ink);
+    outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .topbar-search input:focus{
+    border-color:var(--blue);
+    box-shadow:0 0 0 3px var(--blue-100);
+  }
+  .topbar-search svg{
+    position:absolute; left:12px; top:50%; transform:translateY(-50%);
+    width:15px; height:15px; stroke:var(--muted);
+  }
+  .search-clear{
+    position:absolute; right:8px; top:50%; transform:translateY(-50%);
+    border:none; background:none; color:var(--muted); cursor:pointer;
+    font-size:16px; line-height:1; padding:4px; display:none;
+  }
+  .topbar-search.has-value .search-clear{ display:block; }
 
-        .top-management::after {
-            content: '';
-            position: absolute;
-            bottom: -20px;
-            left: 50%;
-            width: 2px;
-            height: 20px;
-            background-color: var(--ipex-blue);
-        }
+  /* ============ HERO / STATS ============ */
+  .hero{ max-width:1360px; margin:0 auto; padding:36px 28px 8px; }
+  .hero h1{
+    font-size:clamp(26px,3.4vw,38px);
+    font-weight:800; color:var(--navy);
+    margin:0 0 6px; letter-spacing:-.01em;
+  }
+  .hero p{
+    margin:0; color:var(--muted); font-size:15px; max-width:60ch;
+  }
 
-        /* Main Container for Columns */
-        .org-container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 15px;
-            padding-top: 20px;
-            border-top: 2px solid var(--ipex-blue);
-            position: relative;
-            flex-wrap: wrap;
-        }
+  .stats{
+    max-width:1360px; margin:26px auto 0; padding:0 28px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+  }
+  .stat{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-card);
+    padding:16px 18px;
+    display:flex; flex-direction:column; gap:2px;
+    position:relative; overflow:hidden;
+  }
+  .stat::after{
+    content:''; position:absolute; right:-18px; bottom:-18px;
+    width:70px; height:70px; border-radius:50%;
+    background:var(--blue-100); opacity:.7;
+  }
+  .stat .num{
+    font-size:28px; font-weight:800; color:var(--navy); z-index:1;
+  }
+  .stat .lbl{ font-size:12.5px; color:var(--muted); z-index:1; }
 
-        /* Group/Department Styling */
-        .dept-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-width: 200px;
-            flex: 1;
-        }
+  /* ============ CONNECTOR / LEADERSHIP ============ */
+  .leadership-wrap{ max-width:1360px; margin:0 auto; padding:38px 28px 0; }
+  .leadership{
+    display:flex; justify-content:center; gap:20px; flex-wrap:wrap;
+    position:relative; padding-bottom:26px;
+  }
+  .trunk{
+    width:2px; margin:0 auto; background:var(--line-strong);
+    animation:growV .5s ease-out both;
+  }
+  .trunk.top{ height:0; }
+  .trunk.mid{ height:26px; }
+  @keyframes growV{ from{ transform:scaleY(0);} to{ transform:scaleY(1);} }
+  .trunk{ transform-origin:top; }
 
-        .super-header {
-            text-align: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 5px;
-            margin-bottom: 5px;
-        }
+  .rail{
+    max-width:1360px; margin:0 auto; padding:0 28px;
+  }
+  .rail-line{
+    height:2px; background:var(--line-strong); border-radius:2px;
+    animation:growH .6s ease-out both;
+    transform-origin:left;
+  }
+  @keyframes growH{ from{ transform:scaleX(0);} to{ transform:scaleX(1);} }
 
-        .dept-title {
-            background-color: #e9ecef;
-            text-align: center;
-            padding: 10px;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 6px;
-            color: var(--text-dark);
-            border-top: 3px solid var(--ipex-red);
-        }
+  /* ============ FILTERS ============ */
+  .filters{
+    max-width:1360px; margin:0 auto; padding:22px 28px 4px;
+    display:flex; gap:8px; overflow-x:auto; scrollbar-width:none;
+  }
+  .filters::-webkit-scrollbar{ display:none; }
+  .pill{
+    flex-shrink:0;
+    border:1px solid var(--line-strong);
+    background:#fff; color:var(--ink);
+    padding:8px 15px; border-radius:var(--radius-pill);
+    font-size:13px; font-weight:600; font-family:inherit;
+    cursor:pointer; display:flex; align-items:center; gap:7px;
+    transition:background .15s, color .15s, border-color .15s;
+    white-space:nowrap;
+  }
+  .pill .dot{ width:8px; height:8px; border-radius:50%; background:var(--dot,var(--blue)); }
+  .pill:hover{ border-color:var(--blue); }
+  .pill.active{ background:var(--navy); border-color:var(--navy); color:#fff; }
+  .pill.active .dot{ background:#fff; }
 
-        /* Card Styling */
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
-        }
+  /* ============ GRID / LANES ============ */
+  main{ max-width:1360px; margin:0 auto; padding:18px 28px 70px; }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(230px,1fr));
+    gap:18px;
+    align-items:start;
+  }
+  .lane-group{ grid-column: span 3; }
+  @media (max-width:980px){ .lane-group{ grid-column: span 1 / -1; } }
 
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-color: var(--ipex-blue);
-        }
+  .lane, .lane-group{
+    transition:opacity .2s, transform .2s;
+  }
+  .lane.hide, .lane-group.hide{
+    display:none;
+  }
 
-        /* Connecting lines for vertical stacks */
-        .card-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            position: relative;
-            padding-left: 20px;
-            margin-top: 10px;
-        }
-        
-        .card-stack::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: 10px;
-            bottom: 20px;
-            width: 2px;
-            background-color: #cbd5e1;
-        }
+  .lane{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-card);
+    padding:16px;
+    display:flex; flex-direction:column; gap:12px;
+    box-shadow:0 1px 2px rgba(16,38,59,.03);
+  }
+  .lane-tag{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11px; font-weight:700; color:var(--tag,var(--blue));
+    text-transform:none;
+  }
+  .lane-tag .dot{ width:7px; height:7px; border-radius:50%; background:var(--tag,var(--blue)); }
+  .lane h3{
+    margin:0; font-size:14px; font-weight:700; color:var(--navy);
+    line-height:1.3;
+  }
 
-        .card-stack .card::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: -10px;
-            width: 10px;
-            height: 2px;
-            background-color: #cbd5e1;
-        }
+  .lane-group-head{
+    font-size:11px; font-weight:700; color:var(--c-process);
+    display:flex; align-items:center; gap:6px; margin-bottom:2px;
+  }
+  .lane-group-head .dot{ width:7px; height:7px; border-radius:50%; background:var(--c-process); }
+  .lane-group-title{ font-size:14.5px; font-weight:700; color:var(--navy); margin:0 0 12px; }
+  .lane-group-body{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+  }
+  @media (max-width:760px){ .lane-group-body{ grid-template-columns:1fr; } }
+  .lane-group-body .sublane{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-card);
+    padding:14px; display:flex; flex-direction:column; gap:10px;
+  }
 
-        /* Avatar Container */
-        .avatar-container {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background-color: #f1f5f9;
-            border: 2px solid var(--ipex-blue);
-            overflow: hidden;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+  /* ============ PERSON CARD ============ */
+  .person{
+    display:flex; align-items:center; gap:10px;
+    background:#fbfdff;
+    border:1px solid var(--line);
+    border-radius:11px;
+    padding:9px 10px;
+    cursor:pointer;
+    text-align:left;
+    width:100%;
+    font-family:inherit;
+    transition:border-color .15s, box-shadow .15s, transform .15s, opacity .15s;
+  }
+  .person:hover{
+    border-color:var(--blue);
+    box-shadow:0 3px 10px rgba(11,42,67,.08);
+    transform:translateY(-1px);
+  }
+  .person:focus-visible{ outline:2px solid var(--blue); outline-offset:2px; }
+  .person.dim{ opacity:.28; }
+  .person.match{ border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-100); }
 
-        /* Image styling - forces image to fit container perfectly */
-        .avatar-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensures aspect ratio is maintained while filling box */
-            display: block;
-        }
+  .person.lead{
+    background:linear-gradient(180deg,#fff, #f7fbfe);
+    border-color:var(--line-strong);
+  }
 
-        /* Fallback icon if image is missing */
-        .avatar-placeholder {
-            color: #94a3b8;
-            font-size: 20px;
-        }
+  .avatar{
+    width:38px; height:38px; border-radius:50%;
+    flex-shrink:0; overflow:hidden; position:relative;
+    background:var(--blue-100);
+    border:2px solid #fff;
+    box-shadow:0 0 0 1.5px var(--line-strong);
+  }
+  .lead .avatar{ width:44px; height:44px; box-shadow:0 0 0 1.5px var(--blue); }
+  .avatar img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .avatar .fallback{
+    position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+    font-size:13px; font-weight:700; color:#fff; letter-spacing:.02em;
+  }
+  .avatar .fallback.show{ display:flex; }
 
-        /* Text Details */
-        .details {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
+  .p-details{ min-width:0; flex:1; display:flex; flex-direction:column; gap:4px; }
+  .p-name{
+    font-size:12.5px; font-weight:700; color:var(--ink);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    line-height:1.2;
+  }
+  .lead .p-name{ font-size:13px; }
+  .p-title{
+    font-size:11px; color:var(--muted); line-height:1.35;
+  }
 
-        .name {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--ipex-blue);
-            text-transform: uppercase;
-        }
+  .chev{
+    flex-shrink:0; width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--muted); background:transparent;
+    transition:transform .2s, background .15s;
+  }
+  .person[aria-expanded="true"] .chev{ transform:rotate(180deg); }
+  .person:hover .chev{ background:var(--blue-100); color:var(--blue); }
 
-        .title {
-            font-size: 11px;
-            color: var(--text-light);
-            line-height: 1.2;
-            margin-top: 2px;
-        }
+  /* team stack */
+  .team{
+    display:flex; flex-direction:column; gap:8px;
+    padding-left:16px; margin-left:19px;
+    border-left:2px solid var(--line);
+    overflow:hidden;
+    max-height:600px;
+    transition:max-height .28s ease, opacity .2s, margin .2s;
+  }
+  .team.collapsed{ max-height:0; opacity:0; margin-top:-8px; }
 
-        /* Summary Box (Inspectors count) */
-        .summary-box {
-            background-color: #e2e8f0;
-            border-radius: 20px;
-            padding: 8px 12px;
-            text-align: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--ipex-blue);
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .summary-box .count {
-            background-color: var(--card-bg);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--ipex-red);
-        }
+  .summary{
+    display:flex; align-items:center; gap:9px;
+    background:var(--blue-100);
+    border-radius:var(--radius-pill);
+    padding:7px 12px;
+    font-size:11.5px; font-weight:700; color:var(--blue-700);
+  }
+  .summary .n{
+    width:22px; height:22px; border-radius:50%;
+    background:#fff; color:var(--red);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11.5px; flex-shrink:0;
+  }
+  .summary-row{ display:flex; gap:8px; }
+  .summary-row .summary{ flex:1; }
 
-        .split-summary {
-            display: flex;
-            gap: 10px;
-        }
-        .split-summary .summary-box {
-            flex: 1;
-        }
+  /* vacant */
+  .person.vacant{
+    border-style:dashed; border-color:var(--line-strong);
+    background:transparent;
+  }
+  .person.vacant .avatar{
+    background:#fff; border:2px dashed var(--line-strong); box-shadow:none;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .person.vacant .avatar svg{ width:16px; height:16px; stroke:var(--muted); }
+  .person.vacant .p-name{ color:var(--muted); font-style:normal; }
 
-        /* Specific modifications for top level */
-        .top-card {
-            border: 2px solid var(--ipex-blue);
-            min-width: 250px;
-        }
-        
-        .top-card .name { font-size: 14px; }
-        .top-card .title { font-size: 12px; }
+  /* leadership cards, bigger */
+  .lead-card{
+    background:var(--card);
+    border:1px solid var(--line-strong);
+    border-radius:16px;
+    padding:16px 20px;
+    display:flex; align-items:center; gap:14px;
+    min-width:250px;
+    box-shadow:0 4px 16px rgba(11,42,67,.06);
+    cursor:pointer;
+    font-family:inherit; text-align:left;
+    transition:transform .15s, box-shadow .15s;
+  }
+  .lead-card:hover{ transform:translateY(-2px); box-shadow:0 8px 22px rgba(11,42,67,.1); }
+  .lead-card .avatar{ width:56px; height:56px; box-shadow:0 0 0 2px var(--blue); }
+  .lead-card.advisor .avatar{ box-shadow:0 0 0 2px var(--muted); }
+  .lead-card .p-name{ font-size:15.5px; }
+  .lead-card .p-title{ font-size:12.5px; }
+  .lead-card .p-details{ gap:5px; }
 
-    </style>
+  /* empty state */
+  .empty-state{
+    grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--muted);
+  }
+  .empty-state strong{ display:block; color:var(--navy); font-size:16px; margin-bottom:4px; }
+
+  /* ============ DETAIL OVERLAY (blurred glass modal) ============ */
+  .scrim{
+    position:fixed; inset:0;
+    background:rgba(8,22,38,.55);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    opacity:0; pointer-events:none; transition:opacity .25s;
+    z-index:60;
+  }
+  .scrim.open{ opacity:1; pointer-events:auto; }
+
+  .drawer{
+    position:fixed; top:50%; left:50%;
+    width:min(420px, 90vw);
+    max-height:86vh;
+    background:#fff;
+    border-radius:24px;
+    box-shadow:0 30px 70px rgba(8,22,38,.4);
+    overflow:hidden;
+    transform:translate(-50%,-50%) scale(.94);
+    opacity:0;
+    transition:transform .28s cubic-bezier(.2,.8,.2,1), opacity .22s;
+    z-index:61;
+    display:flex; flex-direction:column;
+    pointer-events:none;
+  }
+  .drawer.open{ transform:translate(-50%,-50%) scale(1); opacity:1; pointer-events:auto; }
+
+  .drawer-close{
+    position:absolute; top:16px; right:16px; z-index:3;
+    border:none; background:rgba(255,255,255,.85);
+    backdrop-filter:blur(4px);
+    width:32px; height:32px; border-radius:50%;
+    color:var(--navy); font-size:17px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 10px rgba(8,22,38,.15);
+  }
+
+  /* blurred photo header, with the same portrait enlarged 2x behind it */
+  .drawer-head{
+    position:relative;
+    height:172px;
+    flex-shrink:0;
+    background:linear-gradient(135deg, var(--navy), var(--blue-700));
+    overflow:hidden;
+  }
+  .drawer-head-bg{
+    position:absolute; inset:-25px;
+    background-size:cover; background-position:center;
+    filter:blur(22px) saturate(1.15) brightness(.7);
+    transform:scale(1.2);
+  }
+  .drawer-head::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(8,22,38,.15), rgba(8,22,38,.4));
+  }
+
+  .drawer-body{
+    padding:100px 26px 30px;
+    overflow-y:auto;
+    text-align:center;
+    position:relative;
+  }
+
+  /* portrait, shown 2x the old sidebar size (88px -> 176px)
+     positioned relative to .drawer itself (not .drawer-body) so the
+     scrollable body's overflow never clips the part that overlaps the header */
+  .drawer-avatar{
+    width:176px; height:176px; border-radius:50%; overflow:hidden; position:absolute;
+    left:50%; top:84px; transform:translateX(-50%);
+    background:var(--blue-100);
+    border:6px solid #fff;
+    box-shadow:0 14px 34px rgba(8,22,38,.28);
+    z-index:2;
+  }
+  .drawer-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .drawer-avatar .fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:46px; font-weight:800; color:#fff;
+  }
+  .drawer-avatar .fallback.show{ display:flex; }
+
+  .drawer-name{ font-size:21px; font-weight:800; color:var(--navy); margin:0 0 4px; }
+  .drawer-title{ font-size:14px; color:var(--muted); margin:0 0 20px; }
+  .drawer-meta{ display:flex; flex-direction:column; gap:2px; text-align:left; }
+  .drawer-meta div{
+    display:flex; justify-content:space-between; gap:10px;
+    padding:11px 0; border-top:1px solid var(--line);
+    font-size:12.5px;
+  }
+  .drawer-meta .k{ color:var(--muted); }
+  .drawer-meta .v{ color:var(--ink); font-weight:600; text-align:right; }
+
+  @media (max-width:480px){
+    .drawer{ width:92vw; }
+  }
+
+  footer{
+    max-width:1360px; margin:0 auto; padding:0 28px 50px;
+    color:var(--muted); font-size:12px; display:flex; justify-content:space-between; gap:10px;
+    flex-wrap:wrap;
+  }
+
+  @media (max-width:640px){
+    .stats{ grid-template-columns:repeat(2,1fr); }
+    .topbar-inner{ flex-wrap:wrap; }
+    .topbar-search{ width:100%; order:3; margin-left:0; }
+    .lane-group-body{ grid-template-columns:1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001s !important; transition-duration:.001s !important; }
+  }
+</style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>PT IPEX Indonesia Inc</h1>
-        <h2>Quality Dept. Organization Chart (wef. July '26)</h2>
+<div class="topbar">
+  <div class="topbar-inner">
+    <img class="logo-mark" alt="I-PEX" src="data:image/png;base64,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">
+    <div class="brand-divider"></div>
+    <div class="brand-text">
+      <div class="eyebrow">PT I-PEX Indonesia Inc.</div>
+      <div class="title">Quality Department</div>
     </div>
-
-    <!-- TOP MANAGEMENT -->
-    <div class="top-management">
-        <div class="card top-card">
-            <div class="avatar-container">
-                <!-- Ganti path src dengan path foto asli -->
-                <img src="images/susetyo.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" alt="Susetyo">
-                <span class="avatar-placeholder" style="display: none;">👤</span>
-            </div>
-            <div class="details">
-                <span class="name">Susetyo Andono</span>
-                <span class="title">Quality Manager</span>
-            </div>
-        </div>
-        <div class="card top-card" style="border-color: #64748b;">
-            <div class="avatar-container" style="border-color: #64748b;">
-                <img src="images/ninomiya.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" alt="Ninomiya">
-                <span class="avatar-placeholder" style="display: none;">👤</span>
-            </div>
-            <div class="details">
-                <span class="name">Ninomiya Junichiro</span>
-                <span class="title">Quality Advisor</span>
-            </div>
-        </div>
+    <div class="topbar-search" id="searchWrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="Search name or role…" autocomplete="off">
+      <button class="search-clear" id="searchClear" aria-label="Clear search">&times;</button>
     </div>
+  </div>
+</div>
 
-    <!-- MAIN HIERARCHY COLUMNS -->
-    <div class="org-container">
-        
-        <!-- COLUMN 1 -->
-        <div class="dept-group">
-            <div class="super-header">UPSTREAM CONTROL</div>
-            <div class="dept-title">Vendor QA</div>
-            
-            <div class="card">
-                <div class="avatar-container">
-                    <img src="images/elsie.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="avatar-placeholder" style="display: none;">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name">Elsie Tria Paramian</span>
-                    <span class="title">VQA Asst. Engineer</span>
-                </div>
-            </div>
+<div class="hero">
+  <h1>Quality Organization Structure</h1>
+  <p>A map of the Quality team from upstream to downstream, effective July 2026. Click any card for details, or use the filters and search to find someone.</p>
+</div>
 
-            <div class="card-stack">
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/dian.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Dian Dewi A.L</span>
-                        <span class="title">Foreman (IQC/OQC & Quarantine)</span>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/isna.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Isna</span>
-                        <span class="title">QC Leader</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="summary-box">
-                <span class="count">6</span> IQC & OQC INSPECTOR
-            </div>
+<div class="stats">
+  <div class="stat"><span class="num" id="statTotal">–</span><span class="lbl">Total people listed</span></div>
+  <div class="stat"><span class="num" id="statDept">–</span><span class="lbl">Departments / sections</span></div>
+  <div class="stat"><span class="num" id="statLeads">–</span><span class="lbl">Foremen &amp; supervisors</span></div>
+  <div class="stat"><span class="num" id="statFloor">–</span><span class="lbl">Floor inspectors</span></div>
+</div>
+
+<div class="leadership-wrap">
+  <div class="trunk top"></div>
+  <div class="trunk mid"></div>
+  <div class="leadership">
+    <button class="lead-card" data-name="Susetyo Andono" data-title="Quality Manager" data-dept="Top Management" data-category="leadership" data-img="images/susetyo.jpg">
+      <span class="avatar"><img src="images/susetyo.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+      <span class="p-details"><span class="p-name">Susetyo Andono</span><span class="p-title">Quality Manager</span></span>
+    </button>
+    <button class="lead-card advisor" data-name="Ninomiya Junichiro" data-title="Quality Advisor" data-dept="Top Management" data-category="leadership" data-img="images/ninomiya.jpg">
+      <span class="avatar"><img src="images/ninomiya.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+      <span class="p-details"><span class="p-name">Ninomiya Junichiro</span><span class="p-title">Quality Advisor</span></span>
+    </button>
+  </div>
+</div>
+
+<div class="rail"><div class="rail-line"></div></div>
+
+<div class="filters" id="filters">
+  <button class="pill active" data-filter="all">All teams</button>
+  <button class="pill" data-filter="upstream" style="--dot:var(--c-upstream)"><span class="dot"></span>Upstream Control</button>
+  <button class="pill" data-filter="downstream" style="--dot:var(--c-downstream)"><span class="dot"></span>Downstream Control</button>
+  <button class="pill" data-filter="assurance" style="--dot:var(--c-assurance)"><span class="dot"></span>In-Process Assurance</button>
+  <button class="pill" data-filter="process" style="--dot:var(--c-process)"><span class="dot"></span>In-Process Control</button>
+  <button class="pill" data-filter="support" style="--dot:var(--c-support)"><span class="dot"></span>Quality System Support</button>
+</div>
+
+<main>
+  <div class="grid" id="orgGrid">
+
+    <!-- UPSTREAM CONTROL -->
+    <section class="lane" data-category="upstream" style="--tag:var(--c-upstream)">
+      <div>
+        <div class="lane-tag"><span class="dot"></span>Upstream Control</div>
+        <h3>Vendor QA</h3>
+      </div>
+
+      <button class="person lead" aria-expanded="true" data-name="Elsie Tria Paramian" data-title="VQA Asst. Engineer" data-dept="Vendor QA" data-img="images/elsie.jpg">
+        <span class="avatar"><img src="images/elsie.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+        <span class="p-details"><span class="p-name">Elsie Tria Paramian</span><span class="p-title">VQA Asst. Engineer</span></span>
+        <span class="chev"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="team">
+        <button class="person" data-name="Dian Dewi A.L" data-title="Foreman (IQC/OQC &amp; Quarantine)" data-dept="Vendor QA" data-img="images/dian.jpg">
+          <span class="avatar"><img src="images/dian.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+          <span class="p-details"><span class="p-name">Dian Dewi A.L</span><span class="p-title">Foreman (IQC/OQC &amp; Quarantine)</span></span>
+        </button>
+        <button class="person" data-name="Isna" data-title="QC Leader" data-dept="Vendor QA" data-img="images/isna.jpg">
+          <span class="avatar"><img src="images/isna.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+          <span class="p-details"><span class="p-name">Isna</span><span class="p-title">QC Leader</span></span>
+        </button>
+      </div>
+      <div class="summary"><span class="n" data-count="6">6</span>IQC &amp; OQC Inspector</div>
+    </section>
+
+    <!-- DOWNSTREAM CONTROL -->
+    <section class="lane" data-category="downstream" style="--tag:var(--c-downstream)">
+      <div>
+        <div class="lane-tag"><span class="dot"></span>Downstream Control</div>
+        <h3>Customer QA</h3>
+      </div>
+      <button class="person lead" data-name="Alvin Jamora" data-title="CQA Engineer (Customer QA)" data-dept="Customer QA" data-img="images/alvin.jpg">
+        <span class="avatar"><img src="images/alvin.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+        <span class="p-details"><span class="p-name">Alvin Jamora</span><span class="p-title">CQA Engineer (Customer QA)</span></span>
+      </button>
+    </section>
+
+    <!-- IN-PROCESS ASSURANCE -->
+    <section class="lane" data-category="assurance" style="--tag:var(--c-assurance)">
+      <div>
+        <div class="lane-tag"><span class="dot"></span>In-Process Assurance</div>
+        <h3>Process QA</h3>
+      </div>
+      <button class="person" data-name="Guspita Riolis" data-title="QA Engineer (Connector Assembly)" data-dept="Process QA" data-img="images/guspita.jpg">
+        <span class="avatar"><img src="images/guspita.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+        <span class="p-details"><span class="p-name">Guspita Riolis</span><span class="p-title">QA Engineer (Connector Assembly)</span></span>
+      </button>
+      <button class="person" data-name="Azhari" data-title="QA Engineer (MCX Harness)" data-dept="Process QA" data-img="images/azhari.jpg">
+        <span class="avatar"><img src="images/azhari.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+        <span class="p-details"><span class="p-name">Azhari</span><span class="p-title">QA Engineer (MCX Harness)</span></span>
+      </button>
+      <button class="person" data-name="Juanas Auri" data-title="QA Engineer (MHF Harness)" data-dept="Process QA" data-img="images/juanas.jpg">
+        <span class="avatar"><img src="images/juanas.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+        <span class="p-details"><span class="p-name">Juanas Auri</span><span class="p-title">QA Engineer (MHF Harness)</span></span>
+      </button>
+      <button class="person" data-name="Kiki Hartanti" data-title="QA Engineer (Injection Insert)" data-dept="Process QA" data-img="images/kiki.jpg">
+        <span class="avatar"><img src="images/kiki.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+        <span class="p-details"><span class="p-name">Kiki Hartanti</span><span class="p-title">QA Engineer (Injection Insert)</span></span>
+      </button>
+      <button class="person" data-name="Almayda Atishobyta" data-title="QA Asst. Engineer (Injection Molding, MCD)" data-dept="Process QA" data-img="images/almayda.jpg">
+        <span class="avatar"><img src="images/almayda.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+        <span class="p-details"><span class="p-name">Almayda Atishobyta</span><span class="p-title">QA Asst. Engineer (Injection Molding, MCD)</span></span>
+      </button>
+      <button class="person vacant" data-name="Vacant" data-title="QA Asst. Engineer (Injection)" data-dept="Process QA">
+        <span class="avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M5 21c0-4 3-6 7-6s7 2 7 6"/></svg></span>
+        <span class="p-details"><span class="p-name">Vacant position</span><span class="p-title">QA Asst. Engineer (Injection)</span></span>
+      </button>
+    </section>
+
+    <!-- IN-PROCESS CONTROL (group of 3) -->
+    <section class="lane-group" data-category="process">
+      <div class="lane-group-head"><span class="dot"></span>In-Process Control</div>
+      <div class="lane-group-body">
+
+        <div class="sublane">
+          <h3 class="lane-group-title">Injection Process QC</h3>
+          <button class="person lead" aria-expanded="true" data-name="Nurjannah" data-title="QC Foreman" data-dept="Injection Process QC" data-img="images/nurjannah.jpg">
+            <span class="avatar"><img src="images/nurjannah.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+            <span class="p-details"><span class="p-name">Nurjannah</span><span class="p-title">QC Foreman</span></span>
+            <span class="chev"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="team">
+            <button class="person" data-name="Ikhsan" data-title="QC Leader (Running Shift)" data-dept="Injection Process QC" data-img="images/ikhsan.jpg">
+              <span class="avatar"><img src="images/ikhsan.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+              <span class="p-details"><span class="p-name">Ikhsan</span><span class="p-title">QC Leader (Running Shift)</span></span>
+            </button>
+            <button class="person" data-name="Herlina" data-title="QC Leader (Running Shift)" data-dept="Injection Process QC" data-img="images/herlina.jpg">
+              <span class="avatar"><img src="images/herlina.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+              <span class="p-details"><span class="p-name">Herlina</span><span class="p-title">QC Leader (Running Shift)</span></span>
+            </button>
+          </div>
+          <div class="summary"><span class="n" data-count="12">12</span>Injection QC Inspectors</div>
         </div>
 
-        <!-- COLUMN 2 -->
-        <div class="dept-group">
-            <div class="super-header">DOWNSTREAM CONTROL</div>
-            <div class="dept-title">Customer QA</div>
-            
-            <div class="card">
-                <div class="avatar-container">
-                    <img src="images/alvin.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="avatar-placeholder" style="display: none;">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name">Alvin Jamora</span>
-                    <span class="title">CQA Engineer<br>(Customer QA)</span>
-                </div>
-            </div>
+        <div class="sublane">
+          <h3 class="lane-group-title">Connector Assembly Process QC</h3>
+          <button class="person lead" aria-expanded="true" data-name="Sulastri" data-title="QC Foreman" data-dept="Connector Assembly Process QC" data-img="images/sulastri.jpg">
+            <span class="avatar"><img src="images/sulastri.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+            <span class="p-details"><span class="p-name">Sulastri</span><span class="p-title">QC Foreman</span></span>
+            <span class="chev"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="team">
+            <button class="person" data-name="Tetty" data-title="QC Leader (Running Shift)" data-dept="Connector Assembly Process QC" data-img="images/tetty.jpg">
+              <span class="avatar"><img src="images/tetty.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+              <span class="p-details"><span class="p-name">Tetty</span><span class="p-title">QC Leader (Running Shift)</span></span>
+            </button>
+            <button class="person" data-name="Nenny" data-title="QC Leader (Running Shift)" data-dept="Connector Assembly Process QC" data-img="images/nenny.jpg">
+              <span class="avatar"><img src="images/nenny.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+              <span class="p-details"><span class="p-name">Nenny</span><span class="p-title">QC Leader (Running Shift)</span></span>
+            </button>
+          </div>
+          <div class="summary"><span class="n" data-count="10">10</span>Connector Assy QC Inspector</div>
         </div>
 
-        <!-- COLUMN 3 -->
-        <div class="dept-group">
-            <div class="super-header">IN-PROCESS ASSURANCE</div>
-            <div class="dept-title">Process QA</div>
-            
-            <div class="card">
-                <div class="avatar-container">
-                    <img src="images/guspita.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="avatar-placeholder" style="display: none;">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name">Guspita Riolis</span>
-                    <span class="title">QA Engineer<br>(Connector Assembly)</span>
-                </div>
-            </div>
-            <div class="card">
-                <div class="avatar-container">
-                    <img src="images/azhari.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="avatar-placeholder" style="display: none;">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name">Azhari</span>
-                    <span class="title">QA Engineer<br>(MCX Harness)</span>
-                </div>
-            </div>
-            <div class="card">
-                <div class="avatar-container">
-                    <img src="images/juanas.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="avatar-placeholder" style="display: none;">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name">Juanas Auri</span>
-                    <span class="title">QA Engineer<br>(MHF Harness)</span>
-                </div>
-            </div>
-            <div class="card">
-                <div class="avatar-container">
-                    <img src="images/kiki.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="avatar-placeholder" style="display: none;">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name">Kiki Hartanti</span>
-                    <span class="title">QA Engineer<br>(Injection Insert)</span>
-                </div>
-            </div>
-            <div class="card">
-                <div class="avatar-container">
-                    <img src="images/almayda.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="avatar-placeholder" style="display: none;">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name">Almayda Atishobyta</span>
-                    <span class="title">QA Asst. Engineer<br>(Injection Molding, MCD)</span>
-                </div>
-            </div>
-            <div class="card" style="opacity: 0.6;">
-                <div class="avatar-container" style="background-color: #cbd5e1; border-color: #94a3b8;">
-                    <span class="avatar-placeholder">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name" style="color: #64748b;">Vacant</span>
-                    <span class="title">QA Asst. Engineer<br>(Injection)</span>
-                </div>
-            </div>
+        <div class="sublane">
+          <h3 class="lane-group-title">MCX &amp; Wire Harness Process QC</h3>
+          <button class="person lead" aria-expanded="true" data-name="Sarmadi" data-title="QC Foreman" data-dept="MCX &amp; Wire Harness Process QC" data-img="images/sarmadi.jpg">
+            <span class="avatar"><img src="images/sarmadi.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+            <span class="p-details"><span class="p-name">Sarmadi</span><span class="p-title">QC Foreman</span></span>
+            <span class="chev"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="team">
+            <button class="person" data-name="Tri S." data-title="QC Leader" data-dept="MCX &amp; Wire Harness Process QC" data-img="images/tri.jpg">
+              <span class="avatar"><img src="images/tri.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+              <span class="p-details"><span class="p-name">Tri S.</span><span class="p-title">QC Leader</span></span>
+            </button>
+            <button class="person" data-name="Mia" data-title="QC Leader (Running Shift)" data-dept="MCX &amp; Wire Harness Process QC" data-img="images/mia.jpg">
+              <span class="avatar"><img src="images/mia.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+              <span class="p-details"><span class="p-name">Mia</span><span class="p-title">QC Leader (Running Shift)</span></span>
+            </button>
+            <button class="person" data-name="Ade" data-title="QC Leader (Running Shift)" data-dept="MCX &amp; Wire Harness Process QC" data-img="images/ade.jpg">
+              <span class="avatar"><img src="images/ade.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+              <span class="p-details"><span class="p-name">Ade</span><span class="p-title">QC Leader (Running Shift)</span></span>
+            </button>
+          </div>
+          <div class="summary-row">
+            <div class="summary"><span class="n" data-count="5">5</span>MCX Harness</div>
+            <div class="summary"><span class="n" data-count="12">12</span>Wire Harness</div>
+          </div>
         </div>
 
-        <!-- COLUMN 4 -->
-        <div class="dept-group">
-            <div class="super-header">IN-PROCESS CONTROL</div>
-            <div class="dept-title">Injection Process QC</div>
-            
-            <div class="card">
-                <div class="avatar-container">
-                    <img src="images/nurjannah.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="avatar-placeholder" style="display: none;">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name">Nurjannah</span>
-                    <span class="title">QC Foreman</span>
-                </div>
-            </div>
+      </div>
+    </section>
 
-            <div class="card-stack">
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/ikhsan.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Ikhsan</span>
-                        <span class="title">QC Leader<br>(Running Shift)</span>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/herlina.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Herlina</span>
-                        <span class="title">QC Leader<br>(Running Shift)</span>
-                    </div>
-                </div>
-            </div>
+    <!-- QUALITY SYSTEM SUPPORT -->
+    <section class="lane" data-category="support" style="--tag:var(--c-support)">
+      <div>
+        <div class="lane-tag"><span class="dot"></span>Quality System Support</div>
+        <h3>Training, Calibration &amp; Document Control</h3>
+      </div>
+      <button class="person lead" aria-expanded="true" data-name="Nurhafizah" data-title="Supervisor" data-dept="Training, Calibration &amp; Document Control" data-img="images/nurhafizah.jpg">
+        <span class="avatar"><img src="images/nurhafizah.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+        <span class="p-details"><span class="p-name">Nurhafizah</span><span class="p-title">Supervisor</span></span>
+        <span class="chev"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="team">
+        <button class="person" data-name="Sharah" data-title="Asst. Trainer" data-dept="Training, Calibration &amp; Document Control" data-img="images/sharah.jpg">
+          <span class="avatar"><img src="images/sharah.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+          <span class="p-details"><span class="p-name">Sharah</span><span class="p-title">Asst. Trainer</span></span>
+        </button>
+        <button class="person" data-name="Florentina Feti" data-title="Calibration Senior Clerk" data-dept="Training, Calibration &amp; Document Control" data-img="images/florentina.jpg">
+          <span class="avatar"><img src="images/florentina.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+          <span class="p-details"><span class="p-name">Florentina Feti</span><span class="p-title">Calibration Senior Clerk</span></span>
+        </button>
+        <button class="person" data-name="Mulyati" data-title="Doc. Control Clerk" data-dept="Training, Calibration &amp; Document Control" data-img="images/mulyati.jpg">
+          <span class="avatar"><img src="images/mulyati.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+          <span class="p-details"><span class="p-name">Mulyati</span><span class="p-title">Doc. Control Clerk</span></span>
+        </button>
+        <button class="person" data-name="Yusriani" data-title="Leader" data-dept="Training, Calibration &amp; Document Control" data-img="images/yusriani.jpg">
+          <span class="avatar"><img src="images/yusriani.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+          <span class="p-details"><span class="p-name">Yusriani</span><span class="p-title">Leader</span></span>
+        </button>
+        <button class="person" data-name="Marfa" data-title="Leader" data-dept="Training, Calibration &amp; Document Control" data-img="images/marfa.jpg">
+          <span class="avatar"><img src="images/marfa.jpg" alt="" onerror="this.style.display='none'"><span class="fallback"></span></span>
+          <span class="p-details"><span class="p-name">Marfa</span><span class="p-title">Leader</span></span>
+        </button>
+      </div>
+    </section>
 
-            <div class="summary-box">
-                <span class="count">12</span> INJECTION QC INSPECTORS
-            </div>
-        </div>
+  </div>
 
-        <!-- COLUMN 5 -->
-        <div class="dept-group">
-            <div class="super-header">IN-PROCESS CONTROL</div>
-            <div class="dept-title">Connector Assembly Process QC</div>
-            
-            <div class="card">
-                <div class="avatar-container">
-                    <img src="images/sulastri.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="avatar-placeholder" style="display: none;">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name">Sulastri</span>
-                    <span class="title">QC Foreman</span>
-                </div>
-            </div>
+  <div class="empty-state" id="emptyState" style="display:none">
+    <strong>No matches found</strong>
+    Try a different search term, or clear the active filter.
+  </div>
+</main>
 
-            <div class="card-stack">
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/tetty.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Tetty</span>
-                        <span class="title">QC Leader<br>(Running Shift)</span>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/nenny.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Nenny</span>
-                        <span class="title">QC Leader<br>(Running Shift)</span>
-                    </div>
-                </div>
-            </div>
+<footer>
+  <span>PT I-PEX Indonesia Inc. · Quality Department Organization Chart · effective July 2026</span>
+  <span>Team photos: place image files in an <code>images/</code> folder, matching the path shown on each card.</span>
+</footer>
 
-            <div class="summary-box">
-                <span class="count">10</span> CONNECTOR ASSY QC INSPECTOR
-            </div>
-        </div>
-
-        <!-- COLUMN 6 -->
-        <div class="dept-group">
-            <div class="super-header">IN-PROCESS CONTROL</div>
-            <div class="dept-title">MCX & Wire Harness Process QC</div>
-            
-            <div class="card">
-                <div class="avatar-container">
-                    <img src="images/sarmadi.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="avatar-placeholder" style="display: none;">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name">Sarmadi</span>
-                    <span class="title">QC Foreman</span>
-                </div>
-            </div>
-
-            <div class="card-stack">
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/tri.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Tri S.</span>
-                        <span class="title">QC Leader</span>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/mia.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Mia</span>
-                        <span class="title">QC Leader<br>(Running Shift)</span>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/ade.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Ade</span>
-                        <span class="title">QC Leader<br>(Running Shift)</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="split-summary">
-                <div class="summary-box">
-                    <span class="count">5</span> MCX Harness QC Insp.
-                </div>
-                <div class="summary-box">
-                    <span class="count">12</span> Wire Harness QC Insp.
-                </div>
-            </div>
-        </div>
-
-        <!-- COLUMN 7 -->
-        <div class="dept-group">
-            <div class="super-header">QUALITY SYSTEM SUPPORT</div>
-            <div class="dept-title">Training, Calibration & Document Control</div>
-            
-            <div class="card">
-                <div class="avatar-container">
-                    <img src="images/nurhafizah.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="avatar-placeholder" style="display: none;">👤</span>
-                </div>
-                <div class="details">
-                    <span class="name">Nurhafizah</span>
-                    <span class="title">Supervisor</span>
-                </div>
-            </div>
-
-            <div class="card-stack">
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/sharah.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Sharah</span>
-                        <span class="title">Asst. Trainer</span>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/florentina.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Florentina Feti</span>
-                        <span class="title">Calibration Senior Clerk</span>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/mulyati.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Mulyati</span>
-                        <span class="title">Doc. Control Clerk</span>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/yusriani.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Yusriani</span>
-                        <span class="title">Leader</span>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="avatar-container">
-                        <img src="images/marfa.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span class="avatar-placeholder" style="display: none;">👤</span>
-                    </div>
-                    <div class="details">
-                        <span class="name">Marfa</span>
-                        <span class="title">Leader</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true">
+  <button class="drawer-close" id="drawerClose" aria-label="Close">&times;</button>
+  <div class="drawer-head">
+    <div class="drawer-head-bg" id="drawerHeadBg"></div>
+  </div>
+  <div class="drawer-avatar" id="drawerAvatar">
+    <img id="drawerImg" alt="" style="display:none">
+    <span class="fallback" id="drawerFallback"></span>
+  </div>
+  <div class="drawer-body">
+    <h2 class="drawer-name" id="drawerName"></h2>
+    <p class="drawer-title" id="drawerTitle"></p>
+    <div class="drawer-meta">
+      <div><span class="k">Department</span><span class="v" id="drawerDept"></span></div>
+      <div><span class="k">Category</span><span class="v" id="drawerCategory"></span></div>
+      <div><span class="k">Photo</span><span class="v" id="drawerImgPath"></span></div>
     </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var CATEGORY_LABEL = {
+    leadership:'Top Management',
+    upstream:'Upstream Control',
+    downstream:'Downstream Control',
+    assurance:'In-Process Assurance',
+    process:'In-Process Control',
+    support:'Quality System Support'
+  };
+  var PALETTE = ['#0091e6','#0071b3','#0b2a43','#19a3dd','#5c7085','#0a5f92'];
+
+  function initials(name){
+    if(!name) return '?';
+    var parts = name.trim().split(/\s+/).filter(Boolean);
+    if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  function colorFor(name){
+    var h = 0;
+    for(var i=0;i<name.length;i++){ h = (h*31 + name.charCodeAt(i)) >>> 0; }
+    return PALETTE[h % PALETTE.length];
+  }
+
+  // populate avatar fallbacks (name initials + deterministic color)
+  document.querySelectorAll('.person:not(.vacant), .lead-card').forEach(function(card){
+    var name = card.getAttribute('data-name') || '';
+    var fb = card.querySelector('.avatar .fallback');
+    if(fb){
+      fb.textContent = initials(name);
+      fb.style.background = colorFor(name);
+    }
+    var img = card.querySelector('.avatar img');
+    if(img){
+      img.addEventListener('error', function(){
+        if(fb) fb.style.display = 'flex';
+      });
+    }
+  });
+
+  // expand / collapse team stacks
+  document.querySelectorAll('.person.lead[aria-expanded]').forEach(function(btn){
+    var team = btn.parentElement.querySelector('.team');
+    btn.addEventListener('click', function(e){
+      if(e.target.closest('.chev') === null && e.detail !== 0){
+        // full card click also opens drawer via delegated handler below;
+        // chevron toggles collapse specifically when present
+      }
+      var expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      if(team) team.classList.toggle('collapsed', expanded);
+    });
+  });
+
+  // ---- detail drawer ----
+  var drawer = document.getElementById('drawer');
+  var scrim = document.getElementById('scrim');
+  function openDrawer(card){
+    var name = card.getAttribute('data-name');
+    var title = card.getAttribute('data-title');
+    var dept = card.getAttribute('data-dept') || '—';
+    var cat = card.closest('[data-category]');
+    var catKey = cat ? cat.getAttribute('data-category') : (card.getAttribute('data-category')||'');
+    var imgPath = card.getAttribute('data-img');
+    var isVacant = card.classList.contains('vacant');
+
+    document.getElementById('drawerName').textContent = isVacant ? 'Vacant position' : name;
+    document.getElementById('drawerTitle').textContent = title || '';
+    document.getElementById('drawerDept').textContent = dept;
+    document.getElementById('drawerCategory').textContent = CATEGORY_LABEL[catKey] || '—';
+    document.getElementById('drawerImgPath').textContent = imgPath || '— (no photo yet)';
+
+    var fb = document.getElementById('drawerFallback');
+    var img = document.getElementById('drawerImg');
+    var headBg = document.getElementById('drawerHeadBg');
+    headBg.style.backgroundImage = '';
+
+    if(isVacant){
+      fb.style.display = 'flex';
+      fb.textContent = '＋';
+      fb.style.background = '#b9cada';
+      img.style.display = 'none';
+    } else {
+      fb.textContent = initials(name);
+      fb.style.background = colorFor(name);
+      fb.style.display = 'flex';
+      if(imgPath){
+        img.src = imgPath;
+        img.style.display = 'block';
+        img.onerror = function(){
+          img.style.display = 'none';
+          headBg.style.backgroundImage = '';
+        };
+        img.onload = function(){
+          fb.style.display = 'none';
+          // the same portrait, blurred and enlarged, fills the header behind it
+          headBg.style.backgroundImage = "url('" + imgPath + "')";
+        };
+      } else {
+        img.style.display = 'none';
+      }
+    }
+
+    drawer.classList.add('open');
+    scrim.classList.add('open');
+    drawer.setAttribute('aria-hidden','false');
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open');
+    scrim.classList.remove('open');
+    drawer.setAttribute('aria-hidden','true');
+  }
+  document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+  scrim.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeDrawer(); });
+
+  document.querySelectorAll('.person, .lead-card').forEach(function(card){
+    card.addEventListener('click', function(e){
+      // if this click landed on a lead card's chevron area only toggle (handled above),
+      // otherwise always open the drawer with this person's info.
+      openDrawer(card);
+    });
+  });
+
+  // ---- filters ----
+  var pills = document.querySelectorAll('.pill');
+  var lanes = document.querySelectorAll('.lane, .lane-group');
+  pills.forEach(function(pill){
+    pill.addEventListener('click', function(){
+      pills.forEach(function(p){ p.classList.remove('active'); });
+      pill.classList.add('active');
+      var f = pill.getAttribute('data-filter');
+      lanes.forEach(function(lane){
+        var cat = lane.getAttribute('data-category');
+        lane.classList.toggle('hide', f !== 'all' && f !== cat);
+      });
+      applySearch();
+    });
+  });
+
+  // ---- search ----
+  var searchInput = document.getElementById('searchInput');
+  var searchWrap = document.getElementById('searchWrap');
+  var searchClear = document.getElementById('searchClear');
+  var emptyState = document.getElementById('emptyState');
+
+  function applySearch(){
+    var q = searchInput.value.trim().toLowerCase();
+    searchWrap.classList.toggle('has-value', q.length > 0);
+    var visibleLanesWithMatch = 0;
+
+    document.querySelectorAll('.lane, .lane-group').forEach(function(lane){
+      if(lane.classList.contains('hide')) return;
+      var people = lane.querySelectorAll('.person');
+      var laneHasMatch = q.length === 0;
+
+      people.forEach(function(p){
+        if(q.length === 0){
+          p.classList.remove('dim','match');
+          return;
+        }
+        var hay = (p.getAttribute('data-name') + ' ' + p.getAttribute('data-title') + ' ' + (p.getAttribute('data-dept')||'')).toLowerCase();
+        var isMatch = hay.indexOf(q) !== -1;
+        p.classList.toggle('dim', !isMatch);
+        p.classList.toggle('match', isMatch);
+        if(isMatch){
+          laneHasMatch = true;
+          // ensure containing team + lead card are expanded/visible
+          var team = p.closest('.team');
+          if(team){
+            team.classList.remove('collapsed');
+            var leadBtn = team.parentElement.querySelector('.person.lead');
+            if(leadBtn){ leadBtn.setAttribute('aria-expanded','true'); leadBtn.classList.remove('dim'); }
+          }
+        }
+      });
+
+      if(q.length > 0 && laneHasMatch) visibleLanesWithMatch++;
+    });
+
+    var anyVisibleLane = Array.prototype.some.call(document.querySelectorAll('.lane, .lane-group'), function(l){
+      return !l.classList.contains('hide');
+    });
+    emptyState.style.display = (q.length > 0 && visibleLanesWithMatch === 0 && anyVisibleLane) ? 'block' : 'none';
+  }
+  searchInput.addEventListener('input', applySearch);
+  searchClear.addEventListener('click', function(){
+    searchInput.value = '';
+    applySearch();
+    searchInput.focus();
+  });
+
+  // ---- stats ----
+  var totalPeople = document.querySelectorAll('.person, .lead-card').length;
+  var deptCount = document.querySelectorAll('.lane h3, .lane-group .sublane h3').length + 0;
+  deptCount = document.querySelectorAll('.lane, .lane-group .sublane').length;
+  var leadCount = document.querySelectorAll('.person.lead, .lead-card').length - 2; // exclude the 2 top-management cards
+  var floorCount = 0;
+  document.querySelectorAll('.summary .n').forEach(function(n){
+    floorCount += parseInt(n.getAttribute('data-count') || '0', 10);
+  });
+
+  document.getElementById('statTotal').textContent = totalPeople;
+  document.getElementById('statDept').textContent = deptCount;
+  document.getElementById('statLeads').textContent = leadCount;
+  document.getElementById('statFloor').textContent = floorCount;
+})();
+</script>
 
 </body>
 </html>
