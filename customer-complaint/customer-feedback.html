@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Complaint Management | PT-IPEX</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">I-PEX</div>
+        <div>
+          <div class="eyebrow">PT. IPEX INDONESIA INC.</div>
+          <h1 id="pageTitle">Customer Complaint List</h1>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="nav-btn active" id="btnList">☷ Complaint List</button>
+        <button class="nav-btn" id="btnDashboard">▥ Dashboard</button>
+        <div class="record-counter" id="recordCounter">0 Records</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- PAGE 1 -->
+      <section id="listPage">
+        <section class="toolbar-card">
+          <div class="toolbar-main">
+            <div class="button-group">
+              <button class="btn btn-primary" id="btnNew">＋ New</button>
+              <button class="btn btn-secondary" id="btnEdit">✎ Edit</button>
+              <button class="btn btn-danger" id="btnDelete">⌫ Delete</button>
+            </div>
+            <div class="button-group">
+              <button class="btn btn-light" id="btnImport">⇩ Import CSV</button>
+              <button class="btn btn-light" id="btnExport">⇧ Export CSV</button>
+            </div>
+          </div>
+          <div class="filter-bar">
+            <div class="search-wrap"><span>⌕</span><input type="text" id="searchBar" placeholder="Search complaint data..."></div>
+            <button class="filter-toggle" id="btnFilter">⚲ Filters <span id="filterBadge">0</span></button>
+          </div>
+          <div class="filter-panel" id="filterPanel">
+            <select id="filterCustomer"><option value="">All Customers</option></select>
+            <select id="filterStatus"><option value="">All Customer Report Status</option></select>
+            <select id="filterYear"><option value="">All Years</option></select>
+            <button class="clear-filter" id="btnClearFilters">Clear Filters</button>
+          </div>
+        </section>
+
+        <section class="kpi-grid list-kpi-grid" id="listKpiGrid">
+          <div class="kpi-card"><span>Total Cases</span><strong id="listKpiCases">0</strong><small>Filtered records</small></div>
+          <div class="kpi-card"><span>Official Claims</span><strong id="listKpiClaims">0</strong><small>Claim records</small></div>
+          <div class="kpi-card"><span>Avg. Closure Days</span><strong id="listKpiClosure">—</strong><small>Available closure data</small></div>
+          <div class="kpi-card"><span>Claim Loss Cost</span><strong id="listKpiLoss">0</strong><small>Kyen</small></div>
+        </section>
+
+        <section class="table-card">
+          <div class="table-meta"><span id="selectionInfo">Select a record to edit or delete</span><span id="visibleCounter"></span></div>
+          <div class="table-scroll"><table id="complaintTable"><thead><tr id="tableHeader"></tr></thead><tbody id="tableBody"></tbody></table></div>
+        </section>
+      </section>
+
+      <!-- PAGE 2 -->
+      <section id="dashboardPage" class="dashboard-page hidden">
+        <section class="dashboard-head">
+          <div><div class="eyebrow dark">QUALITY PERFORMANCE</div><h2>Customer Complaint Dashboard</h2><p>Interactive analysis of customer complaints and official claims.</p></div>
+          <button class="btn btn-primary" id="btnPdf">▣ Export Dashboard to PDF</button>
+        </section>
+
+        <section class="dashboard-filters">
+          <div class="filter-title">Dashboard Filters</div>
+          <div class="dash-filter-grid">
+            <label>Customer Name<select id="dashCustomer"><option value="">All Customers</option></select></label>
+            <label>Official Claim<select id="dashClaim"><option value="">All Official Claim</option></select></label>
+            <label>Defect Criteria<select id="dashDefect"><option value="">All Defect Criteria</option></select></label>
+            <button class="btn btn-light" id="btnResetDash">Reset</button>
+          </div>
+        </section>
+
+        <section class="kpi-grid" id="kpiGrid">
+          <div class="kpi-card"><span>Total Complaints</span><strong id="kpiTotal">0</strong><small>Filtered records</small></div>
+          <div class="kpi-card"><span>Official Claims</span><strong id="kpiClaims">0</strong><small>Claim records</small></div>
+          <div class="kpi-card"><span>Customers</span><strong id="kpiCustomers">0</strong><small>Unique customers</small></div>
+          <div class="kpi-card"><span>Avg. Closure Days</span><strong id="kpiClosure">—</strong><small>Based on available data</small></div>
+          <div class="kpi-card"><span>Claim Loss Cost</span><strong id="kpiLoss">0</strong><small>Kyen</small></div>
+        </section>
+
+        <section class="chart-grid">
+          <div class="chart-card chart-wide"><div class="chart-title">Complaint Trend</div><div class="chart-box"><canvas id="trendChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-title">Complaints by Customer</div><div class="chart-box"><canvas id="customerChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-title">Official Claim Distribution</div><div class="chart-box"><canvas id="claimChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-title">Defect Criteria</div><div class="chart-box"><canvas id="defectChart"></canvas></div></div>
+          <div class="chart-card"><div class="chart-title">Customer Report Status</div><div class="chart-box"><canvas id="statusChart"></canvas></div></div>
+          <div class="chart-card chart-wide"><div class="chart-title">Level 2 Cause Analysis</div><div class="chart-box tall"><canvas id="causeChart"></canvas></div></div>
+        </section>
+        <div class="dashboard-footer">PT. IPEX Indonesia Inc. • Customer Complaint Analysis • Generated from current complaint data</div>
+      </section>
+    </main>
+  </div>
+
+  <input type="file" id="fileInput" accept=".csv" hidden>
+
+  <div class="modal-backdrop" id="formModal"><div class="modal">
+    <div class="modal-header"><div><div class="eyebrow dark">COMPLAINT RECORD</div><h2 id="modalTitle">New Customer Complaint</h2></div><button class="icon-btn" id="btnCloseModal">×</button></div>
+    <form id="complaintForm"><div class="form-grid" id="formFields"></div><div class="modal-footer"><button type="button" class="btn btn-light" id="btnCancel">Cancel</button><button type="submit" class="btn btn-primary">Save Record</button></div></form>
+  </div></div>
+  <div class="toast" id="toast"></div>
+  <script src="script.js"></script>
+</body>
+</html>
