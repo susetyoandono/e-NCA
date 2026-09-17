@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I-PEX Quality Organization Chart</title>
+    <style>
+        :root {
+            --ipex-blue: #007dc5;
+            --ipex-red: #e60012;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--ipex-blue);
+        }
+
+        .header h1 {
+            color: var(--ipex-blue);
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header h2 {
+            color: var(--text-light);
+            margin: 0;
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        /* Top Management */
+        .top-management {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .top-management::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            background-color: var(--ipex-blue);
+        }
+
+        /* Main Container for Columns */
+        .org-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 15px;
+            padding-top: 20px;
+            border-top: 2px solid var(--ipex-blue);
+            position: relative;
+            flex-wrap: wrap;
+        }
+
+        /* Group/Department Styling */
+        .dept-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 200px;
+            flex: 1;
+        }
+
+        .super-header {
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+
+        .dept-title {
+            background-color: #e9ecef;
+            text-align: center;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 6px;
+            color: var(--text-dark);
+            border-top: 3px solid var(--ipex-red);
+        }
+
+        /* Card Styling */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-color: var(--ipex-blue);
+        }
+
+        /* Connecting lines for vertical stacks */
+        .card-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .card-stack::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            bottom: 20px;
+            width: 2px;
+            background-color: #cbd5e1;
+        }
+
+        .card-stack .card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -10px;
+            width: 10px;
+            height: 2px;
+            background-color: #cbd5e1;
+        }
+
+        /* Avatar Container */
+        .avatar-container {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #f1f5f9;
+            border: 2px solid var(--ipex-blue);
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Image styling - forces image to fit container perfectly */
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures aspect ratio is maintained while filling box */
+            display: block;
+        }
+
+        /* Fallback icon if image is missing */
+        .avatar-placeholder {
+            color: #94a3b8;
+            font-size: 20px;
+        }
+
+        /* Text Details */
+        .details {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ipex-blue);
+            text-transform: uppercase;
+        }
+
+        .title {
+            font-size: 11px;
+            color: var(--text-light);
+            line-height: 1.2;
+            margin-top: 2px;
+        }
+
+        /* Summary Box (Inspectors count) */
+        .summary-box {
+            background-color: #e2e8f0;
+            border-radius: 20px;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--ipex-blue);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .summary-box .count {
+            background-color: var(--card-bg);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ipex-red);
+        }
+
+        .split-summary {
+            display: flex;
+            gap: 10px;
+        }
+        .split-summary .summary-box {
+            flex: 1;
+        }
+
+        /* Specific modifications for top level */
+        .top-card {
+            border: 2px solid var(--ipex-blue);
+            min-width: 250px;
+        }
+        
+        .top-card .name { font-size: 14px; }
+        .top-card .title { font-size: 12px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>PT IPEX Indonesia Inc</h1>
+        <h2>Quality Dept. Organization Chart (wef. July '26)</h2>
+    </div>
+
+    <!-- TOP MANAGEMENT -->
+    <div class="top-management">
+        <div class="card top-card">
+            <div class="avatar-container">
+                <!-- Ganti path src dengan path foto asli -->
+                <img src="images/susetyo.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" alt="Susetyo">
+                <span class="avatar-placeholder" style="display: none;">👤</span>
+            </div>
+            <div class="details">
+                <span class="name">Susetyo Andono</span>
+                <span class="title">Quality Manager</span>
+            </div>
+        </div>
+        <div class="card top-card" style="border-color: #64748b;">
+            <div class="avatar-container" style="border-color: #64748b;">
+                <img src="images/ninomiya.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" alt="Ninomiya">
+                <span class="avatar-placeholder" style="display: none;">👤</span>
+            </div>
+            <div class="details">
+                <span class="name">Ninomiya Junichiro</span>
+                <span class="title">Quality Advisor</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN HIERARCHY COLUMNS -->
+    <div class="org-container">
+        
+        <!-- COLUMN 1 -->
+        <div class="dept-group">
+            <div class="super-header">UPSTREAM CONTROL</div>
+            <div class="dept-title">Vendor QA</div>
+            
+            <div class="card">
+                <div class="avatar-container">
+                    <img src="images/elsie.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="avatar-placeholder" style="display: none;">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name">Elsie Tria Paramian</span>
+                    <span class="title">VQA Asst. Engineer</span>
+                </div>
+            </div>
+
+            <div class="card-stack">
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/dian.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Dian Dewi A.L</span>
+                        <span class="title">Foreman (IQC/OQC & Quarantine)</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/isna.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Isna</span>
+                        <span class="title">QC Leader</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary-box">
+                <span class="count">6</span> IQC & OQC INSPECTOR
+            </div>
+        </div>
+
+        <!-- COLUMN 2 -->
+        <div class="dept-group">
+            <div class="super-header">DOWNSTREAM CONTROL</div>
+            <div class="dept-title">Customer QA</div>
+            
+            <div class="card">
+                <div class="avatar-container">
+                    <img src="images/alvin.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="avatar-placeholder" style="display: none;">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name">Alvin Jamora</span>
+                    <span class="title">CQA Engineer<br>(Customer QA)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 3 -->
+        <div class="dept-group">
+            <div class="super-header">IN-PROCESS ASSURANCE</div>
+            <div class="dept-title">Process QA</div>
+            
+            <div class="card">
+                <div class="avatar-container">
+                    <img src="images/guspita.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="avatar-placeholder" style="display: none;">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name">Guspita Riolis</span>
+                    <span class="title">QA Engineer<br>(Connector Assembly)</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="avatar-container">
+                    <img src="images/azhari.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="avatar-placeholder" style="display: none;">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name">Azhari</span>
+                    <span class="title">QA Engineer<br>(MCX Harness)</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="avatar-container">
+                    <img src="images/juanas.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="avatar-placeholder" style="display: none;">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name">Juanas Auri</span>
+                    <span class="title">QA Engineer<br>(MHF Harness)</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="avatar-container">
+                    <img src="images/kiki.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="avatar-placeholder" style="display: none;">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name">Kiki Hartanti</span>
+                    <span class="title">QA Engineer<br>(Injection Insert)</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="avatar-container">
+                    <img src="images/almayda.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="avatar-placeholder" style="display: none;">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name">Almayda Atishobyta</span>
+                    <span class="title">QA Asst. Engineer<br>(Injection Molding, MCD)</span>
+                </div>
+            </div>
+            <div class="card" style="opacity: 0.6;">
+                <div class="avatar-container" style="background-color: #cbd5e1; border-color: #94a3b8;">
+                    <span class="avatar-placeholder">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name" style="color: #64748b;">Vacant</span>
+                    <span class="title">QA Asst. Engineer<br>(Injection)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 4 -->
+        <div class="dept-group">
+            <div class="super-header">IN-PROCESS CONTROL</div>
+            <div class="dept-title">Injection Process QC</div>
+            
+            <div class="card">
+                <div class="avatar-container">
+                    <img src="images/nurjannah.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="avatar-placeholder" style="display: none;">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name">Nurjannah</span>
+                    <span class="title">QC Foreman</span>
+                </div>
+            </div>
+
+            <div class="card-stack">
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/ikhsan.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Ikhsan</span>
+                        <span class="title">QC Leader<br>(Running Shift)</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/herlina.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Herlina</span>
+                        <span class="title">QC Leader<br>(Running Shift)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-box">
+                <span class="count">12</span> INJECTION QC INSPECTORS
+            </div>
+        </div>
+
+        <!-- COLUMN 5 -->
+        <div class="dept-group">
+            <div class="super-header">IN-PROCESS CONTROL</div>
+            <div class="dept-title">Connector Assembly Process QC</div>
+            
+            <div class="card">
+                <div class="avatar-container">
+                    <img src="images/sulastri.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="avatar-placeholder" style="display: none;">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name">Sulastri</span>
+                    <span class="title">QC Foreman</span>
+                </div>
+            </div>
+
+            <div class="card-stack">
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/tetty.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Tetty</span>
+                        <span class="title">QC Leader<br>(Running Shift)</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/nenny.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Nenny</span>
+                        <span class="title">QC Leader<br>(Running Shift)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-box">
+                <span class="count">10</span> CONNECTOR ASSY QC INSPECTOR
+            </div>
+        </div>
+
+        <!-- COLUMN 6 -->
+        <div class="dept-group">
+            <div class="super-header">IN-PROCESS CONTROL</div>
+            <div class="dept-title">MCX & Wire Harness Process QC</div>
+            
+            <div class="card">
+                <div class="avatar-container">
+                    <img src="images/sarmadi.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="avatar-placeholder" style="display: none;">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name">Sarmadi</span>
+                    <span class="title">QC Foreman</span>
+                </div>
+            </div>
+
+            <div class="card-stack">
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/tri.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Tri S.</span>
+                        <span class="title">QC Leader</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/mia.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Mia</span>
+                        <span class="title">QC Leader<br>(Running Shift)</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/ade.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Ade</span>
+                        <span class="title">QC Leader<br>(Running Shift)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="split-summary">
+                <div class="summary-box">
+                    <span class="count">5</span> MCX Harness QC Insp.
+                </div>
+                <div class="summary-box">
+                    <span class="count">12</span> Wire Harness QC Insp.
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 7 -->
+        <div class="dept-group">
+            <div class="super-header">QUALITY SYSTEM SUPPORT</div>
+            <div class="dept-title">Training, Calibration & Document Control</div>
+            
+            <div class="card">
+                <div class="avatar-container">
+                    <img src="images/nurhafizah.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="avatar-placeholder" style="display: none;">👤</span>
+                </div>
+                <div class="details">
+                    <span class="name">Nurhafizah</span>
+                    <span class="title">Supervisor</span>
+                </div>
+            </div>
+
+            <div class="card-stack">
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/sharah.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Sharah</span>
+                        <span class="title">Asst. Trainer</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/florentina.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Florentina Feti</span>
+                        <span class="title">Calibration Senior Clerk</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/mulyati.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Mulyati</span>
+                        <span class="title">Doc. Control Clerk</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/yusriani.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Yusriani</span>
+                        <span class="title">Leader</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="avatar-container">
+                        <img src="images/marfa.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="avatar-placeholder" style="display: none;">👤</span>
+                    </div>
+                    <div class="details">
+                        <span class="name">Marfa</span>
+                        <span class="title">Leader</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
