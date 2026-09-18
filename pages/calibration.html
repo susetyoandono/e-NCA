@@ -180,14 +180,7 @@
       <div class="tag">Calibration Masterlist</div>
     </div>
     <h2>Sign in to continue</h2>
-    <p class="login-sub">Upload masterlist file untuk mengaktifkan akses</p>
-
-    <label class="dropzone" id="dropzone">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16a4 4 0 0 1-1-7.87A5.5 5.5 0 0 1 16.5 8h.5a4 4 0 0 1 1 7.87"/><path d="M12 11v8"/><path d="M9 14l3-3 3 3"/></svg>
-      <div class="dz-title">Klik atau drop file di sini</div>
-      <div class="dz-sub">.csv, .xlsx, .xls</div>
-      <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" />
-    </label>
+    <p class="login-sub">Masterlist dimuat otomatis dari repository</p>
     <div id="fileNote" class="file-note"></div>
 
     <div class="divider-text">Login</div>
@@ -369,6 +362,7 @@ let modalMode = null; // 'add' | 'edit'
 let modalIndex = null;
 const STORAGE_KEY = 'ipex_calibration_masterlist_v4';
 const STORAGE_FILE_KEY = 'ipex_calibration_source_name_v4';
+const DEFAULT_CSV_FILE = 'IPEX_Calibration_Masterlist_2026-09-11.csv';
 
 /* ======= Utility: show popup ======= */
 function showPopup(msg){
@@ -414,12 +408,19 @@ function setLoginEnabled(enabled, restored=false){
   const note = document.getElementById('fileNote');
   if(enabled){
     note.style.display = 'block';
+    note.style.background = '#ecfdf5';
+    note.style.color = '#047857';
+    note.style.borderColor = '#a7f3d0';
     const src = sourceFileName ? ` — ${escapeHtml(sourceFileName)}` : '';
     note.innerHTML = restored
       ? `✓ Saved masterlist restored (${data.length} rows)${src}.`
       : `✓ File berhasil dimuat (${data.length} baris)${src}. Silakan login untuk melanjutkan.`;
   } else {
-    note.style.display = 'none';
+    note.style.display = 'block';
+    note.style.background = '#fff7ed';
+    note.style.color = '#9a3412';
+    note.style.borderColor = '#fed7aa';
+    note.textContent = 'Memuat masterlist dari repository...';
   }
 }
 
@@ -454,48 +455,33 @@ function openDashboard(){
   loadLogToUI();
 }
 
-/* ======= File input: Excel (.xlsx/.xls) or CSV ======= */
-const fileInput = document.getElementById('fileInput');
-fileInput.addEventListener('change', async (e) => {
-  const f = e.target.files[0];
-  if(!f) return;
-  showPopup('Loading file, please wait...');
-  const overlay = document.createElement('div');
-  overlay.id = 'loadingOverlay';
-  overlay.style = 'position:fixed;inset:0;background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;z-index:9999;font-size:15px;font-weight:600;color:#0b2340;font-family:Inter,sans-serif';
-  overlay.innerText = 'Parsing file...';
-  document.body.appendChild(overlay);
-
-  try {
-    const name = f.name.toLowerCase();
-    if(name.endsWith('.csv')){
-      const text = await f.text();
-      setTimeout(()=> { parseCSVText(text); if(document.getElementById('loadingOverlay')) document.body.removeChild(overlay); }, 50);
-    } else if(name.endsWith('.xlsx') || name.endsWith('.xls')){
-      const arrayBuffer = await f.arrayBuffer();
-      setTimeout(()=>{
-        try{
-          const workbook = XLSX.read(arrayBuffer, {type:'array'});
-          const firstSheetName = workbook.SheetNames[0];
-          const csv = XLSX.utils.sheet_to_csv(workbook.Sheets[firstSheetName]);
-          parseCSVText(csv);
-        }catch(err){
-          console.error(err);
-          alert('Error parsing Excel: '+err.message);
-        } finally {
-          if(document.getElementById('loadingOverlay')) document.body.removeChild(overlay);
-        }
-      }, 50);
-    } else {
-      alert('Unsupported file type. Use .csv or .xlsx/.xls');
-      document.body.removeChild(overlay);
+/* ======= Load CSV automatically from the same folder as this HTML ======= */
+async function loadDefaultCSV(){
+  setLoginEnabled(false);
+  try{
+    const response = await fetch(encodeURI(DEFAULT_CSV_FILE), {cache:'no-store'});
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+    const text = await response.text();
+    sourceFileName = DEFAULT_CSV_FILE;
+    parseCSVText(text, {sourceFileName: DEFAULT_CSV_FILE});
+  }catch(err){
+    console.error('Unable to load repository CSV:', err);
+    if(loadDataFromStorage()){
+      const note = document.getElementById('fileNote');
+      note.style.background = '#fff7ed';
+      note.style.color = '#9a3412';
+      note.style.borderColor = '#fed7aa';
+      note.innerHTML = `CSV repository tidak dapat diakses. Menggunakan data tersimpan (${data.length} baris).`;
+      return;
     }
-  } catch(err){
-    console.error(err);
-    alert('Failed to read file: '+err.message);
-    if(document.getElementById('loadingOverlay')) document.body.removeChild(overlay);
+    const note = document.getElementById('fileNote');
+    note.style.display = 'block';
+    note.style.background = '#fef2f2';
+    note.style.color = '#b91c1c';
+    note.style.borderColor = '#fecaca';
+    note.innerHTML = `Gagal memuat <strong>${escapeHtml(DEFAULT_CSV_FILE)}</strong>. Pastikan file CSV berada di folder yang sama dengan HTML dan nama filenya sama persis.`;
   }
-});
+}
 
 
 /* ======================================================================
@@ -504,7 +490,7 @@ fileInput.addEventListener('change', async (e) => {
    Date | Last Calibration Date | Next Calibration Date | Owner | Location
    | Type of Calibration
    ====================================================================== */
-function parseCSVText(text){
+function parseCSVText(text, options={}){
   // Robust CSV parser: supports comma / semicolon / tab delimiters,
   // BOM, quoted values and CRLF. Location = column 10, Type of Calibration = column 11 (1-based).
   text = String(text || '').replace(/^\uFEFF/, '');
@@ -580,9 +566,8 @@ function parseCSVText(text){
 
   fileLoaded = data.length > 0;
   if(fileLoaded){
+    sourceFileName = options.sourceFileName || sourceFileName || DEFAULT_CSV_FILE;
     saveDataToStorage();
-    // Keep the uploaded file available in the UI after refresh/change-user.
-    localStorage.setItem('cal_source_file_name', document.getElementById('fileInput').files[0]?.name || localStorage.getItem('cal_source_file_name') || 'Masterlist.csv');
   }
   setLoginEnabled(fileLoaded);
   logActivity(`Masterlist loaded (${data.length} rows)`);
@@ -1022,8 +1007,8 @@ function changeUser(){
   showPopup('Back to login — masterlist tetap tersimpan');
 }
 
-// Restore the last uploaded masterlist automatically on page load.
-loadDataFromStorage();
+// Always prefer the latest CSV committed beside this HTML.
+loadDefaultCSV();
 
 /* ======================================================================
    EXPORT — formal PDF report (IPEX letterhead, repeated on every page)
