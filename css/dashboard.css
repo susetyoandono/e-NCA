@@ -136,18 +136,17 @@
 }
 
 .dx-logo {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+    display: block;
+    height: 34px;
+    width: auto;
+    max-width: 140px;
+    object-fit: contain;
+}
 
-    display: grid;
-    place-items: center;
-
-    background: var(--dx-navy);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: .02em;
+.dx-brand-divider {
+    width: 1px;
+    height: 30px;
+    background: var(--dx-line);
 }
 
 .dx-brand-title {
@@ -701,6 +700,7 @@
     .dx-header-inner { padding: 0 16px; }
 
     .dx-brand-sub,
+    .dx-brand-divider,
     .dx-user-text,
     .dx-chevron { display: none; }
 
