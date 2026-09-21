@@ -1,0 +1,601 @@
+/* =========================================================
+   e-NCA - NCA Detail
+   Load AFTER css/style.css and css/dashboard.css.
+   Header, buttons, pills and modal come from dashboard.css
+   (body has both classes: "dash nd").
+   ========================================================= */
+
+.nd a.dx-brand,
+.nd a.btn {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   TITLE ROW
+   ========================================================= */
+
+.nd .dx-title-row {
+    align-items: flex-end;
+    margin-bottom: 18px;
+}
+
+.nd-crumbs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+
+    font-size: 13px;
+    color: var(--dx-muted);
+}
+
+.nd-crumbs a {
+    color: var(--dx-blue-dark);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.nd-crumbs a:hover { text-decoration: underline; }
+
+.nd-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+}
+
+.nd .nd-title h1 {
+    font-size: 26px;
+    overflow-wrap: anywhere;
+}
+
+.nd-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+
+/* =========================================================
+   SUMMARY STRIP
+   ========================================================= */
+
+.nd-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 20px;
+}
+
+.nd-summary-item {
+    min-width: 0;
+    padding: 16px 22px;
+    border-right: 1px solid var(--dx-line);
+}
+
+.nd-summary-item:last-child { border-right: 0; }
+
+.nd-summary-item strong {
+    display: block;
+    margin-top: 4px;
+
+    font-size: 14.5px;
+    font-weight: 650;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.nd-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--dx-muted);
+}
+
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+
+.nd-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 20px;
+    align-items: start;
+}
+
+.nd-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
+
+.nd-aside {
+    position: sticky;
+    top: 88px;
+}
+
+
+/* =========================================================
+   SECTION CARD
+   ========================================================= */
+
+.nd-section {
+    padding: 22px 24px 24px;
+    overflow: visible;
+}
+
+.nd-section-head { margin-bottom: 18px; }
+
+.nd-section-head h2 {
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--dx-navy);
+}
+
+.nd-section-head p {
+    margin-top: 3px;
+    font-size: 13px;
+    color: var(--dx-muted);
+}
+
+.nd-group {
+    margin: 4px 0 14px;
+    padding-top: 2px;
+
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--dx-text);
+}
+
+.nd-group:not(:first-of-type) {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--dx-line-soft);
+}
+
+
+/* =========================================================
+   FIELDS
+   ========================================================= */
+
+.nd-fields {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px 24px;
+}
+
+.nd-field { min-width: 0; }
+
+.nd-field-full { margin-top: 18px; }
+
+.nd-value {
+    margin-top: 4px;
+
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--dx-text);
+    overflow-wrap: anywhere;
+}
+
+.nd-text {
+    margin-top: 6px;
+    padding: 14px 16px;
+
+    background: #f7f9fc;
+    border: 1px solid var(--dx-line-soft);
+    border-radius: 10px;
+
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   STAT TILES
+   ========================================================= */
+
+.nd-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.nd-stat {
+    padding: 14px 16px;
+    background: #f7f9fc;
+    border: 1px solid var(--dx-line-soft);
+    border-radius: 12px;
+}
+
+.nd-stat strong {
+    display: block;
+    font-size: 26px;
+    font-weight: 750;
+    letter-spacing: -.01em;
+    color: var(--dx-navy);
+    line-height: 1.15;
+}
+
+.nd-stat span {
+    display: block;
+    margin-top: 4px;
+    font-size: 12.5px;
+    color: var(--dx-muted);
+}
+
+.nd-stats-sm .nd-stat strong { font-size: 20px; }
+
+
+/* =========================================================
+   TABLE (traceability)
+   ========================================================= */
+
+.nd-table-wrap {
+    margin-top: 18px;
+    overflow-x: auto;
+
+    border: 1px solid var(--dx-line);
+    border-radius: 12px;
+}
+
+.nd-table {
+    width: 100%;
+    min-width: 980px;
+    border-collapse: collapse;
+}
+
+.nd-table th {
+    padding: 11px 14px;
+
+    background: #f7f9fc;
+    color: #56657a;
+
+    font-size: 12.5px;
+    font-weight: 650;
+    text-align: left;
+    white-space: nowrap;
+
+    border-bottom: 1px solid var(--dx-line);
+}
+
+.nd-table td {
+    padding: 12px 14px;
+
+    font-size: 13.5px;
+    border-bottom: 1px solid var(--dx-line-soft);
+}
+
+.nd-table tbody tr:last-child td { border-bottom: 0; }
+
+.nd-table tbody tr:hover td { background: #f5f9fd; }
+
+.nd-table tr.trace-row-completed td:first-child { box-shadow: inset 3px 0 #16a34a; }
+.nd-table tr.trace-row-pending td:first-child   { box-shadow: inset 3px 0 #f0a020; }
+
+.nd .table-empty {
+    padding: 36px 16px !important;
+    color: var(--dx-muted) !important;
+}
+
+
+/* =========================================================
+   EVIDENCE (markup generated by nca-detail.js)
+   ========================================================= */
+
+.nd .evidence-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.nd .evidence-photo-card {
+    padding: 14px;
+    background: #fff;
+    border: 1px solid var(--dx-line);
+    border-radius: 12px;
+}
+
+.nd .evidence-photo-card h3 {
+    margin: 0 0 10px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--dx-text);
+}
+
+.nd .evidence-photo-button {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 260px;
+    padding: 0;
+
+    background: #f1f5f9;
+    border: 1px solid var(--dx-line);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: zoom-in;
+}
+
+.nd .evidence-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: contain;
+}
+
+.nd .photo-zoom-hint {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+
+    padding: 5px 10px;
+    border-radius: 999px;
+
+    background: rgba(7, 27, 46, .78);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+
+    opacity: 0;
+    transition: opacity .15s;
+}
+
+.nd .evidence-photo-button:hover .photo-zoom-hint,
+.nd .evidence-photo-button:focus-visible .photo-zoom-hint { opacity: 1; }
+
+.nd .file-name {
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--dx-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.nd .attachment-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.nd .attachment-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 12px 14px;
+    background: #f7f9fc;
+    border: 1px solid var(--dx-line);
+    border-radius: 10px;
+}
+
+.nd .attachment-item strong { font-size: 13.5px; }
+
+.nd .attachment-item .file-name {
+    margin-top: 2px;
+    max-width: 420px;
+}
+
+.nd .attachment-item .btn { height: 34px; }
+
+.nd .attachment-description {
+    margin-top: 16px;
+    padding: 14px 16px;
+
+    background: #f7f9fc;
+    border: 1px solid var(--dx-line-soft);
+    border-left: 3px solid var(--dx-blue);
+    border-radius: 10px;
+}
+
+.nd .attachment-description strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+.nd .attachment-description div {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #334155;
+}
+
+.nd .empty-message {
+    padding: 28px 12px;
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--dx-muted);
+}
+
+
+/* =========================================================
+   WORKFLOW TIMELINE (markup generated by nca-detail.js)
+   ========================================================= */
+
+.nd-timeline {
+    max-height: calc(100vh - 220px);
+    overflow-y: auto;
+    padding: 4px 4px 0 6px;
+}
+
+.nd .workflow-item {
+    position: relative;
+
+    margin: 0;
+    padding: 0 0 22px 22px;
+
+    background: none;
+    border: 0;
+    border-left: 2px solid var(--dx-line);
+    border-radius: 0;
+}
+
+.nd .workflow-item:last-child {
+    padding-bottom: 4px;
+    border-left-color: transparent;
+}
+
+.nd .workflow-item::before {
+    content: "";
+    position: absolute;
+    left: -7px;
+    top: 3px;
+
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+
+    background: #fff;
+    border: 2px solid #b6c3d3;
+}
+
+.nd .workflow-item:first-child::before {
+    background: var(--dx-blue);
+    border-color: var(--dx-blue);
+    box-shadow: 0 0 0 4px var(--dx-blue-tint);
+}
+
+.nd .workflow-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    margin-bottom: 6px;
+}
+
+.nd .workflow-header strong {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dx-text);
+}
+
+.nd .workflow-header span {
+    font-size: 12px;
+    color: var(--dx-muted);
+}
+
+.nd .workflow-status,
+.nd .workflow-approval,
+.nd .workflow-user {
+    margin-top: 3px;
+    font-size: 13px;
+    color: #475569;
+}
+
+.nd .workflow-user { color: var(--dx-muted); }
+
+.nd .workflow-comment {
+    margin-top: 8px;
+    padding: 9px 12px;
+
+    background: #f7f9fc;
+    border: 1px solid var(--dx-line-soft);
+    border-radius: 8px;
+
+    font-size: 13px;
+    line-height: 1.5;
+    color: #334155;
+}
+
+
+/* =========================================================
+   MODAL FORM CONTROLS
+   ========================================================= */
+
+.nd .form-group select {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: #fff;
+
+    font: inherit;
+    font-size: 14px;
+    outline: none;
+}
+
+.nd .form-group select:focus {
+    border-color: var(--dx-blue);
+    box-shadow: 0 0 0 3px rgba(10, 120, 194, .14);
+}
+
+.nd .field-help {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--dx-muted);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .nd-layout { grid-template-columns: 1fr; }
+
+    .nd-aside { position: static; }
+
+    .nd-timeline { max-height: none; }
+
+    .nd-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .nd-summary-item:nth-child(2) { border-right: 0; }
+
+    .nd-summary-item:nth-child(-n+2) { border-bottom: 1px solid var(--dx-line); }
+}
+
+@media (max-width: 700px) {
+
+    .nd .dx-title-row { align-items: flex-start; }
+
+    .nd-actions { width: 100%; }
+
+    .nd-actions .btn { flex: 1; }
+
+    .nd-section { padding: 18px 16px 20px; }
+
+    .nd-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .nd-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .nd .evidence-photo-grid { grid-template-columns: 1fr; }
+
+    .nd .evidence-photo-button { height: 220px; }
+
+    .nd .attachment-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 460px) {
+
+    .nd-fields { grid-template-columns: 1fr; }
+
+    .nd-summary { grid-template-columns: 1fr; }
+
+    .nd-summary-item {
+        border-right: 0;
+        border-bottom: 1px solid var(--dx-line);
+    }
+
+    .nd-summary-item:last-child { border-bottom: 0; }
+}
