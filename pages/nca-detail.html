@@ -12,115 +12,445 @@
 
     <title>e-NCA - NCA Detail</title>
 
-    <link
-        rel="stylesheet"
-        href="../css/style.css"
-    >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css?v=3">
+    <link rel="stylesheet" href="../css/nca-detail.css?v=1">
 
 </head>
 
 
-<body>
+<body class="dash nd">
 
-<header class="app-header no-print">
+    <!-- =========================
+         HEADER (same as dashboard)
+         ========================= -->
 
-    <div class="header-left">
+    <header class="dx-header no-print">
 
-        <div class="app-logo">
-            e-NCA
+        <div class="dx-header-inner">
+
+            <a href="dashboard.html" class="dx-brand" title="Back to dashboard">
+
+                <img
+                    src="../assets/images/i-pex-logo.png"
+                    alt="I-PEX"
+                    class="dx-logo"
+                >
+
+                <div class="dx-brand-divider"></div>
+
+                <div>
+                    <div class="dx-brand-title">e-NCA</div>
+                    <div class="dx-brand-sub">
+                        Electronic Non-Conformance Application
+                    </div>
+                </div>
+
+            </a>
+
+
+            <div class="dx-header-actions">
+
+                <div class="dx-user-wrap">
+
+                    <button
+                        type="button"
+                        id="user-menu-button"
+                        class="dx-user-chip"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                    >
+
+                        <span class="dx-avatar" id="user-avatar">–</span>
+
+                        <span class="dx-user-text">
+                            <strong id="user-name">Loading...</strong>
+                            <span id="user-role">Loading...</span>
+                        </span>
+
+                        <svg class="dx-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+
+                    </button>
+
+
+                    <div id="user-menu" class="dx-menu" role="menu">
+
+                        <div class="dx-menu-head">
+                            <strong id="menu-user-name">-</strong>
+                            <span id="menu-user-badge">-</span>
+                        </div>
+
+                        <button
+                            type="button"
+                            id="go-dashboard"
+                            class="dx-menu-item"
+                            role="menuitem"
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                            Dashboard
+                        </button>
+
+                        <div class="dx-menu-sep"></div>
+
+                        <button
+                            type="button"
+                            id="logout-button"
+                            class="dx-menu-item danger"
+                            role="menuitem"
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+                            Log out
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="app-title">
-            Non-Conformity Analysis
-        </div>
-
-    </div>
+    </header>
 
 
-    <div class="header-right">
+    <!-- =========================
+         MAIN (screen only)
+         ========================= -->
 
-        <span id="user-name"></span>
+    <main class="dx-main no-print">
 
-        <span id="user-role"></span>
+        <!-- TITLE + ACTIONS -->
 
-        <button
-            id="logout-button"
-            class="btn btn-secondary"
-        >
-            Logout
-        </button>
+        <div class="dx-title-row">
 
-    </div>
+            <div class="nd-heading">
 
-</header>
+                <nav class="nd-crumbs" aria-label="Breadcrumb">
+                    <a href="dashboard.html">Dashboard</a>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                    <span>NCA detail</span>
+                </nav>
 
+                <div class="nd-title">
+                    <h1 id="nca-number-title">Loading...</h1>
+                    <span id="nca-status" class="pill tone-neutral">-</span>
+                    <span id="approval-status" class="pill tone-neutral">-</span>
+                </div>
 
-<main class="page-container">
-
-
-    <!-- PAGE HEADER -->
-
-    <div class="page-header no-print">
-
-        <div>
-
-            <h1>NCA Detail</h1>
-
-            <p id="nca-number-title">
-                Loading...
-            </p>
-
-        </div>
+            </div>
 
 
-        <div class="page-header-actions">
+            <div class="nd-actions">
 
-            <button
-                id="print-nca-button"
-                class="btn btn-primary"
-            >
-                Print NCA
-            </button>
+                <button
+                    type="button"
+                    id="print-nca-button"
+                    class="btn btn-secondary"
+                >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                    Print NCA
+                </button>
 
-            <button
-                type="button"
-                id="submit-review-button"
-                class="btn btn-primary"
-                style="display:none;"
-            >
-                Submit for Review
-            </button>
+                <button
+                    type="button"
+                    id="submit-review-button"
+                    class="btn btn-primary"
+                    style="display:none;"
+                >
+                    Submit for review
+                </button>
 
-            <button
-                type="button"
-                id="qc-supervisor-review-btn"
-                class="btn btn-primary"
-                style="display:none;"
-            >
-                QC Supervisor Review
-            </button>
+                <button
+                    type="button"
+                    id="qc-supervisor-review-btn"
+                    class="btn btn-primary"
+                    style="display:none;"
+                >
+                    QC supervisor review
+                </button>
 
-            <button
-                class="btn btn-secondary"
-                onclick="window.location.href='dashboard.html'"
-            >
-                Back to Dashboard
-            </button>
+            </div>
 
         </div>
 
-    </div>
+
+        <!-- SUMMARY -->
+
+        <section class="dx-card nd-summary">
+
+            <div class="nd-summary-item">
+                <span class="nd-label">Current assignee</span>
+                <strong id="current-assignee">-</strong>
+            </div>
+
+            <div class="nd-summary-item">
+                <span class="nd-label">Created by</span>
+                <strong id="created-by">-</strong>
+            </div>
+
+            <div class="nd-summary-item">
+                <span class="nd-label">Department</span>
+                <strong id="department">-</strong>
+            </div>
+
+            <div class="nd-summary-item">
+                <span class="nd-label">Created</span>
+                <strong id="created-date">-</strong>
+            </div>
+
+        </section>
 
 
+        <div class="nd-layout">
 
-    <!-- ================================================= -->
-    <!-- PRINT AREA -->
-    <!-- ================================================= -->
+            <!-- ================= LEFT COLUMN ================= -->
+
+            <div class="nd-col">
+
+
+                <!-- NCA INFORMATION -->
+
+                <section class="dx-card nd-section">
+
+                    <div class="nd-section-head">
+                        <h2>NCA information</h2>
+                    </div>
+
+                    <h3 class="nd-group">Defect</h3>
+
+                    <div class="nd-fields">
+
+                        <div class="nd-field">
+                            <span class="nd-label">Defect name</span>
+                            <div id="defect-name" class="nd-value">-</div>
+                        </div>
+
+                        <div class="nd-field">
+                            <span class="nd-label">Defect category</span>
+                            <div id="defect-category" class="nd-value">-</div>
+                        </div>
+
+                        <div class="nd-field">
+                            <span class="nd-label">Process / station</span>
+                            <div id="process-station" class="nd-value">-</div>
+                        </div>
+
+                        <div class="nd-field">
+                            <span class="nd-label">Detection source</span>
+                            <div id="detection-source" class="nd-value">-</div>
+                        </div>
+
+                        <div class="nd-field">
+                            <span class="nd-label">Reported date</span>
+                            <div id="reported-date" class="nd-value">-</div>
+                        </div>
+
+                    </div>
+
+                    <div class="nd-field nd-field-full">
+                        <span class="nd-label">Defect description</span>
+                        <div id="defect-description" class="nd-text">-</div>
+                    </div>
+
+
+                    <h3 class="nd-group">Part and lot</h3>
+
+                    <div class="nd-fields">
+
+                        <div class="nd-field">
+                            <span class="nd-label">Part number</span>
+                            <div id="part-number" class="nd-value">-</div>
+                        </div>
+
+                        <div class="nd-field">
+                            <span class="nd-label">Part name</span>
+                            <div id="part-name" class="nd-value">-</div>
+                        </div>
+
+                        <div class="nd-field">
+                            <span class="nd-label">Lot number</span>
+                            <div id="lot-number" class="nd-value">-</div>
+                        </div>
+
+                        <div class="nd-field">
+                            <span class="nd-label">Reel number</span>
+                            <div id="reel-number" class="nd-value">-</div>
+                        </div>
+
+                        <div class="nd-field">
+                            <span class="nd-label">Machine / mold no.</span>
+                            <div id="machine-mold-no" class="nd-value">-</div>
+                        </div>
+
+                    </div>
+
+                    <span id="nca-number" hidden></span>
+
+                </section>
+
+
+                <!-- QUANTITY -->
+
+                <section class="dx-card nd-section">
+
+                    <div class="nd-section-head">
+                        <h2>Quantity and impact</h2>
+                    </div>
+
+                    <div class="nd-stats">
+
+                        <div class="nd-stat">
+                            <strong id="affected-qty">-</strong>
+                            <span>Affected qty</span>
+                        </div>
+
+                        <div class="nd-stat">
+                            <strong id="sample-size">-</strong>
+                            <span>Sample size</span>
+                        </div>
+
+                        <div class="nd-stat">
+                            <strong id="defective-qty">-</strong>
+                            <span>Defective qty</span>
+                        </div>
+
+                        <div class="nd-stat">
+                            <strong id="defective-percent">-</strong>
+                            <span>Defective rate</span>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- EVIDENCE -->
+
+                <section class="dx-card nd-section">
+
+                    <div class="nd-section-head">
+                        <h2>Evidence and attachments</h2>
+                    </div>
+
+                    <div
+                        id="evidence-container"
+                        class="evidence-container"
+                    >
+                        <div class="empty-message">
+                            Loading evidence...
+                        </div>
+                    </div>
+
+                </section>
+
+
+                <!-- TRACEABILITY -->
+
+                <section
+                    id="traceability-section"
+                    class="dx-card nd-section"
+                >
+
+                    <div class="nd-section-head">
+                        <h2>Traceability and containment</h2>
+                        <p>Affected lots placed on hold and containment progress.</p>
+                    </div>
+
+                    <div class="nd-stats nd-stats-sm">
+
+                        <div class="nd-stat">
+                            <strong id="trace-affected-count">0</strong>
+                            <span>Affected lots</span>
+                        </div>
+
+                        <div class="nd-stat">
+                            <strong id="trace-total-hold">0</strong>
+                            <span>Total on-hold qty</span>
+                        </div>
+
+                        <div class="nd-stat">
+                            <strong id="trace-total-defect">0</strong>
+                            <span>Total defect qty</span>
+                        </div>
+
+                        <div class="nd-stat">
+                            <strong id="trace-completed">0 / 0</strong>
+                            <span>Completed</span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="nd-table-wrap">
+
+                        <table class="nd-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>#</th>
+                                    <th>Part number</th>
+                                    <th>Part name</th>
+                                    <th>Lot number</th>
+                                    <th>Reel number</th>
+                                    <th>Lot qty</th>
+                                    <th>Defect name</th>
+                                    <th>Defect qty</th>
+                                    <th>Sorting / rework by</th>
+                                    <th>Inspected by</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="traceability-detail-list">
+
+                                <tr>
+                                    <td colspan="10" class="table-empty">
+                                        No traceability data.
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- ================= RIGHT COLUMN ================= -->
+
+            <aside class="nd-aside">
+
+                <section class="dx-card nd-section">
+
+                    <div class="nd-section-head">
+                        <h2>Workflow history</h2>
+                    </div>
+
+                    <div id="workflow-container" class="nd-timeline">
+                        <div class="empty-message">
+                            Loading workflow...
+                        </div>
+                    </div>
+
+                </section>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+
+    <!-- =================================================
+         PRINT AREA (A6 label) - do not remove
+         ================================================= -->
 
     <div id="print-area">
-
-
-        <!-- PRINT HEADER -->
 
         <div class="print-nca-header">
 
@@ -135,8 +465,6 @@
         </div>
 
 
-        <!-- QR + BASIC INFORMATION -->
-
         <section class="print-nca-top">
 
             <div
@@ -144,85 +472,42 @@
                 class="print-qrcode"
             ></div>
 
-
             <div class="print-basic-info">
 
                 <div class="print-field">
-
-                    <span>
-                        NCA ID
-                    </span>
-
-                    <strong id="print-nca-number">
-                        -
-                    </strong>
-
+                    <span>NCA ID</span>
+                    <strong id="print-nca-number">-</strong>
                 </div>
 
-
                 <div class="print-field">
-
-                    <span>
-                        Part Number
-                    </span>
-
-                    <strong id="print-part-number">
-                        -
-                    </strong>
-
+                    <span>Part Number</span>
+                    <strong id="print-part-number">-</strong>
                 </div>
 
-
                 <div class="print-field">
-
-                    <span>
-                        Part Name
-                    </span>
-
-                    <strong id="print-part-name">
-                        -
-                    </strong>
-
+                    <span>Part Name</span>
+                    <strong id="print-part-name">-</strong>
                 </div>
 
             </div>
 
         </section>
 
-
-
-        <!-- DEFECT -->
 
         <section class="print-defect-section">
 
             <div class="print-field">
-
-                <span>
-                    Defect Name
-                </span>
-
-                <strong id="print-defect-name">
-                    -
-                </strong>
-
+                <span>Defect Name</span>
+                <strong id="print-defect-name">-</strong>
             </div>
 
-
             <div class="print-field print-description">
-
-                <span>
-                    Defect Description
-                </span>
-
-                <div id="print-defect-description">
-                    -
-                </div>
-
+                <span>Defect Description</span>
+                <div id="print-defect-description">-</div>
             </div>
 
         </section>
 
-        <!-- LATEST DISPOSITION -->
 
         <section class="print-disposition-section">
 
@@ -238,9 +523,7 @@
             </div>
 
         </section>
-        
 
-        <!-- PRINT PHOTOS -->
 
         <section class="print-photo-section">
 
@@ -258,7 +541,6 @@
                 </div>
 
             </div>
-
 
             <div class="print-photo-box">
 
@@ -280,716 +562,165 @@
     </div>
 
 
-
-    <!-- ================================================= -->
-    <!-- SCREEN DETAIL -->
-    <!-- ================================================= -->
-
-
-    <!-- STATUS -->
-
-  <section class="nca-status-panel no-print">
-
-    <div class="nca-status-main">
-
-        <div class="nca-title-area">
-
-            <div class="nca-title-label">
-                NON-CONFORMANCE ALERT
-            </div>
-
-            <h1 id="nca-number-title">
-                -
-            </h1>
-
-        </div>
-
-
-        <div class="nca-status-badges">
-
-            <div
-                id="nca-status"
-                class="status-badge"
-            >
-                -
-            </div>
-
-            <div
-                id="approval-status"
-                class="approval-badge"
-            >
-                -
-            </div>
-
-        </div>
-
-    </div>
-
-
-        <div class="workflow-summary-grid">
-    
-            <div class="workflow-summary-item">
-    
-                <span class="summary-label">
-                    Current Assignee
-                </span>
-    
-                <strong id="current-assignee">
-                    -
-                </strong>
-    
-            </div>
-    
-    
-            <div class="workflow-summary-item">
-    
-                <span class="summary-label">
-                    Created By
-                </span>
-    
-                <strong id="created-by">
-                    -
-                </strong>
-    
-            </div>
-    
-    
-            <div class="workflow-summary-item">
-    
-                <span class="summary-label">
-                    Department
-                </span>
-    
-                <strong id="department">
-                    -
-                </strong>
-    
-            </div>
-    
-    
-            <div class="workflow-summary-item">
-    
-                <span class="summary-label">
-                    Created
-                </span>
-    
-                <strong id="created-date">
-                    -
-                </strong>
-    
-            </div>
-    
-        </div>
-    
-    </section>
-
-
-
-    <!-- NCA INFORMATION -->
-
-    <section class="detail-section no-print">
-
-        <h2>NCA Information</h2>
-
-        <div class="detail-grid">
-
-            <div class="detail-item">
-
-                <label>NCA Number</label>
-
-                <div
-                    id="nca-number"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Reported Date</label>
-
-                <div
-                    id="reported-date"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Created By</label>
-
-                <div
-                    id="created-by"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Department</label>
-
-                <div
-                    id="department"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Defect Name</label>
-
-                <div
-                    id="defect-name"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Defect Category</label>
-
-                <div
-                    id="defect-category"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Process / Station</label>
-
-                <div
-                    id="process-station"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Detection Source</label>
-
-                <div
-                    id="detection-source"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Part Number</label>
-
-                <div
-                    id="part-number"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Part Name</label>
-
-                <div
-                    id="part-name"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Lot Number</label>
-
-                <div
-                    id="lot-number"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Reel Number</label>
-
-                <div
-                    id="reel-number"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>Machine / Mold No.</label>
-
-                <div
-                    id="machine-mold-no"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="detail-item detail-full">
-
-            <label>
-                Defect Description
-            </label>
-
-            <div
-                id="defect-description"
-                class="detail-value detail-text"
-            >
-                -
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- QUANTITY -->
-
-    <section class="detail-section no-print">
-
-        <h2>Quantity / Impact</h2>
-
-        <div class="detail-grid">
-
-            <div class="detail-item">
-
-                <label>
-                    Affected Qty
-                </label>
-
-                <div
-                    id="affected-qty"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>
-                    Sample Size
-                </label>
-
-                <div
-                    id="sample-size"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>
-                    Defective Qty
-                </label>
-
-                <div
-                    id="defective-qty"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="detail-item">
-
-                <label>
-                    % Defective
-                </label>
-
-                <div
-                    id="defective-percent"
-                    class="detail-value"
-                >
-                    -
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- EVIDENCE -->
-
-    <section class="detail-section no-print">
-
-        <h2>
-            Evidence & Attachments
-        </h2>
-
-        <div
-            id="evidence-container"
-            class="evidence-container"
-        >
-
-            <div class="empty-message">
-                Loading evidence...
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- =================================================
-     TRACEABILITY / CONTAINMENT
-     ================================================= -->
-
-<section
-    id="traceability-section"
-    class="detail-section no-print"
->
-
-    <div class="section-header-row">
-
-        <div>
-            <h2>Traceability / Containment</h2>
-
-            <p class="section-description">
-                Affected lots placed ON HOLD and containment progress.
-            </p>
-        </div>
-
-    </div>
-
-
-    <!-- SUMMARY -->
-
-    <div class="traceability-summary-grid">
-
-        <div class="traceability-summary-card">
-
-            <span>Affected Lots</span>
-
-            <strong id="trace-affected-count">
-                0
-            </strong>
-
-        </div>
-
-
-        <div class="traceability-summary-card">
-
-            <span>Total ON HOLD Qty</span>
-
-            <strong id="trace-total-hold">
-                0
-            </strong>
-
-        </div>
-
-
-        <div class="traceability-summary-card">
-
-            <span>Total Defect Qty</span>
-
-            <strong id="trace-total-defect">
-                0
-            </strong>
-
-        </div>
-
-
-        <div class="traceability-summary-card">
-
-            <span>Completed</span>
-
-            <strong id="trace-completed">
-                0 / 0
-            </strong>
-
-        </div>
-
-    </div>
-
-
-    <!-- TABLE -->
-
-    <div class="traceability-detail-wrap">
-
-        <table class="traceability-detail-table">
-
-            <thead>
-
-                <tr>
-                    <th>#</th>
-                    <th>Part Number</th>
-                    <th>Part Name</th>
-                    <th>Lot Number</th>
-                    <th>Reel Number</th>
-                    <th>Lot Qty</th>
-                    <th>Defect Name</th>
-                    <th>Defect Qty</th>
-                    <th>Sorting / Rework By</th>
-                    <th>Inspected By</th>
-                </tr>
-
-            </thead>
-
-
-            <tbody id="traceability-detail-list">
-
-                <tr>
-
-                    <td
-                        colspan="10"
-                        class="table-empty"
-                    >
-                        No traceability data.
-                    </td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</section>
-
-
-    <!-- WORKFLOW -->
-
-    <section class="detail-section no-print">
-
-        <h2>
-            Workflow History
-        </h2>
-
-        <div
-            id="workflow-container"
-        >
-
-            <div class="empty-message">
-                Loading workflow...
-            </div>
-
-        </div>
-
-    </section>
-
-
-</main>
-
-
     <!-- =====================================================
-     SUBMIT FOR QC REVIEW MODAL
-     ===================================================== -->
+         SUBMIT FOR QC REVIEW MODAL
+         ===================================================== -->
 
-        <div
-            id="submit-review-modal"
-            class="modal-overlay"
-            style="display:none;"
-        >
-        
-            <div class="user-modal submit-review-modal">
-        
-                <div class="modal-header">
-        
-                    <div>
-                        <h2>Submit NCA for Review</h2>
-        
-                        <div class="modal-subtitle">
-                            Assign this NCA to a QC Supervisor.
-                        </div>
+    <div
+        id="submit-review-modal"
+        class="modal-overlay no-print"
+        style="display:none;"
+    >
+
+        <div class="user-modal submit-review-modal">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2>Submit NCA for review</h2>
+
+                    <div class="modal-subtitle">
+                        Assign this NCA to a QC supervisor.
                     </div>
-        
+                </div>
+
+                <button
+                    type="button"
+                    id="submit-review-close"
+                    class="modal-close"
+                    aria-label="Close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="submit-review-form">
+
+                <div class="form-group">
+
+                    <label for="qc-supervisor-id">
+                        QC supervisor
+                        <span class="required">*</span>
+                    </label>
+
+                    <select
+                        id="qc-supervisor-id"
+                        required
+                    >
+                        <option value="">
+                            Select QC supervisor
+                        </option>
+                    </select>
+
+                    <small class="field-help">
+                        Active QC supervisors are shown here.
+                    </small>
+
+                </div>
+
+
+                <div
+                    id="submit-review-message"
+                    class="form-message"
+                ></div>
+
+
+                <div class="modal-actions">
+
                     <button
                         type="button"
-                        id="submit-review-close"
-                        class="modal-close"
+                        id="cancel-submit-review"
+                        class="btn btn-secondary"
                     >
-                        ×
+                        Cancel
                     </button>
-        
-                </div>
-        
-        
-                <form id="submit-review-form">
-        
-                    <div class="form-group">
-        
-                        <label>
-                            QC Supervisor
-                            <span class="required">*</span>
-                        </label>
-        
-                        <select
-                            id="qc-supervisor-id"
-                            required
-                        >
-                            <option value="">
-                                Select QC Supervisor
-                            </option>
-                        </select>
-        
-                        <small class="field-help">
-                            Active QC Supervisors are shown here.
-                        </small>
-        
-                    </div>
-        
-        
-                    <div
-                        id="submit-review-message"
-                        class="form-message"
-                    ></div>
-        
-        
-                    <div class="modal-actions">
-        
-                        <button
-                            type="button"
-                            id="cancel-submit-review"
-                            class="btn btn-secondary"
-                        >
-                            Cancel
-                        </button>
-        
-                        <button
-                            type="submit"
-                            id="confirm-submit-review"
-                            class="btn btn-primary"
-                        >
-                            Submit for Review
-                        </button>
-        
-                    </div>
-        
-                </form>
-        
-            </div>
-        
-        </div>
 
-    <!-- =====================================================
-     PHOTO LIGHTBOX
-     ===================================================== -->
+                    <button
+                        type="submit"
+                        id="confirm-submit-review"
+                        class="btn btn-primary"
+                    >
+                        Submit for review
+                    </button>
 
-<div
-    id="photo-lightbox"
-    class="photo-lightbox"
-    aria-hidden="true"
->
-    <div class="photo-lightbox-dialog">
-
-        <div class="photo-lightbox-header">
-
-            <div>
-                <div
-                    id="lightbox-title"
-                    class="lightbox-title"
-                >
-                    Evidence Photo
                 </div>
 
-                <div
-                    id="lightbox-filename"
-                    class="lightbox-filename"
-                ></div>
-            </div>
-
-            <button
-                type="button"
-                id="lightbox-close"
-                class="lightbox-close"
-                aria-label="Close image"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <div class="photo-lightbox-body">
-
-            <img
-                id="lightbox-image"
-                src=""
-                alt="NCA Evidence"
-            >
+            </form>
 
         </div>
 
     </div>
-</div>
-
-<!-- QR CODE LIBRARY -->
-
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
-</script>
 
 
-<script
-    type="module"
-    src="../js/nca-detail.js">
-</script>
+    <!-- =====================================================
+         PHOTO LIGHTBOX
+         ===================================================== -->
 
+    <div
+        id="photo-lightbox"
+        class="photo-lightbox no-print"
+        aria-hidden="true"
+    >
+        <div class="photo-lightbox-dialog">
+
+            <div class="photo-lightbox-header">
+
+                <div>
+                    <div
+                        id="lightbox-title"
+                        class="lightbox-title"
+                    >
+                        Evidence Photo
+                    </div>
+
+                    <div
+                        id="lightbox-filename"
+                        class="lightbox-filename"
+                    ></div>
+                </div>
+
+                <button
+                    type="button"
+                    id="lightbox-close"
+                    class="lightbox-close"
+                    aria-label="Close image"
+                >
+                    ×
+                </button>
+
+            </div>
+
+            <div class="photo-lightbox-body">
+
+                <img
+                    id="lightbox-image"
+                    src=""
+                    alt="NCA Evidence"
+                >
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- QR CODE LIBRARY -->
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
+    </script>
+
+    <script
+        type="module"
+        src="../js/nca-detail.js?v=2">
+    </script>
+
+    <script
+        type="module"
+        src="../js/nca-detail-ui.js?v=1">
+    </script>
 
 </body>
 
